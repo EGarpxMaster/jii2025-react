@@ -1,0 +1,18 @@
+#footer {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 1rem 1rem;
+  text-align: center;
+  margin-top: auto;
+  z-index: 10;
+}
+
+#footer .copyright {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+#footer .copyright a {
+  color: var(--secondary-color);
+  text-decoration: none;
+}

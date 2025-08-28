@@ -1,0 +1,25 @@
+:host {
+  display: block;
+}
+
+h2 {
+    font-weight: 500;
+    color: var(--primary-color)
+}
+
+.event-info-section {
+  margin-top: -2rem;
+  background-color: var(--light-color);
+}
+
+/* Línea divisoria */
+hr {
+  border-color: var(--primary-color);
+}
+
+/* Texto informativo */
+.info-content .lead {
+  color: var(--primary-color);
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
