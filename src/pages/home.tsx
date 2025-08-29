@@ -1,5 +1,7 @@
-import Carousel from "../components/carousel/carousel";
-import EventInfo from "../components/event-info/event-info";
+import Carousel from "../components/home/carousel/carousel";
+import EventInfo from "../components/home/event-info/event-info";
+import "../components/home/countdown/countdown";
+import Countdown from "../components/home/countdown/countdown";
 
 export default function Home() {
   return (
@@ -7,7 +9,8 @@ export default function Home() {
       
       <main className="w-full mt-[100px] md:mt-[90px]">
         <Carousel />
-          <EventInfo />
+        <Countdown />
+        <EventInfo />
       </main>
     </div>
   )

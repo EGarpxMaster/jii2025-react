@@ -57,54 +57,79 @@ const EventInfo: FC = () => {
   return (
     <section className="event-info-section text-light py-5">
       <div className="container">
-        {sections.map((section, index) => (
-          <div key={section.id}>
-            {index > 0 && <hr className="my-5" />}
-            <div className="row align-items-center">
-              <div className="col-lg-7 mb-4 mb-lg-0">
-                <div className="info-content">
-                  <h2 id={section.id} className="display-4 fw-bold">{section.title}</h2>
-                  <p className="lead mt-3">{section.content}</p>
+        {sections.map((section) => {
+          if (section.id === "acerca") {
+            return (
+              <div key={section.id}>
+                <div className="row align-items-center">
+                  <div className="col-lg-7 mb-4 mb-lg-0">
+                    <div className="info-content">
+                      <h2 id={section.id} className="display-4 fw-bold">{section.title}</h2>
+                      <p className="lead mt-3">{section.content}</p>
+                    </div>
+                  </div>
+                  <div className="col-lg-5">
+                    <img 
+                      src={`/assets/images/carousel/comite.jpg`}
+                      alt={section.title}
+                      className="img-fluid rounded shadow-lg"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = '/assets/images/placeholder.jpg';
+                      }}
+                    />
+                  </div>
+                </div>
+                
+                <div className="row mt-5">
+                  <div className="col-12">
+                    <div className="map-container">
+                      <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3719.79233394753!2d-86.82603072473866!3d21.200406980492243!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8f4c2c298cab405b%3A0xc7ce34485e9b3b8!2sUniversidad%20del%20Caribe!5e0!3m2!1ses!2smx!4v1751600476163!5m2!1ses!2smx"
+                        width="100%"
+                        height="450"
+                        style={{
+                          border: 0,
+                          borderRadius: '20px',
+                          marginTop: '-2rem'
+                        }}
+                        allowFullScreen
+                        loading="lazy"
+                        referrerPolicy="no-referrer-when-downgrade"
+                        title="Universidad del Caribe Location"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div className="col-lg-5">
-                <img 
-                  src={`/assets/images/carousel/comite.jpg`}
-                  alt={section.title}
-                  className="img-fluid rounded shadow-lg"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.src = '/assets/images/placeholder.jpg';
-                  }}
-                />
+            );
+          }
+
+          return (
+            <div key={section.id}>
+              <hr className="my-5" />
+              <div className="row align-items-center">
+                <div className="col-lg-7 mb-4 mb-lg-0">
+                  <div className="info-content">
+                    <h2 id={section.id} className="display-4 fw-bold">{section.title}</h2>
+                    <p className="lead mt-3">{section.content}</p>
+                  </div>
+                </div>
+                <div className="col-lg-5">
+                  <img 
+                    src={`/assets/images/carousel/comite.jpg`}
+                    alt={section.title}
+                    className="img-fluid rounded shadow-lg"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = '/assets/images/placeholder.jpg';
+                    }}
+                  />
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-
-        <hr className="my-5" />
-        
-        {/* Map section */}
-        <div className="row">
-          <div className="col-12">
-            <div className="map-container">
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3719.79233394753!2d-86.82603072473866!3d21.200406980492243!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8f4c2c298cab405b%3A0xc7ce34485e9b3b8!2sUniversidad%20del%20Caribe!5e0!3m2!1ses!2smx!4v1751600476163!5m2!1ses!2smx"
-                width="100%"
-                height="450"
-                style={{
-                  border: 0,
-                  borderRadius: '20px',
-                  marginTop: '1rem'
-                }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Universidad del Caribe Location"
-              />
-            </div>
-          </div>
-        </div>
+          );
+        })}
       </div>
     </section>
   );

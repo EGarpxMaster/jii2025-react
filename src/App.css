@@ -13,7 +13,6 @@
   padding: 2rem;
   text-align: center;
 } */
-
 /* Variables globales */
 :root {
   --primary-color: #1b1c39;
@@ -23,7 +22,6 @@
   --font-family: "Montserrat", sans-serif;
   --transition-speed: 0.3s;
 }
-
 
 .logo {
   height: 6em;

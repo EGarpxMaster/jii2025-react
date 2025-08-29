@@ -1,0 +1,113 @@
+:root {
+  --primary-color: #1b1c39;
+  --secondary-color: #f7c04a;
+  --light-color: #f8f9fa;
+  --text-color: #495057;
+}
+
+/* Línea divisoria */
+hr {
+  border-color: var(--primary-color);
+}
+
+.countdown-container {
+  background-color: var(--light-color);
+  border-radius: 12px;
+  padding: 3rem;
+  max-width: 100%;
+  text-align: center;
+}
+
+.countdown-title {
+  color: var(--primary-color);
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.countdown-title::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background-color: var(--secondary-color);
+}
+
+.countdown-timer {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.countdown-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 70px;
+}
+
+.countdown-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 0.8rem 1.2rem;
+  min-width: 70px;
+  text-align: center;
+}
+
+.countdown-label {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin-top: 0.5rem;
+  text-transform: uppercase;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .countdown-container {
+    padding: 1rem;
+  }
+
+  .countdown-title {
+    font-size: 1.5rem;
+  }
+
+  .countdown-value {
+    font-size: 2rem;
+    padding: 0.6rem 1rem;
+    min-width: 60px;
+  }
+
+  .countdown-label {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .countdown-timer {
+    gap: 0.5rem;
+  }
+
+  .countdown-item {
+    min-width: 60px;
+  }
+
+  .countdown-value {
+    font-size: 1.5rem;
+    padding: 0.5rem 0.8rem;
+    min-width: 50px;
+  }
+
+  .countdown-label {
+    font-size: 0.8rem;
+  }
+}

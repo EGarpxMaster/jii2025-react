@@ -1,0 +1,827 @@
+/* Activities Styling - Mobile First Approach */
+:root {
+  --primary-color: #1b1c39;
+  --secondary-color: #1ECECA;
+  --text-color: #2d3e50;
+  --light-color: #f9f9f9;
+  --font-family: "Montserrat", sans-serif;
+  --transition-speed: 0.3s;
+}
+
+/* Base Styles (Mobile First) */
+.contenedor {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  max-width: 100%;
+  margin: 5rem auto 0;
+  padding: 0 15px;
+  margin-bottom: 3rem;
+  margin-top: 8rem;
+}
+
+.contenedor h2 {
+  font-size: 2.2rem;
+  color: var(--primary-color);
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.contenedor h2::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background-color: var(--secondary-color);
+}
+
+.activities-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  width: 100%;
+  max-width: 350px;
+  margin: 0 auto 3rem;
+}
+
+.activity-card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.activity-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12);
+}
+
+.activity-header {
+  padding-bottom: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.activity-logo {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.activity-card h3 {
+  font-size: 1.45rem;
+  color: var(--primary-color);
+  margin: 8px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.activity-description {
+  padding: 0 15px;
+  flex-grow: 1;
+}
+
+.activity-description p {
+  font-size: 1.25rem;
+  line-height: 1.4;
+  color: var(--text-color);
+  margin-bottom: 15px;
+}
+
+.speaker-info {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  background-color: #f5f5f5;
+  border-top: 1px solid #eaeaea;
+  margin-top: auto;
+}
+
+.speaker-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 100%;
+  object-fit: cover;
+  margin-right: 5px;
+}
+
+.speakers-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 100%;
+  object-fit: cover;
+}
+
+.speaker-name {
+  justify-content: start;
+  text-align: left;
+  font-weight: 500;
+  color: var(--primary-color);
+  margin: 0;
+  font-size: 1.05rem;
+  
+}
+
+.speakers-name {
+  font-weight: 500;
+  color: var(--primary-color);
+  margin: 0;
+  font-size: 1.05rem;
+  min-width: 100px;
+  display: flex; /* Si es un contenedor flexible */
+}
+
+/* Modal styles - Mobile First */
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  width: 95%;
+  padding: 0;
+  box-sizing: border-box;
+  z-index: 9999;
+  transition: all 0.3s ease;
+  max-height: 90vh;
+  overflow-y: auto;
+  border: none;
+}
+
+.modal::backdrop {
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(2px);
+}
+
+.modal-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-content {
+  padding: 15px 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-speaker {
+  padding: 10px;
+  background-color: #f5f7fa;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  border-top: 1px solid #eaeaea;
+  border-radius: 0 0 10px 10px;
+}
+
+.modal h3 {
+  font-size: 1.5rem;
+  color: var(--primary-color);
+  margin: 0 0 15px;
+  text-align: center;
+  position: relative;
+  padding-bottom: 10px;
+}
+
+.modal h3::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 2px;
+  background-color: var(--secondary-color);
+}
+
+.modal-description {
+  margin-bottom: 20px;
+}
+
+.modal-description p, .modal-description li {
+  font-size: 1.35rem;
+  line-height: 1.5;
+  color: var(--text-color);
+  text-align: justify;
+}
+
+.modal-description ul, .modal-description ol {
+  padding-left: 15px;
+  margin-bottom: 15px;
+}
+
+.modal-speaker-image {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 15px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+}
+
+.modal-speaker h4 {
+  font-size: 1.2rem;
+  color: var(--primary-color);
+  margin: 0 0 8px;
+}
+
+.speaker-bio {
+  font-size: 1.15rem;
+  line-height: 1.4;
+  color: var(--text-color);
+  margin-bottom: 8px;
+}
+
+.speaker-institution {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  margin-bottom: 15px; /* Añadido para dar espacio antes del botón en móviles */
+}
+
+/* Button styling */
+.modal-button {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-size: 1.2rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  align-self: center;
+  outline: none;
+  box-shadow: none;
+}
+
+/* Para dispositivos móviles, el botón no se muestra en su ubicación original */
+.modal-content .modal-button {
+  display: none;
+}
+
+/* Para dispositivos móviles, mostramos el botón en la parte inferior del modal-speaker */
+.modal-speaker .modal-button {
+  display: block;
+  margin-top: 10px;
+}
+
+.modal-button:hover {
+  background-color: var(--secondary-color);
+  transform: scale(1.05);
+  outline: none;
+  box-shadow: none;
+}
+
+.modal-button:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+@media screen and (min-width: 375px){
+  .contenedor h2{
+    font-size: 2.5rem;
+  }
+  .activity-card h3 {
+  font-size: 1.5rem;
+  color: var(--primary-color);
+  margin: 8px;
+  font-weight: 600;
+  line-height: 1.3;
+  }
+
+  .activity-description p {
+    font-size: 1.35rem;
+    line-height: 1.4;
+    color: var(--text-color);
+    margin-bottom: 15px;
+  }
+  
+  .speaker-name {
+  font-size: 1.2rem;
+  }
+
+  .speakers-name {
+    font-size: 1.2rem;
+  }
+}
+
+@media screen and (min-width: 425px){
+  .contenedor h2{
+    font-size: 2.5rem;
+  }
+  .activity-card h3 {
+  font-size: 1.5rem;
+  color: var(--primary-color);
+  margin: 8px;
+  font-weight: 600;
+  line-height: 1.3;
+  }
+
+  .activity-description p {
+    font-size: 1.35rem;
+    line-height: 1.4;
+    color: var(--text-color);
+    margin-bottom: 15px;
+  }
+  
+  .speaker-name {
+  font-size: 1.2rem;
+  }
+
+  .speakers-name {
+    font-size: 1.2rem;
+  }
+  
+  .modal-speaker-image {
+  width: 100px;
+  height: 100px;
+  }
+  
+  .modal-speakers-image {
+  width: 100px;
+  height: 100px;
+  }
+
+  .modal-content h3 {
+  font-size: 1.75rem;
+  }
+  
+  .modal-content p {
+  font-size: 1.5rem;
+  }
+  
+  .modal-speaker h4 {
+  font-size: 1.4rem;
+  color: var(--primary-color);
+  margin: 0 0 8px;
+  }
+  
+  .speaker-bio {
+  font-size: 1.4rem;
+  }
+
+  .speaker-institution {
+    font-size: 1.3rem;
+  }
+}
+
+/* Tablet styles */
+@media screen and (min-width: 576px) {
+  .contenedor {
+    margin-top: 8rem;
+    padding: 0 20px;
+  }
+  
+  .contenedor h2 {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .contenedor h2::after {
+    width: 100px;
+    height: 3px;
+    bottom: -10px;
+  }
+  
+  .activities-container {
+    grid-template-columns: repeat(2, 1fr); /* Siempre 2 columnas en tablets */
+    max-width: 700px; /* Ajustado para 2 columnas */
+    gap: 25px;
+  }
+  
+  .activity-logo {
+    height: 130px;
+  }
+  
+  .activity-card h3 {
+    font-size: 1.23rem;
+    margin: 10px 15px;
+  }
+  
+  .activity-description p {
+    font-size: 1.15rem;
+    line-height: 1.5;
+  }
+  
+  .speaker-image {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .speakers-image {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .speaker-name {
+    font-size: 1rem;
+  }
+  
+  .speakers-name {
+    font-size: 1rem;
+  }
+  
+  .modal {
+    width: 90%;
+    max-width: 500px;
+  }
+  
+  .modal-content, .modal-speaker {
+    padding: 20px;
+  }
+  
+  .modal-content h3 {
+    font-size: 1.7rem;
+    margin-bottom: 20px;
+  }
+  
+  .modal-description p, .modal-description li {
+    font-size: 1.4rem;
+  }
+  
+  .modal-speaker-image {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .modal-speaker h4 {
+    font-size: 1.4rem;
+  }
+  
+  .modal-speaker p {
+    font-size: 1.3rem;
+  }
+  
+  .speaker-institution {
+    font-size: 1.3rem;
+  }
+  
+  .modal-button {
+    font-size: 1.3rem;
+  }
+}
+
+/* Desktop styles */
+@media screen and (min-width: 768px) {
+  .contenedor {
+    margin-top: 9rem;
+    margin-bottom: 5rem;
+    max-width: 1200px;
+  }
+  
+  .contenedor h2 {
+    font-size: 3rem;
+    margin-bottom: 2.5rem;
+  }
+  
+  .activities-container {
+    grid-template-columns: repeat(2, 1fr); /* Mantiene 2 columnas para tablets más grandes */
+    gap: 30px;
+    margin-bottom: 4rem;
+  }
+  
+  .activity-logo {
+    height: 150px;
+  }
+  
+  .activity-card h3 {
+    font-size: 1.4rem;
+    min-height: 50px;
+  }
+  
+  .activity-description p {
+    font-size: 1.2rem;
+  }
+  
+  .speaker-image {
+    width: 50px;
+    height: 50px;
+    margin-right: 15px;
+  }
+  
+  .speaker-name {
+    font-size: 1.15rem;
+  }
+  
+  .speakers-name {
+    font-size: 1.15rem;
+  }
+  
+  .modal {
+    max-width: 800px;
+  }
+  
+  .modal-container {
+    flex-direction: row;
+  }
+  
+  .modal-content {
+    flex: 3;
+    padding: 20px;
+  }
+  
+  /* En pantallas más grandes, el botón vuelve a su posición original */
+  .modal-content .modal-button {
+    display: block;
+    margin-top: 20px;
+  }
+
+  .modal-speaker .modal-button {
+    display: none;
+  }
+  
+  .modal-speaker {
+    flex: 2;
+    border-top: none;
+    border-left: 1px solid #eaeaea;
+    border-radius: 0 10px 10px 0;
+    padding: 30px;
+  }
+  
+  .modal h3 {
+    font-size: 1.85rem;
+    padding-bottom: 15px;
+    margin: 0 1px 0 1px;
+  }
+  
+  .modal h3::after {
+    width: 80px;
+    height: 3px;
+  }
+  
+  .modal-description p{
+    margin-top: 10px;
+  }
+  .modal-description p, .modal-description li {
+    font-size: 1.4rem; 
+    margin-bottom: 15px;
+  }
+  
+  .modal-speaker-image {
+    width: 120px;
+    height: 120px;
+    margin-bottom: 20px;
+  }
+  
+  .modal-speaker h4 {
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+  }
+  
+  .speaker-bio {
+    font-size: 1.1rem;
+  }
+  
+  .speaker-institution {
+    font-size: 1.1rem;
+  }
+  
+  .modal-button {
+    padding: 12px 25px;
+    font-size: 1.4rem;
+  }
+}
+
+/* Large desktop styles */
+@media screen and (min-width: 1024px) {
+  .activities-container {
+    grid-template-columns: repeat(3, 1fr); /* 4 columnas para pantallas grandes */
+    max-width: 1100px;
+  }
+  
+  .contenedor{
+    margin-top: 10rem;
+  }
+  
+  .contenedor h2 {
+    font-size: 3rem;
+  }
+  
+  .activity-logo {
+    height: 150px;
+  }
+  
+  .activity-card h3 {
+    font-size: 1.4rem;
+    min-height: 50px;
+  }
+  
+  .activity-description p {
+    font-size: 1.2rem;
+  }
+  
+  .speaker-image {
+    width: 60px;
+    height: 60px;
+    margin-right: 15px;
+  }
+  
+  .speaker-name {
+    font-size: 1.15rem;
+  }
+  
+  .modal {
+    max-width: 800px;
+  }
+  
+  .modal-container {
+    flex-direction: row;
+  }
+  
+  .modal-content {
+    flex: 3;
+    padding: 30px;
+  }
+  
+  /* En pantallas más grandes, el botón vuelve a su posición original */
+  .modal-content .modal-button {
+    display: block;
+    margin-top: 20px;
+  }
+
+  .modal-speaker .modal-button {
+    display: none;
+  }
+  
+  .modal-speaker {
+    flex: 2;
+    border-top: none;
+    border-left: 1px solid #eaeaea;
+    border-radius: 0 10px 10px 0;
+    padding: 30px;
+  }
+  
+  .modal h3 {
+    font-size: 1.85rem;
+    padding-bottom: 15px;
+  }
+  
+  .modal h3::after {
+    width: 80px;
+    height: 3px;
+  }
+  
+  .modal-description p, .modal-description li {
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+  }
+  
+  .modal-speaker-image {
+    width: 120px;
+    height: 120px;
+    margin-bottom: 20px;
+  }
+  
+  .modal-speaker h4 {
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+  }
+  
+  .speaker-bio {
+    font-size: 1rem;
+  }
+  
+  .speaker-institution {
+    font-size: 1rem;
+  }
+  
+  .modal-button {
+    padding: 12px 25px;
+    font-size: 1.4rem;
+  }
+}
+
+/* Large desktop styles */
+@media screen and (min-width: 1440px) {
+  .contenedor{
+    max-width: 90%;
+  }
+  .activities-container {
+  grid-template-columns: repeat(4, 1fr);
+  max-width: 1400px;
+  }
+  
+  .contenedor h2 {
+    font-size: 3rem;
+  }
+  
+  .activity-logo {
+    height: 150px;
+  }
+  
+  .activity-card h3 {
+    font-size: 1.4rem;
+    min-height: 50px;
+  }
+  
+  .activity-description p {
+    font-size: 1.2rem;
+  }
+  
+  .speaker-image {
+    width: 60px;
+    height: 60px;
+    margin-right: 15px;
+  }
+  
+  .speaker-name {
+    font-size: 1.15rem;
+  }
+  
+  .modal {
+    max-width: 1000px;
+  }
+  
+  .modal-container {
+    flex-direction: row;
+  }
+  
+  .modal-content {
+    flex: 3;
+    padding: 30px;
+  }
+  
+  /* En pantallas más grandes, el botón vuelve a su posición original */
+  .modal-content .modal-button {
+    display: block;
+    margin-top: 20px;
+  }
+
+  .modal-speaker .modal-button {
+    display: none;
+  }
+  
+  .modal-speaker {
+    flex: 2;
+    border-top: none;
+    border-left: 1px solid #eaeaea;
+    border-radius: 0 10px 10px 0;
+    padding: 30px;
+  }
+  
+  .modal h3 {
+    font-size: 1.85rem;
+    padding-bottom: 15px;
+  }
+  
+  .modal h3::after {
+    width: 80px;
+    height: 3px;
+  }
+  
+  .modal-description p, .modal-description li {
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+  }
+  
+  .modal-speaker-image {
+    width: 120px;
+    height: 120px;
+    margin-bottom: 20px;
+  }
+  
+  .modal-speaker h4 {
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+  }
+  
+  .speaker-bio {
+    font-size: 1rem;
+  }
+  
+  .speaker-institution {
+    font-size: 1rem;
+  }
+  
+  .modal-button {
+    padding: 12px 25px;
+    font-size: 1.4rem;
+  }
+}
+
+@media screen and (min-width: 2560px) {
+  .activities-container {
+  max-width: 1500px;
+  }
+  
+  .contenedor{
+    margin-top: 12rem;
+  }
+}

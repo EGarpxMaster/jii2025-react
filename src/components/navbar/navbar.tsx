@@ -36,7 +36,7 @@ const Navbar = () => {
   return (
     <nav className="navbar" id="mainNav" style={{ transform: navbarTransform }}>
       <div className="navbar-logo">
-        <a href="index.html">
+        <a href="/">
           <img src="/assets/images/LogoUnificado_Blanco.png" alt="Logotipo de la Jornada de Ingeniería Industrial" />
         </a>
       </div>
@@ -51,6 +51,21 @@ const Navbar = () => {
       </button>
 
       <div className={`menu ${isMenuOpen ? 'show' : ''}`} id="mainMenu">
+        <div className="nav-item">
+          <a href='/'>
+            <svg
+              viewBox="0 0 24 24"
+              width="1.5em"
+              height="1.5em"
+              fill="currentColor"
+              className="text-white text-xl leading-none"
+              aria-hidden="true"
+            >
+              <path d="M12 3.172 3 10v10h6v-6h6v6h6V10l-9-6.828z" />
+            </svg>
+          </a>
+        </div>
+
         <div className="nav-item dropdown">
           <a 
             href="#" 
