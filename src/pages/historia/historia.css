@@ -1,0 +1,103 @@
+/* historia.css */
+.historia-container {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  scroll-behavior: smooth;
+}
+
+.historia-shadow-md {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.historia-shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.historia-hover-shadow-lg:hover {
+  box-shadow: 0 10px 15px -3px rgba(27, 28, 57, 0.1), 0 4px 6px -2px rgba(27, 28, 57, 0.05);
+}
+
+.historia-transition-all {
+  transition: all 0.3s ease-in-out;
+}
+
+.historia-transition-transform {
+  transition: transform 0.3s ease-in-out;
+}
+
+.historia-transition-colors {
+  transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+}
+
+.historia-card {
+  transition: all 0.3s ease;
+}
+
+.historia-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Asegurar que las imágenes se muestren correctamente */
+.historia-img-cover {
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Efectos de hover para las tarjetas */
+.historia-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Pattern de fondo */
+.historia-pattern-grid {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='rgb(0 212 212 / 0.05)'%3e%3cpath d='M0 .5H31.5V32'/%3e%3c/svg%3e");
+}
+
+/* Efecto de desenfoque de vidrio */
+.historia-backdrop-blur {
+  backdrop-filter: blur(10px);
+}
+
+/* Ajustes responsivos */
+@media (max-width: 768px) {
+  .historia-stats-container {
+    padding: 1rem;
+  }
+  
+  .historia-stats-item {
+    margin-bottom: 1.5rem;
+  }
+  
+  .historia-testimonial-card {
+    margin-bottom: 1.5rem;
+  }
+}
+
+/* Animaciones suaves */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.historia-animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* Mejoras de accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+  .historia-transition-all,
+  .historia-transition-transform,
+  .historia-transition-colors,
+  .historia-card {
+    transition: none;
+  }
+  
+  .historia-container {
+    scroll-behavior: auto;
+  }
+}
