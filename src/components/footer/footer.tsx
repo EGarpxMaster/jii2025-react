@@ -69,7 +69,7 @@ function Footer() {
         </div>
         
         <div className="footer-copyright">
-          <p>© {currentYear} <a href="#/">EGarpx Company</a> - Todos los derechos reservados</p>
+          <p>© {currentYear} <a href="#/">TechnoWards Company</a> - Todos los derechos reservados</p>
         </div>
       </div>
     </footer>
