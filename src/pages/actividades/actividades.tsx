@@ -353,20 +353,19 @@ function useModalControls(isOpen: boolean, onClose: () => void) {
 }
 
 // Componente Modal mejorado
-function Modal({
-  open,
-  title,
-  children,
-  onClose,
-  speakers,
-}: {
-  open: boolean;
-  title: string;
-  children: React.ReactNode;
-  onClose: () => void;
-  speakers: Speaker[];
-}) {
+function Modal({ open, title, children, onClose, speakers }) {
   useModalControls(open, onClose);
+  
+  // Efecto para manejar el foco dentro del modal
+  useEffect(() => {
+    if (open) {
+      // Enfocar el modal cuando se abre
+      const modalElement = document.querySelector('.actividades-modal-content');
+      if (modalElement) {
+        (modalElement as HTMLElement).focus();
+      }
+    }
+  }, [open]);
 
   if (!open) return null;
   
@@ -405,6 +404,7 @@ function Modal({
                       src={speaker.image}
                       alt={`Imagen de ${speaker.name}`}
                       className="actividades-modal-speaker-image"
+                      loading="lazy"
                     />
                     <h5 className="actividades-modal-speaker-name">{speaker.name}</h5>
                     {speaker.institution && (
@@ -543,8 +543,11 @@ function ActivitiesSection({
 }
 
 // Componente principal - CORREGIDO
+// actividades.tsx - Componente principal actualizado
 export default function Activities() {
   const [openId, setOpenId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   const conferences = useMemo(
     () => activitiesData.filter((a) => a.kind === "conference"),
@@ -561,9 +564,89 @@ export default function Activities() {
     [openId]
   );
 
+  // Simular carga de datos
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+    
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Efecto para la barra de progreso de scroll
+  useEffect(() => {
+    const updateScrollProgress = () => {
+      const scrollPx = document.documentElement.scrollTop;
+      const winHeightPx = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (scrollPx / winHeightPx) * 100;
+      setScrollProgress(scrolled);
+    };
+
+    window.addEventListener('scroll', updateScrollProgress);
+    return () => window.removeEventListener('scroll', updateScrollProgress);
+  }, []);
+
+  // Componente Skeleton
+  const SkeletonCard = () => (
+    <div className="activity-card">
+      <div className="activity-header">
+        <div className="activity-logo skeleton"></div>
+        <span className={`activity-badge skeleton`}></span>
+      </div>
+      <div className="skeleton-text" style={{height: '24px', margin: '1rem'}}></div>
+      <div className="activity-description">
+        <div className="skeleton-text" style={{height: '16px', marginBottom: '0.5rem'}}></div>
+        <div className="skeleton-text" style={{height: '16px', width: '80%'}}></div>
+      </div>
+      <div className="speaker-info">
+        <div className="speaker-single">
+          <div className="speaker-image skeleton"></div>
+          <span className="speaker-name skeleton-text" style={{width: '120px', height: '16px'}}></span>
+        </div>
+      </div>
+    </div>
+  );
+
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (!element) return;
+    
+    const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+    const offsetPosition = elementPosition - 80; // Ajustar para el header fijo
+    
+    const startPosition = window.pageYOffset;
+    const distance = offsetPosition - startPosition;
+    const duration = 800;
+    let startTime: number | null = null;
+    
+    function animation(currentTime: number) {
+      if (startTime === null) startTime = currentTime;
+      const timeElapsed = currentTime - startTime;
+      const run = easeInOutQuad(timeElapsed, startPosition, distance, duration);
+      window.scrollTo(0, run);
+      if (timeElapsed < duration) requestAnimationFrame(animation);
+    }
+    
+    // Función de easing para animación suave
+    function easeInOutQuad(t: number, b: number, c: number, d: number): number {
+      t /= d/2;
+      if (t < 1) return c/2*t*t + b;
+      t--;
+      return -c/2 * (t*(t-2) - 1) + b;
+    }
+    
+    requestAnimationFrame(animation);
+  };
+
   return (
     <div className="actividades-container">
-      {/* Hero Section - CORREGIDO */}
+      {/* Barra de progreso de scroll */}
+      <div 
+        className="scroll-progress-bar" 
+        style={{ '--scroll-progress': `${scrollProgress}%` } as React.CSSProperties}
+      />
+      
+      {/* Hero Section */}
       <section className="actividades-hero">
         <div className="container">
           <h1>Actividades Académicas</h1>
@@ -572,33 +655,79 @@ export default function Activities() {
             que tenemos preparados para ti en esta jornada de ingeniería industrial.
           </p>
           <div className="actividades-hero-buttons">
-            <a href="#conferencias1" className="actividades-hero-btn-primary">
+            <button 
+              onClick={() => scrollToSection('conferencias')} 
+              className="actividades-hero-btn-primary"
+            >
               Ver Conferencias
-            </a>
-            <a href="#workshops1" className="actividades-hero-btn-secondary">
+            </button>
+            <button 
+              onClick={() => scrollToSection('workshops')} 
+              className="actividades-hero-btn-secondary"
+            >
               Ver Workshops
-            </a>
+            </button>
           </div>
         </div>
       </section>
 
-      {/* Sección de Conferencias - CORREGIDA */}
-      <ActivitiesSection
-        id="conferencias1"
-        title="Conferencias Magistrales"
-        items={conferences}
-        onOpen={setOpenId}
-      />
+      {/* Sección de Conferencias */}
+      <section id="conferencias" className="actividades-section">
+        <div className="container">
+          <div className="actividades-section-header">
+            <h2 className="actividades-section-title">Conferencias Magistrales</h2>
+            <p className="actividades-section-description">
+              Sesiones magistrales con expertos en diferentes áreas de la ingeniería industrial
+            </p>
+          </div>
+          
+          <div className="activities-container">
+            {isLoading ? (
+              Array.from({ length: 4 }).map((_, index) => (
+                <SkeletonCard key={index} />
+              ))
+            ) : (
+              conferences.map((activity) => (
+                <ActivityCard 
+                  key={activity.id} 
+                  activity={activity} 
+                  onOpen={() => setOpenId(activity.id)} 
+                />
+              ))
+            )}
+          </div>
+        </div>
+      </section>
 
-      {/* Sección de Workshops - CORREGIDA */}
-      <ActivitiesSection 
-        id="workshops1"
-        title="Workshops Especializados" 
-        items={workshops} 
-        onOpen={setOpenId} 
-      />
+      {/* Sección de Workshops */}
+      <section id="workshops" className="actividades-section">
+        <div className="container">
+          <div className="actividades-section-header">
+            <h2 className="actividades-section-title">Workshops Especializados</h2>
+            <p className="actividades-section-description">
+              Talleres prácticos para desarrollar habilidades específicas en el ámbito industrial
+            </p>
+          </div>
+          
+          <div className="activities-container">
+            {isLoading ? (
+              Array.from({ length: 4 }).map((_, index) => (
+                <SkeletonCard key={index} />
+              ))
+            ) : (
+              workshops.map((activity) => (
+                <ActivityCard 
+                  key={activity.id} 
+                  activity={activity} 
+                  onOpen={() => setOpenId(activity.id)} 
+                />
+              ))
+            )}
+          </div>
+        </div>
+      </section>
 
-      {/* Modal - CORREGIDO */}
+      {/* Modal */}
       {current && (
         <Modal 
           open={!!current} 
