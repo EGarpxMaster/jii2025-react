@@ -351,35 +351,56 @@ function useModalControls(isOpen: boolean, onClose: () => void) {
     };
   }, [isOpen, onClose]);
 }
+// Tipa las props del modal
+type ModalProps = {
+  open: boolean;
+  title: string;
+  children: React.ReactNode;
+  onClose: () => void;
+  speakers?: Speaker[]; // opcional
+};
 
-// Componente Modal mejorado
-function Modal({ open, title, children, onClose, speakers }) {
+// Componente Modal mejorado (reemplaza tu Modal por este)
+function Modal({
+  open,
+  title,
+  children,
+  onClose,
+  speakers = [],
+}: ModalProps) {
   useModalControls(open, onClose);
-  
-  // Efecto para manejar el foco dentro del modal
+
+  const contentRef = React.useRef<HTMLDivElement>(null);
+
+  // Enfocar el contenedor del modal al abrir
   useEffect(() => {
-    if (open) {
-      // Enfocar el modal cuando se abre
-      const modalElement = document.querySelector('.actividades-modal-content');
-      if (modalElement) {
-        (modalElement as HTMLElement).focus();
-      }
+    if (open && contentRef.current) {
+      contentRef.current.focus();
     }
   }, [open]);
 
   if (!open) return null;
-  
+
   return (
     <div className="actividades-modal">
-      <div 
-        className="actividades-modal-backdrop" 
+      <div
+        className="actividades-modal-backdrop"
         onClick={onClose}
       />
-      
-      <div className="actividades-modal-content">
+
+      <div
+        className="actividades-modal-content"
+        ref={contentRef}
+        tabIndex={-1} // necesario para poder recibir foco
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="actividades-modal-title"
+      >
         <div className="actividades-modal-header">
-          <h3 className="actividades-modal-title">{title}</h3>
-          {/* Botón de cerrar restaurado en la posición correcta */}
+          <h3 id="actividades-modal-title" className="actividades-modal-title">
+            {title}
+          </h3>
+
           <button
             onClick={onClose}
             className="actividades-modal-close"
@@ -388,38 +409,42 @@ function Modal({ open, title, children, onClose, speakers }) {
             &times;
           </button>
         </div>
-        
+
         <div className="actividades-modal-body">
           <div className="actividades-modal-grid">
-            <div className="actividades-modal-main">
-              {children}
-            </div>
-            
-            <div className="actividades-modal-sidebar">
-              <h4>Ponente(s)</h4>
-              <div className="actividades-modal-speakers">
-                {speakers.map((speaker) => (
-                  <div key={speaker.name} className="actividades-modal-speaker">
-                    <img
-                      src={speaker.image}
-                      alt={`Imagen de ${speaker.name}`}
-                      className="actividades-modal-speaker-image"
-                      loading="lazy"
-                    />
-                    <h5 className="actividades-modal-speaker-name">{speaker.name}</h5>
-                    {speaker.institution && (
-                      <p className="actividades-modal-speaker-institution">{speaker.institution}</p>
-                    )}
-                    {speaker.bio && (
-                      <p className="actividades-modal-speaker-bio">{speaker.bio}</p>
-                    )}
-                  </div>
-                ))}
+            <div className="actividades-modal-main">{children}</div>
+
+            {speakers.length > 0 && (
+              <div className="actividades-modal-sidebar">
+                <h4>Ponente(s)</h4>
+                <div className="actividades-modal-speakers">
+                  {speakers.map((speaker) => (
+                    <div key={speaker.name} className="actividades-modal-speaker">
+                      {speaker.image && (
+                        <img
+                          src={speaker.image}
+                          alt={`Imagen de ${speaker.name}`}
+                          className="actividades-modal-speaker-image"
+                          loading="lazy"
+                        />
+                      )}
+                      <h5 className="actividades-modal-speaker-name">{speaker.name}</h5>
+                      {speaker.institution && (
+                        <p className="actividades-modal-speaker-institution">
+                          {speaker.institution}
+                        </p>
+                      )}
+                      {speaker.bio && (
+                        <p className="actividades-modal-speaker-bio">{speaker.bio}</p>
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
-        
+
         <div className="actividades-modal-footer">
           <button onClick={onClose} className="actividades-modal-close">
             Cerrar
