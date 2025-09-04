@@ -1,4 +1,22 @@
+import React, { useState, useEffect } from "react";
+
 export default function Historia() {
+  // Estado para la barra de progreso
+  const [scrollProgress, setScrollProgress] = useState(0);
+  
+  // Efecto para la barra de progreso de scroll
+  useEffect(() => {
+    const updateScrollProgress = () => {
+      const scrollPx = document.documentElement.scrollTop;
+      const winHeightPx = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (scrollPx / winHeightPx) * 100;
+      setScrollProgress(scrolled);
+    };
+
+    window.addEventListener('scroll', updateScrollProgress);
+    return () => window.removeEventListener('scroll', updateScrollProgress);
+  }, []);
+
   const jornadas = [
     {
       año: "2024",
@@ -53,6 +71,12 @@ export default function Historia() {
 
   return (
     <div className="w-full historia-container">
+      {/* Barra de progreso de scroll */}
+      <div 
+        className="scroll-progress-bar" 
+        style={{ '--scroll-progress': `${scrollProgress}%` } as React.CSSProperties}
+      ></div>
+      
       <main className="w-full mt-[100px] md:mt-[90px]">
         {/* Hero Section */}
         <section className="text-white body-font bg-gradient-to-r from-[#1b1c39] to-[#2a2b4a] py-16 relative overflow-hidden">
@@ -96,10 +120,10 @@ export default function Historia() {
         </section>
 
         {/* Jornadas Section */}
-        <section className="text-gray-700 body-font overflow-hidden bg-white">
+        <section className="text-gray-700 body-font overflow-hidden bg-white pb-5">
           <div className="container px-5 py-12 mx-auto">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold title-font text-gray-900 mb-4">Ediciones Anteriores</h2>
+              <h2 className="text-3xl font-bold title-font text-gray-900 mb-4 pt-5">Ediciones Anteriores</h2>
               <div className="flex mt-2 justify-center">
                 <div className="w-16 h-1 rounded-full bg-[#00d4d4] inline-flex"></div>
               </div>
@@ -147,60 +171,6 @@ export default function Historia() {
                   </div>
                 </div>
               ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Stats Section */}
-        <section className="text-gray-700 body-font bg-gradient-to-r from-[#1b1c39] to-[#2a2b4a] py-16">
-          <div className="container px-5 py-12 mx-auto">
-            <div className="flex flex-col text-center w-full mb-12">
-              <h2 className="text-3xl font-bold title-font mb-4 text-white">En Números</h2>
-              <div className="flex mt-2 justify-center">
-                <div className="w-16 h-1 rounded-full bg-[#00d4d4] inline-flex"></div>
-              </div>
-            </div>
-            <div className="flex flex-wrap -m-4 text-center">
-              <div className="p-4 md:w-1/4 sm:w-1/2 w-full">
-                <div className="border-2 border-gray-200 border-opacity-60 px-4 py-6 rounded-lg transform hover:scale-105 transition-transform">
-                  <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="text-[#00d4d4] w-12 h-12 mb-3 inline-block" viewBox="0 0 24 24">
-                    <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path>
-                    <circle cx="9" cy="7" r="4"></circle>
-                    <path d="M23 21v-2a4 4 0 00-3-3.87m-4-12a4 4 0 010 7.75"></path>
-                  </svg>
-                  <h2 className="title-font font-medium text-3xl text-white">750+</h2>
-                  <p className="leading-relaxed text-gray-300">Participantes</p>
-                </div>
-              </div>
-              <div className="p-4 md:w-1/4 sm:w-1/2 w-full">
-                <div className="border-2 border-gray-200 border-opacity-60 px-4 py-6 rounded-lg transform hover:scale-105 transition-transform">
-                  <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="text-[#00d4d4] w-12 h-12 mb-3 inline-block" viewBox="0 0 24 24">
-                    <path d="M3 18v-6a9 9 0 01118 0v6"></path>
-                    <path d="M21 19a2 2 0 01-2 2h-1a2 2 0 01-2-2v-3a2 2 0 012-2h3zM3 19a2 2 0 002 2h1a2 2 0 002-2v-3a2 2 0 00-2-2H3z"></path>
-                  </svg>
-                  <h2 className="title-font font-medium text-3xl text-white">35+</h2>
-                  <p className="leading-relaxed text-gray-300">Conferencias</p>
-                </div>
-              </div>
-              <div className="p-4 md:w-1/4 sm:w-1/2 w-full">
-                <div className="border-2 border-gray-200 border-opacity-60 px-4 py-6 rounded-lg transform hover:scale-105 transition-transform">
-                  <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="text-[#00d4d4] w-12 h-12 mb-3 inline-block" viewBox="0 0 24 24">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                  </svg>
-                  <h2 className="title-font font-medium text-3xl text-white">20+</h2>
-                  <p className="leading-relaxed text-gray-300">Empresas</p>
-                </div>
-              </div>
-              <div className="p-4 md:w-1/4 sm:w-1/2 w-full">
-                <div className="border-2 border-gray-200 border-opacity-60 px-4 py-6 rounded-lg transform hover:scale-105 transition-transform">
-                  <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="text-[#00d4d4] w-12 h-12 mb-3 inline-block" viewBox="0 0 24 24">
-                    <circle cx="12" cy="5" r="3"></circle>
-                    <path d="M12 22V8M5 12H2a10 10 0 0020 0h-3"></path>
-                  </svg>
-                  <h2 className="title-font font-medium text-3xl text-white">15+</h2>
-                  <p className="leading-relaxed text-gray-300">Talleres</p>
-                </div>
-              </div>
             </div>
           </div>
         </section>
