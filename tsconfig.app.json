@@ -23,5 +23,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src"]
+  "include": ["src", "server/db.js", "server/registro.routes.js", "server/server.js", "server/validate.js"]
 }
