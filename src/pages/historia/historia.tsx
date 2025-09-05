@@ -77,7 +77,7 @@ export default function Historia() {
         style={{ '--scroll-progress': `${scrollProgress}%` } as React.CSSProperties}
       ></div>
       
-      <main className="w-full mt-[100px] md:mt-[90px]">
+      <main className="w-full mt-[0px] md:mt-[90px]">
         {/* Hero Section */}
         <section className="text-white body-font bg-gradient-to-r from-[#1b1c39] to-[#2a2b4a] py-16 relative overflow-hidden">
           <div className="absolute inset-0 opacity-10">

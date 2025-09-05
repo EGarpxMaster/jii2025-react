@@ -670,7 +670,7 @@ export default function Activities() {
         className="scroll-progress-bar" 
         style={{ '--scroll-progress': `${scrollProgress}%` } as React.CSSProperties}
       />
-      
+      <main className="w-full mt-[-80px] md:mt-[20px]">
       {/* Hero Section */}
       <section className="actividades-hero">
         <div className="container">
@@ -751,6 +751,7 @@ export default function Activities() {
           </div>
         </div>
       </section>
+    </main>
 
       {/* Modal */}
       {current && (
@@ -788,5 +789,6 @@ export default function Activities() {
         </Modal>
       )}
     </div>
+    
   );
 }
