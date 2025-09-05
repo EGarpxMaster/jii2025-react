@@ -6,6 +6,7 @@ import Actividades from './pages/actividades/actividades';
 import Concurso from './pages/concurso/concurso';
 import Constancias from './pages/constancias';
 import Registro from './pages/registro';
+import AsistenciaPage from './pages/asistencia';
 import Aliados from './pages/aliados/aliados';
 import Navbar from "./components/navbar/navbar";
 import Footer from './components/footer/footer';
@@ -24,6 +25,7 @@ function App() {
             <Route path="/constancias" element={<Constancias />} /> {/* Ruta a la página 'Constancias' */}
             <Route path="/aliados" element={<Aliados />} /> {/* Ruta a la página 'Aliados' */}
             <Route path="/registro" element={<Registro />} /> {/* Ruta a la página 'Registro' */}
+            <Route path="/asistencia" element={<AsistenciaPage />} /> {/* Ruta a la página 'Asistencia' */}
           </Routes>
       </BrowserRouter>
       <Footer />

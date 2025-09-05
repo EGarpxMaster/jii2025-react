@@ -53,12 +53,12 @@ const RegistroParticipanteForm: React.FC = () => {
 
   const placeholders = useMemo(
     () => ({
-      apellidoPaterno: "Ej. Jiménez",
-      apellidoMaterno: "Ej. Vázquez",
-      primerNombre: "Ej. Orbelin",
-      segundoNombre: "Opcional",
-      email: "ejemplo@correo.com",
-      telefono: "10 dígitos (solo números)",
+      apellidoPaterno: "Apellido paterno",
+      apellidoMaterno: "Apellido materno",
+      primerNombre: "Primer nombre",
+      segundoNombre: "Segundo nombre",
+      email: "Correo electrónico",
+      telefono: "Teléfono",
     }),
     []
   );
