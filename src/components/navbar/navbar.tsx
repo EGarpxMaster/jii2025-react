@@ -9,7 +9,6 @@ import {
   faPeopleGroup,
 } from "@fortawesome/free-solid-svg-icons";
 import "./navbar.css";
-
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
@@ -69,7 +68,28 @@ const Navbar = () => {
       document.body.style.overflow = "";
     };
   }, [isMenuOpen]);
+// Agregar este useEffect después de los existentes
+useEffect(() => {
+  const handleClickOutside = (event: MouseEvent) => {
+    if (openDropdown === "nuestraJornada") {
+      const dropdown = document.getElementById('submenu-nuestra-jornada');
+      const button = document.querySelector('.dropdown-header');
+      
+      if (dropdown && 
+          button && 
+          !dropdown.contains(event.target as Node) &&
+          !button.contains(event.target as Node)) {
+        setOpenDropdown(null);
+      }
+    }
+  };
 
+  document.addEventListener('mousedown', handleClickOutside);
+  
+  return () => {
+    document.removeEventListener('mousedown', handleClickOutside);
+  };
+}, [openDropdown]);
   // resaltar link activo sin React Router (simple por pathname)
   const isActive = (href: string) =>
     typeof window !== "undefined" && window.location?.pathname === href;
@@ -112,23 +132,34 @@ const Navbar = () => {
                 aria-expanded={openDropdown === "nuestraJornada"}
                 aria-controls="submenu-nuestra-jornada"
                 onClick={() => toggleDropdown("nuestraJornada")}
-              >
-                <span>Nuestra Jornada</span>
-                <FontAwesomeIcon icon={faChevronDown} className="dropdown-icon" />
-              </button>
-
-              <div
-                id="submenu-nuestra-jornada"
-                className={`dropdown-content ${openDropdown === "nuestraJornada" ? "show" : ""}`}
-                role="menu"
-                tabIndex={-1}
-                onBlur={(e) => {
-                  // cierra si el foco sale del contenedor
-                  if (!e.currentTarget.contains(e.relatedTarget as Node)) {
-                    setOpenDropdown(null);
-                  }
+                onMouseEnter={(e) => {
+                  // Prevenir que se abra con hover
+                  e.stopPropagation();
                 }}
               >
+                <span>Nuestra Jornada</span>
+                <FontAwesomeIcon 
+                  icon={faChevronDown} 
+                  className={`dropdown-icon ${openDropdown === "nuestraJornada" ? "rotated" : ""}`}
+                />
+              </button>
+                  <div
+                  id="submenu-nuestra-jornada"
+                  className={`dropdown-content ${openDropdown === "nuestraJornada" ? "show" : ""}`}
+                  role="menu"
+                  tabIndex={-1}
+                  onBlur={(e) => {
+                    if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+                      setOpenDropdown(null);
+                    }
+                  }}
+                  onMouseLeave={() => {
+                    // Cerrar el dropdown cuando el mouse sale (opcional)
+                    if (openDropdown === "nuestraJornada") {
+                      setOpenDropdown(null);
+                    }
+                  }}
+                >
                 <a href="#acerca" className="dropdown-item" onClick={closeNavbar} role="menuitem">
                   Acerca de
                 </a>

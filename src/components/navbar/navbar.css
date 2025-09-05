@@ -68,7 +68,7 @@ body, html {
   align-items: center;
   z-index: 1002;
   flex-shrink: 0;
-  padding: 0 1.5rem; /* Separación añadida */
+  padding: 0 1rem; /* Separación añadida */
 }
 
 .navbar-logo img, .navbar-logo2 img {
@@ -97,6 +97,7 @@ body, html {
   border-radius: 4px;
   color: white;
   z-index: 1002;
+  margin: 0;
 }
 
 .hamburger-box {
@@ -162,10 +163,9 @@ body, html {
   right: 0;
   bottom: 0;
   flex-direction: column;
-  padding: 5rem 2rem 2rem;
+  padding: 5rem 1.5rem 2rem; /* Reducir padding lateral */
   align-items: stretch;
   z-index: 1001;
-  overflow-y: auto;
   transform: translateX(-100%);
   transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
@@ -181,24 +181,30 @@ body, html {
   from { opacity: 0; }
   to { opacity: 1; }
 }
+  .nav-item {
+    margin-bottom: 0.5rem;
+    position: relative;
+    display: flex;
+    align-items: center; /* Centrado vertical añadido */
+    height: 60%; /* Altura completa para alineación */
+  }
 
-.nav-item {
-  margin-bottom: 0.5rem;
-}
-
-.nav-link {
-  color: white;
-  text-decoration: none;
-  font-size: 1.2rem;
-  font-weight: 500;
-  padding: 1rem;
-  display: flex;
-  align-items: center;
-  border-radius: 6px;
-  transition: background-color var(--transition-speed);
-  position: relative;
-  overflow: hidden;
-}
+  .nav-link {
+    color: white;
+    text-decoration: none;
+    font-size: 1.1rem; /* Tamaño más apropiado para móvil */
+    font-weight: 500;
+    padding: 0.8rem 1rem; /* Padding reducido */
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Alinear a la izquierda */
+    border-radius: 6px;
+    transition: background-color var(--transition-speed);
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    text-align: left;
+  }
 
 .nav-link::after {
   content: '';
@@ -236,17 +242,20 @@ body, html {
   position: relative;
   overflow: hidden;
   color: var(--primary-color);
-  padding: 0.8rem 1.5rem;
+  padding: 0.7rem 1.5rem;
   border-radius: 50px;
   font-weight: 700;
-  justify-content: center;
-  margin-top: 1rem;
+  margin-top: 0.5rem;
   transition: all var(--transition-speed);
   display: flex;
   align-items: center;
-  height: fit-content;
+  justify-content: center;
+  width: auto;
+  align-self: center;
+  min-width: 120px;
 }
 
+  
 .btn-registro::before {
   content: '';
   position: absolute;
@@ -273,8 +282,11 @@ body, html {
   color: white;
   border: 0;
   text-align: left;
-  padding: 1rem;
+  padding: 0.8rem 1rem;
   border-radius: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .dropdown-header:hover,
@@ -298,7 +310,8 @@ body, html {
   transition: height 0.3s ease;
   background-color: rgba(0, 0, 0, 0.1);
   border-radius: 0 0 6px 6px;
-  margin: 0 0.5rem;
+  margin: 0;
+  width: 100%;
 }
 
 .dropdown-content.show {
@@ -308,10 +321,11 @@ body, html {
 
 .dropdown-item {
   color: white;
-  font-size: 1.1rem;
-  padding: 0.8rem 1.5rem 0.8rem 2.5rem;
+  font-size: 1rem;
+  padding: 0.7rem 1rem 0.7rem 2rem;
   text-decoration: none;
   display: block;
+  width: 100%;
   transition: background-color 0.3s;
 }
 
@@ -337,6 +351,9 @@ body, html {
 
 /* =============== MEDIA QUERIES - TABLET =============== */
 @media (min-width: 768px) {
+  .menu{
+    padding: 4rem 1rem 2rem;
+  }
   .navbar-container {
     padding: 0 1.5rem;
   }
@@ -351,7 +368,31 @@ body, html {
   }
   
   .nav-link {
-    font-size: 1.1rem;
+    font-size: 1rem;
+    padding: 0.7rem 0.8rem;
+    border-left: 3px solid transparent;
+  }
+    .nav-link.is-active {
+    border-left-color: var(--secondary-color);
+    background-color: rgba(0, 212, 212, 0.1);
+  }
+  
+  .dropdown-header {
+    padding: 0.7rem 0.8rem;
+  }
+  
+  .dropdown-item {
+    padding: 0.6rem 0.8rem 0.6rem 2rem;
+    font-size: 0.95rem;
+  }
+  
+  /* Asegurar que los elementos no se salgan de la pantalla */
+  .navbar-container {
+    padding: 0 0.5rem;
+  }
+  
+  .nav-links-container {
+    justify-content: flex-end; /* Alinear el botón de menú a la derecha */
   }
 }
 
@@ -376,17 +417,8 @@ body, html {
     flex-direction: row;
     background-color: transparent;
     padding: 0;
-    overflow-y: visible;
     gap: 1rem;
     transform: none;
-    align-items: center; /* Centrado vertical añadido */
-    height: 100%; /* Altura completa para alineación */
-  }
-
-  .nav-item {
-    margin-bottom: 0;
-    position: relative;
-    display: flex;
     align-items: center; /* Centrado vertical añadido */
     height: 100%; /* Altura completa para alineación */
   }
@@ -402,15 +434,7 @@ body, html {
   .home-icon {
     display: none;
   }
-  
-  .btn-registro {
-    margin-top: 0;
-    margin-left: 0.5rem;
-    padding: 0.6rem 1.5rem;
-    height: auto;
-    display: flex;
-    align-items: center; /* Centrado vertical añadido */
-  }
+
 
   /* Dropdown para desktop */
   .dropdown-content {
@@ -429,12 +453,13 @@ body, html {
     border-radius: 0 0 8px 8px;
     padding: 0.5rem 0;
     margin: 0;
+    z-index: 1002;
   }
-
-  .dropdown:hover .dropdown-content {
-    visibility: visible;
-    opacity: 1;
-    transform: translateY(0);
+  
+  .dropdown-content.show {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
   }
 
   .dropdown-item {
@@ -444,19 +469,14 @@ body, html {
     position: relative;
     padding-left: 1.2rem;
   }
-  
-  .dropdown-item::before {
-    content: '';
-    position: absolute;
-    left: 0.5rem;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 5px;
-    height: 5px;
-    background-color: var(--secondary-color);
-    border-radius: 50%;
-    opacity: 0;
-    transition: opacity 0.3s ease;
+
+  .dropdown-icon {
+  font-size: 0.8rem;
+  transition: transform 0.3s;
+  }
+
+  .dropdown-icon.rotated {
+  transform: rotate(180deg);
   }
   
   .dropdown-item:hover::before {
@@ -468,23 +488,15 @@ body, html {
     transform: rotate(0);
   }
   
-  .dropdown:hover .dropdown-icon {
-    transform: rotate(180deg);
-  }
-  
   .dropdown-header {
     display: flex;
     align-items: center;
     gap: .35rem;
     padding: 1rem 1.2rem;
     cursor: pointer;
-    height: 100%; /* Altura completa para alineación */
-  }
-
-  .dropdown {
-    height: 100%; /* Altura completa para alineación */
-    display: flex;
-    align-items: center; /* Centrado vertical añadido */
+    height: 60%;
+    border: none;
+    background: none;
   }
 }
 
