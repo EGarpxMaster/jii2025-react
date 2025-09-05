@@ -3,6 +3,9 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { z } from "zod";
 import mysql from "mysql2";
+import path from "path";
+import fs from "fs";
+import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
 
 dotenv.config();
 
@@ -34,6 +37,9 @@ app.use(
     credentials: true,
   })
 );
+
+// Servir archivos estáticos (para las constancias generadas)
+app.use('/constancias', express.static(path.join(process.cwd(), 'src/uploads')));
 
 // Esquemas de validación (Zod)
 const RegistroSchema = z.object({
@@ -122,6 +128,26 @@ const getAsistenciasByEmail = (email: string): Promise<any[]> => {
   });
 };
 
+const getAsistenciasWithConferencias = (email: string): Promise<any[]> => {
+  return new Promise((resolve, reject) => {
+    const query = `
+      SELECT c.titulo, c.ponente, c.fecha, c.lugar, a.creado as fechaAsistencia
+      FROM asistencias a
+      INNER JOIN participantes p ON a.participante_id = p.id
+      INNER JOIN conferencias c ON a.conferencia_id = c.id
+      WHERE p.email = ?
+      ORDER BY c.fecha ASC`;
+    
+    db.query(query, [email], (err, results: any[]) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(results);
+      }
+    });
+  });
+};
+
 const checkAsistenciaExists = (participanteId: number, conferenciaId: number): Promise<boolean> => {
   return new Promise((resolve, reject) => {
     const query = "SELECT COUNT(*) as count FROM asistencias WHERE participante_id = ? AND conferencia_id = ?";
@@ -134,6 +160,46 @@ const checkAsistenciaExists = (participanteId: number, conferenciaId: number): P
     });
   });
 };
+
+// Función para generar PDF de constancia
+async function generarConstanciaPDF(participante: any, asistencias: any[]): Promise<Buffer> {
+  try {
+    // Cargar la plantilla PDF
+    const templatePath = path.join(process.cwd(), 'src/templates/constancia-template.pdf');
+    const templateBytes = fs.readFileSync(templatePath);
+    
+    // Cargar el documento PDF
+    const pdfDoc = await PDFDocument.load(templateBytes);
+    const pages = pdfDoc.getPages();
+    const firstPage = pages[0];
+    
+    // Obtener dimensiones de la página
+    const { width, height } = firstPage.getSize();
+    
+    // Configurar fuente
+    const font = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+    
+    // Nombre completo del participante
+    const nombreCompleto = `${participante.primerNombre} ${participante.segundoNombre || ""} ${participante.apellidoPaterno} ${participante.apellidoMaterno}`.trim().toUpperCase();
+    
+    // Escribir SOLO el nombre en el PDF (ajusta las coordenadas según tu plantilla)
+    firstPage.drawText(nombreCompleto, {
+      x: width / 2 - (nombreCompleto.length * 8.5), // Centrado aproximado
+      y: height * 0.515, // Ajusta según tu plantilla - COORDENADA Y PRINCIPAL
+      size: 30,
+      font: font,
+      color: rgb(27/255, 28/255, 57/255),
+    });
+    
+    // Serializar el PDF
+    const pdfBytes = await pdfDoc.save();
+    return Buffer.from(pdfBytes);
+    
+  } catch (error) {
+    console.error("Error generando PDF:", error);
+    throw new Error("Error al generar la constancia PDF");
+  }
+}
 
 // === RUTAS EXISTENTES ===
 
@@ -223,7 +289,7 @@ app.post("/api/registro", async (req, res) => {
   }
 });
 
-// === NUEVAS RUTAS PARA ASISTENCIA ===
+// === RUTAS PARA ASISTENCIA ===
 
 // Obtener participante por email
 app.get("/api/participante", async (req, res) => {
@@ -295,26 +361,22 @@ app.post("/api/asistencias", async (req, res) => {
 
     const { email, conferenciaId } = parsed.data;
 
-    // Verificar que el participante existe
     const participante = await getParticipantByEmail(email);
     if (!participante) {
       return res.status(404).json({ error: "Participante no encontrado" });
     }
 
-    // Verificar que la conferencia existe
     const conferencias = await getAllConferencias();
     const conferencia = conferencias.find(c => c.id === conferenciaId);
     if (!conferencia) {
       return res.status(404).json({ error: "Conferencia no encontrada" });
     }
 
-    // Verificar si ya existe la asistencia
     const yaExiste = await checkAsistenciaExists(participante.id, conferenciaId);
     if (yaExiste) {
       return res.status(409).json({ error: "Ya se registró asistencia para esta conferencia" });
     }
 
-    // Insertar nueva asistencia
     const insertQuery = `
       INSERT INTO asistencias (participante_id, conferencia_id, creado, modo)
       VALUES (?, ?, NOW(), 'self')`;
@@ -346,11 +408,78 @@ app.post("/api/asistencias", async (req, res) => {
   }
 });
 
+// === RUTAS PARA CONSTANCIAS ===
+
+// Verificar si un participante puede obtener constancia
+app.get("/api/constancia/verificar", async (req, res) => {
+  const { email } = req.query;
+
+  if (!email || typeof email !== "string") {
+    return res.status(400).json({ error: "Email requerido" });
+  }
+
+  try {
+    const participante = await getParticipantByEmail(email);
+    if (!participante) {
+      return res.status(404).json({ error: "Participante no encontrado" });
+    }
+
+    const asistencias = await getAsistenciasWithConferencias(email);
+    
+    return res.json({
+      participante,
+      asistencias,
+      puedeObtenerConstancia: asistencias.length > 0
+    });
+
+  } catch (error) {
+    console.error("Error verificando constancia:", error);
+    return res.status(500).json({ error: "Error interno del servidor" });
+  }
+});
+
+// Generar y descargar constancia
+app.get("/api/constancia/generar", async (req, res) => {
+  const { email } = req.query;
+
+  if (!email || typeof email !== "string") {
+    return res.status(400).json({ error: "Email requerido" });
+  }
+
+  try {
+    const participante = await getParticipantByEmail(email);
+    if (!participante) {
+      return res.status(404).json({ error: "Participante no encontrado" });
+    }
+
+    const asistencias = await getAsistenciasWithConferencias(email);
+    if (asistencias.length === 0) {
+      return res.status(400).json({ error: "No tienes asistencias registradas" });
+    }
+
+    // Generar PDF
+    const pdfBuffer = await generarConstanciaPDF(participante, asistencias);
+    
+    // Configurar headers para descarga
+    const nombreArchivo = `constancia-${participante.primerNombre}-${participante.apellidoPaterno}.pdf`;
+    
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="${nombreArchivo}"`);
+    res.setHeader('Content-Length', pdfBuffer.length);
+    
+    return res.send(pdfBuffer);
+
+  } catch (error) {
+    console.error("Error generando constancia:", error);
+    return res.status(500).json({ error: "Error generando constancia" });
+  }
+});
+
 // === RUTAS GENERALES ===
 
 // Ruta de prueba
 app.get("/", (req, res) => {
-  res.json({ message: "API de registro y asistencia funcionando correctamente" });
+  res.json({ message: "API de registro, asistencia y constancias funcionando correctamente" });
 });
 
 // Manejo de rutas no encontradas
