@@ -7,16 +7,18 @@ import {
   faAward,
   faAddressCard,
   faPeopleGroup,
+  faHome,
 } from "@fortawesome/free-solid-svg-icons";
 import "./navbar.css";
+
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [navbarHidden, setNavbarHidden] = useState(false);
 
-  // refs para scroll y rAF
-  const lastScrollTopRef = useRef(0);
-  const tickingRef = useRef(false);
+  // refs para scroll
+  const lastScrollY = useRef(0);
+  const ticking = useRef(false);
 
   const closeNavbar = useCallback(() => {
     setIsMenuOpen(false);
@@ -28,18 +30,27 @@ const Navbar = () => {
     setOpenDropdown((prev) => (prev === dropdownId ? null : dropdownId));
   };
 
-  // Scroll (optimizado con rAF)
+  // Scroll handling - CORREGIDO
   const handleScroll = useCallback(() => {
-    const work = () => {
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      const goingDown = scrollTop > lastScrollTopRef.current;
-      setNavbarHidden(goingDown && scrollTop > 150);
-      lastScrollTopRef.current = Math.max(scrollTop, 0);
-      tickingRef.current = false;
-    };
-    if (!tickingRef.current) {
-      tickingRef.current = true;
-      requestAnimationFrame(work);
+    const currentScrollY = window.scrollY;
+
+    if (!ticking.current) {
+      ticking.current = true;
+      requestAnimationFrame(() => {
+        // Determinar dirección del scroll
+        const scrollingDown = currentScrollY > lastScrollY.current;
+        const scrollingUp = currentScrollY < lastScrollY.current;
+
+        // Ocultar navbar al bajar, mostrar al subir
+        if (scrollingDown && currentScrollY > 100) {
+          setNavbarHidden(true);
+        } else if (scrollingUp) {
+          setNavbarHidden(false);
+        }
+
+        lastScrollY.current = currentScrollY;
+        ticking.current = false;
+      });
     }
   }, []);
 
@@ -48,83 +59,113 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [handleScroll]);
 
-  // Cerrar con Escape + devolver foco al botón
+  // Cerrar con Escape
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        setIsMenuOpen(false);
-        setOpenDropdown(null);
+        closeNavbar();
         (document.querySelector(".menu-toggle") as HTMLButtonElement | null)?.focus();
       }
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, []);
+  }, [closeNavbar]);
 
   // Bloquear scroll del body cuando el menú móvil está abierto
   useEffect(() => {
-    document.body.style.overflow = isMenuOpen ? "hidden" : "";
+    if (isMenuOpen) {
+      document.body.style.overflow = "hidden";
+      document.body.style.position = "fixed";
+      document.body.style.width = "100%";
+    } else {
+      document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.width = "";
+    }
+    
     return () => {
       document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.width = "";
     };
   }, [isMenuOpen]);
-// Agregar este useEffect después de los existentes
-useEffect(() => {
-  const handleClickOutside = (event: MouseEvent) => {
-    if (openDropdown === "nuestraJornada") {
-      const dropdown = document.getElementById('submenu-nuestra-jornada');
-      const button = document.querySelector('.dropdown-header');
-      
-      if (dropdown && 
-          button && 
-          !dropdown.contains(event.target as Node) &&
-          !button.contains(event.target as Node)) {
-        setOpenDropdown(null);
-      }
-    }
-  };
 
-  document.addEventListener('mousedown', handleClickOutside);
-  
-  return () => {
-    document.removeEventListener('mousedown', handleClickOutside);
-  };
-}, [openDropdown]);
-  // resaltar link activo sin React Router (simple por pathname)
+  // Cerrar dropdown al hacer click fuera
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (openDropdown === "nuestraJornada") {
+        const dropdown = document.getElementById('submenu-nuestra-jornada');
+        const button = document.querySelector('.dropdown-header');
+        
+        if (dropdown && 
+            button && 
+            !dropdown.contains(event.target as Node) &&
+            !button.contains(event.target as Node)) {
+          setOpenDropdown(null);
+        }
+      }
+    };
+
+    if (openDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [openDropdown]);
+
+  // resaltar link activo
   const isActive = (href: string) =>
     typeof window !== "undefined" && window.location?.pathname === href;
 
   return (
     <nav className={`navbar ${navbarHidden ? "navbar-hidden" : ""}`} id="mainNav">
-      <div className="navbar-container" role="navigation" aria-label="Principal">
-        {/* Logo izquierdo */}
-        <div className="navbar-logo">
-          <a href="/" aria-label="Ir a inicio">
-            <img
-              src="/assets/images/LogoUnificado_Blanco.png"
-              alt="Logotipo de la Jornada de Ingeniería Industrial"
-            />
-          </a>
-        </div>
-
-        {/* Contenedor central para los enlaces */}
-        <div className="nav-links-container">
-          {/* Toggle móvil */}
-          <button
-            className="menu-toggle"
-            aria-label={isMenuOpen ? "Cerrar menú de navegación" : "Abrir menú de navegación"}
-            aria-controls="mainMenu"
-            aria-expanded={isMenuOpen}
-            onClick={() => setIsMenuOpen((v) => !v)}
-          >
-            <span className="hamburger-box">
-              <span className="hamburger-inner" />
-            </span>
-            <span className="menu-text">Menú</span>
-          </button>
+          <div className="navbar-container" role="navigation" aria-label="Principal">
+      {/* Logo izquierdo */}
+      <div className="navbar-logo">
+        <a href="/" aria-label="Ir a inicio">
+          <img
+            src="/assets/images/LogoUnificado_Blanco.png"
+            alt="Logotipo de la Jornada de Ingeniería Industrial"
+          />
+        </a>
+      </div>
+      <div className="nav-links-container">
+        {/* Toggle móvil */}
+        <button
+          className="menu-toggle"
+          aria-label={isMenuOpen ? "Cerrar menú de navegación" : "Abrir menú de navegación"}
+          aria-controls="mainMenu"
+          aria-expanded={isMenuOpen}
+          onClick={() => setIsMenuOpen((v) => !v)}
+        >
+          <span className="hamburger-box">
+            <span className="hamburger-inner" />
+          </span>
+          <span className="menu-text">Menú</span>
+        </button>
 
           {/* Menú */}
-          <div className={`menu ${isMenuOpen ? "show" : ""}`} id="mainMenu">
+          <div 
+            className={`menu ${isMenuOpen ? "show" : ""}`} 
+            id="mainMenu"
+            onScroll={(e) => {
+              // Prevenir que el scroll se propague al body
+              e.stopPropagation();
+            }}
+          >
+            <div className="mobile-home-btn" id="init">
+              <a
+                href="/"
+                className="nav-link"
+                onClick={closeNavbar}
+                aria-label="Ir a inicio"
+              >
+                <FontAwesomeIcon icon={faHome} className="home-icon" />
+                Inicio
+              </a>
+            </div>
             {/* Dropdown: Nuestra Jornada */}
             <div className="nav-item dropdown">
               <button
