@@ -29,7 +29,7 @@ export default function Home() {
         style={{ '--scroll-progress': `${scrollProgress}%` } as React.CSSProperties}
       ></div>
       
-      <main className="w-full mt-[0px] md:mt-[90px]">
+      <main className="w-full">
         <Carousel />
         <Countdown />
         <EventInfo />
