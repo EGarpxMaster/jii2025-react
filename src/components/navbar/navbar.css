@@ -470,15 +470,7 @@ body {
   .home-icon {
     display: none;
   }
-  
-  /* Botón registro */
-  .btn-registro {
-    margin: 0 0 0 0.5rem;
-    padding: 0.6rem 1.5rem;
-    align-self: auto;
-    min-width: auto;
-  }
-  
+
   /* Ocultar botón inicio móvil */
   .mobile-home-btn {
     display: none;
@@ -572,6 +564,13 @@ body {
   .nav-link .btn-registro{
     padding: auto 1rem;
   }
+    /* Botón registro */
+  .btn-registro {
+    margin: 0;
+    padding: 0 .25rem;
+    align-self: auto;
+    min-width: auto;
+  }
 }
 
 @media(min-width:890px){
@@ -599,6 +598,15 @@ body {
   .nav-link .btn-registro{
     padding: auto 1rem;
   }
+    
+  /* Botón registro */
+  .btn-registro {
+    margin: 0;
+    padding: 0.6rem .7rem;
+    align-self: auto;
+    min-width: auto;
+  }
+  
 }
 @media(min-width:960px){
   .navbar-container {
@@ -625,6 +633,8 @@ body {
   .nav-link .btn-registro{
     padding: auto 1.1rem;
   }
+
+  
 }
 
 @media(min-width:1024px){
@@ -691,6 +701,13 @@ body {
     font-size: 1.1rem;
     padding: 1rem 1.5rem;
   }
+      /* Botón registro */
+  .btn-registro {
+    margin: 0;
+    padding: 1rem 2rem;
+    align-self: auto;
+    min-width: auto;
+  }
 }
 
 /* =============== MEDIA QUERIES - EXTRA LARGE DESKTOP (1920px) =============== */
@@ -727,4 +744,5 @@ body {
     max-width: 240px;
     max-height: 100px;
   }
+
 }

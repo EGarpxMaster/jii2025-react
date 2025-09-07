@@ -670,7 +670,7 @@ export default function Activities() {
         className="scroll-progress-bar" 
         style={{ '--scroll-progress': `${scrollProgress}%` } as React.CSSProperties}
       />
-      <main className="w-full mt-[-80px] md:mt-[20px]">
+      <main className="w-full mt-[-80px] md:mt-[-80px]">
       {/* Hero Section */}
       <section className="actividades-hero">
         <div className="container">
