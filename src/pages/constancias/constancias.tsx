@@ -129,20 +129,14 @@ const ConstanciaPage: React.FC = () => {
   return (
     <main className="w-full  md:pt--2">
       {/* Fondo degradado con patrón sutil (misma vibra que el sitio) */}
-      <div className="min-h-screen bg-white">
-        <div className="mx-auto max-w-4xl px-4 py-10">
-          {/* Card contenedora */}
-          <div className="rounded-2xl bg-white/95 shadow-xl ring-1 ring-black/5 p-6 sm:p-8">
-            {/* Header */}
-            <div className="text-center">
-              <h1 className="historia-h1 mb-4 mt-4 text-[#1b1c39]"> Obtener Constancia</h1>
-              <p className="historia-text-lg text-gray-600">
-                Ingresa tu correo registrado para verificar tu elegibilidad y descargar tu constancia.
-              </p>
-              <div className="mt-4 flex justify-center">
-                <div className="h-1 w-16 rounded-full bg-[#00d4d4]" />
-              </div>
-            </div>
+      <section className="registro-section">
+        <div className="registro-container">
+          <div className="registro-header">
+            <h2>Constancias</h2>
+            <p className="registro-description">
+              Ingresa tu correo registrado para verificar tu elegibilidad y descargar tu constancia.
+            </p>
+          </div>
 
             {/* Formulario */}
             <div className="mt-8">
@@ -157,7 +151,7 @@ const ConstanciaPage: React.FC = () => {
                 <input
                   id="emailLookup"
                   type="email"
-                  placeholder="tu.matricula@ucaribe.edu.mx"
+                  placeholder="Correo electrónico"
                   value={email}
                   onChange={(e) => setEmail(e.target.value.trim())}
                   className={[
@@ -303,17 +297,11 @@ const ConstanciaPage: React.FC = () => {
                 <button
                   onClick={descargarConstancia}
                   disabled={descargando}
-                  className={[
-                    "inline-flex items-center rounded-2xl px-6 py-3 text-white font-semibold shadow-lg transition",
-                    "bg-gradient-to-r from-emerald-500 to-emerald-600 hover:translate-y-[-2px]",
-                    "disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0"
-                  ].join(" ")}
+                  className="submit-button mb-4"
                 >
                   {descargando ? "⏳ Generando constancia…" : "📄 Descargar Constancia PDF"}
                 </button>
-                <p className="mt-2 text-xs text-gray-500">
-                  * El PDF incluye folio y verificación por QR (si tu backend lo emite).
-                </p>
+                
               </div>
             )}
 
@@ -334,8 +322,7 @@ const ConstanciaPage: React.FC = () => {
               </div>
             )}
           </div>
-        </div>
-      </div>
+      </section>
     </main>
   );
 };

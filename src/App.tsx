@@ -4,7 +4,7 @@ import Home from './pages/home';
 import Historia from './pages/historia/historia';
 import Actividades from './pages/actividades/actividades';
 import Concurso from './pages/concurso/concurso';
-import Constancias from './pages/constancias';
+import Constancias from './pages/constancias/constancias';
 import Registro from './pages/registro/registro';
 import AsistenciaPage from './pages/asistencia';
 import Aliados from './pages/aliados/aliados';
