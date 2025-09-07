@@ -200,6 +200,7 @@
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
   transition: left 0.7s ease;
 }
+
 #btn_galery:hover::before, #btn_CallToAction:hover::before{
   left: 100%;
 }

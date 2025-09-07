@@ -1,0 +1,417 @@
+/* registro.css - Versión Mejorada con Fondo Blanco */
+:root {
+  --primary-color: #1b1c39;
+  --secondary-color: #2563eb;
+  --accent-color: #f97316;
+  --light-accent: #3b82f6;
+  --text-color: #374151;
+  --light-text: #6b7280;
+  --light-bg: #f9fafb;
+  --card-bg: #ffffff;
+  --border-color: #e5e7eb;
+  --error-color: #ef4444;
+  --success-color: #10b981;
+  --warning-color: #f59e0b;
+  --font-family: "Inter", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --border-radius: 12px;
+  --shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  --shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --transition: all 0.3s ease;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #fafafa;
+  font-family: var(--font-family);
+  color: var(--text-color);
+  line-height: 1.6;
+}
+
+.registro-section {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+}
+
+.registro-container {
+  width: 100%;
+  max-width: 800px;
+  background: var(--card-bg);
+  border-radius: var(--border-radius);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05), 0 5px 10px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.registro-header {
+  background: linear-gradient(135deg, var(--secondary-color), var(--light-accent));
+  color: white;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.registro-header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  animation: rotate 15s linear infinite;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.registro-header h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  position: relative;
+  z-index: 1;
+  color: #f8fafc;
+}
+
+.registro-description {
+  opacity: 0.9;
+  line-height: 1.5;
+  position: relative;
+  z-index: 1;
+}
+
+.registro-form {
+  padding: 2.5rem 2rem;
+}
+
+.registro-fieldset {
+  border: none;
+  padding: 0;
+  margin: 0 0 2.5rem 0;
+}
+
+.registro-legend {
+  font-weight: 600;
+  color: var(--primary-color);
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+  padding: 0.75rem 1.25rem;
+  background: rgba(37, 99, 235, 0.08);
+  border-radius: var(--border-radius);
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.registro-legend::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 24px;
+  background: var(--secondary-color);
+  border-radius: 3px;
+  margin-right: 12px;
+}
+
+.registro-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .registro-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-label {
+  font-weight: 600;
+  color: var(--text-color);
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+}
+
+.form-label::after {
+  content: '*';
+  color: var(--error-color);
+  margin-left: 4px;
+}
+
+.form-label:has(+ .form-input:not([required]))::after {
+  content: '';
+}
+
+.form-input,
+.form-select {
+  padding: 0.875rem 1rem;
+  border: 2px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  transition: var(--transition);
+  font-family: var(--font-family);
+  background-color: #fafafa;
+}
+
+.form-input:focus,
+.form-select:focus {
+  outline: none;
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  background-color: #fff;
+}
+
+.form-input:hover,
+.form-select:hover {
+  border-color: #cbd5e1;
+  background-color: #f8fafc;
+}
+
+.input-error {
+  border-color: var(--error-color) !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15) !important;
+}
+
+.error-message {
+  color: var(--error-color);
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  display: block;
+  font-weight: 500;
+}
+
+.email-status {
+  margin-top: 0.5rem;
+}
+
+.email-status small {
+  font-size: 0.875rem;
+  display: block;
+  font-weight: 500;
+}
+
+.email-status .checking {
+  color: var(--warning-color);
+}
+
+.email-status .success {
+  color: var(--success-color);
+  font-weight: 600;
+}
+
+.email-status .error {
+  color: var(--error-color);
+}
+
+.form-submit {
+  margin-top: 2rem;
+  text-align: center;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color);
+
+}
+.submit-button {
+  background: linear-gradient(135deg, var(--secondary-color), var(--light-accent));
+  color: white;
+  border: none;
+  padding: 1rem 2.5rem;
+  border-radius: var(--border-radius);
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  min-width: 200px;
+  position: relative;
+  
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
+}
+
+.submit-button::before{
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.7s ease;
+}
+
+.submit-button:hover::before{
+  left: 100%;
+}
+
+.submit-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+}
+
+.submit-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.submit-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.submit-button.submitting {
+  background: linear-gradient(135deg, var(--secondary-color), var(--secondary-color));
+}
+
+.spinner {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s ease-in-out infinite;
+  margin-right: 0.5rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.success-message {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: var(--text-color);
+}
+
+.success-icon {
+  font-size: 4rem;
+  color: var(--success-color);
+  margin-bottom: 1.5rem;
+  animation: scaleIn 0.5s ease-out;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.success-message h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: var(--primary-color);
+  font-weight: 700;
+}
+
+.success-message p {
+  line-height: 1.6;
+  opacity: 0.8;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .registro-section {
+    padding: 1rem;
+  }
+  
+  .registro-header {
+    padding: 2rem 1.5rem;
+  }
+  
+  .registro-header h2 {
+    font-size: 1.5rem;
+  }
+  
+  .registro-form {
+    padding: 2rem 1.5rem;
+  }
+  
+  .submit-button {
+    width: 100%;
+  }
+  
+  .registro-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Focus styles for accessibility */
+.form-input:focus-visible,
+.form-select:focus-visible,
+.submit-button:focus-visible {
+  outline: 2px solid var(--secondary-color);
+  outline-offset: 2px;
+}
+
+/* Custom select arrow */
+.form-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 16px;
+}
+
+/* Mejoras para modo de alto contraste */
+@media (prefers-contrast: high) {
+  .form-input,
+  .form-select {
+    border-width: 2px;
+  }
+  
+  .submit-button {
+    border: 2px solid var(--secondary-color);
+  }
+}
+
+/* Mejoras para reducir movimiento */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .registro-header::before {
+    animation: none;
+  }
+}
