@@ -30,18 +30,16 @@ const Navbar = () => {
     setOpenDropdown((prev) => (prev === dropdownId ? null : dropdownId));
   };
 
-  // Scroll handling - CORREGIDO
+  // Scroll handling
   const handleScroll = useCallback(() => {
     const currentScrollY = window.scrollY;
 
     if (!ticking.current) {
       ticking.current = true;
       requestAnimationFrame(() => {
-        // Determinar dirección del scroll
         const scrollingDown = currentScrollY > lastScrollY.current;
         const scrollingUp = currentScrollY < lastScrollY.current;
 
-        // Ocultar navbar al bajar, mostrar al subir
         if (scrollingDown && currentScrollY > 100) {
           setNavbarHidden(true);
         } else if (scrollingUp) {
@@ -90,7 +88,7 @@ const Navbar = () => {
     };
   }, [isMenuOpen]);
 
-  // Cerrar dropdown al hacer click fuera
+  // Cerrar dropdown al hacer click fuera - RESTAURADO
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (openDropdown === "nuestraJornada") {
@@ -121,37 +119,36 @@ const Navbar = () => {
 
   return (
     <nav className={`navbar ${navbarHidden ? "navbar-hidden" : ""}`} id="mainNav">
-          <div className="navbar-container" role="navigation" aria-label="Principal">
-      {/* Logo izquierdo */}
-      <div className="navbar-logo">
-        <a href="/" aria-label="Ir a inicio">
-          <img
-            src="/assets/images/LogoUnificado_Blanco.png"
-            alt="Logotipo de la Jornada de Ingeniería Industrial"
-          />
-        </a>
-      </div>
-      <div className="nav-links-container">
-        {/* Toggle móvil */}
-        <button
-          className="menu-toggle"
-          aria-label={isMenuOpen ? "Cerrar menú de navegación" : "Abrir menú de navegación"}
-          aria-controls="mainMenu"
-          aria-expanded={isMenuOpen}
-          onClick={() => setIsMenuOpen((v) => !v)}
-        >
-          <span className="hamburger-box">
-            <span className="hamburger-inner" />
-          </span>
-          <span className="menu-text">Menú</span>
-        </button>
+      <div className="navbar-container" role="navigation" aria-label="Principal">
+        {/* Logo izquierdo */}
+        <div className="navbar-logo">
+          <a href="/" aria-label="Ir a inicio">
+            <img
+              src="/assets/images/LogoUnificado_Blanco.png"
+              alt="Logotipo de la Jornada de Ingeniería Industrial"
+            />
+          </a>
+        </div>
+        <div className="nav-links-container">
+          {/* Toggle móvil */}
+          <button
+            className="menu-toggle"
+            aria-label={isMenuOpen ? "Cerrar menú de navegación" : "Abrir menú de navegación"}
+            aria-controls="mainMenu"
+            aria-expanded={isMenuOpen}
+            onClick={() => setIsMenuOpen((v) => !v)}
+          >
+            <span className="hamburger-box">
+              <span className="hamburger-inner" />
+            </span>
+            <span className="menu-text">Menú</span>
+          </button>
 
           {/* Menú */}
           <div 
             className={`menu ${isMenuOpen ? "show" : ""}`} 
             id="mainMenu"
             onScroll={(e) => {
-              // Prevenir que el scroll se propague al body
               e.stopPropagation();
             }}
           >
@@ -166,6 +163,7 @@ const Navbar = () => {
                 Inicio
               </a>
             </div>
+            
             {/* Dropdown: Nuestra Jornada */}
             <div className="nav-item dropdown">
               <button
@@ -173,10 +171,6 @@ const Navbar = () => {
                 aria-expanded={openDropdown === "nuestraJornada"}
                 aria-controls="submenu-nuestra-jornada"
                 onClick={() => toggleDropdown("nuestraJornada")}
-                onMouseEnter={(e) => {
-                  // Prevenir que se abra con hover
-                  e.stopPropagation();
-                }}
               >
                 <span>Nuestra Jornada</span>
                 <FontAwesomeIcon 
@@ -184,23 +178,12 @@ const Navbar = () => {
                   className={`dropdown-icon ${openDropdown === "nuestraJornada" ? "rotated" : ""}`}
                 />
               </button>
-                  <div
-                  id="submenu-nuestra-jornada"
-                  className={`dropdown-content ${openDropdown === "nuestraJornada" ? "show" : ""}`}
-                  role="menu"
-                  tabIndex={-1}
-                  onBlur={(e) => {
-                    if (!e.currentTarget.contains(e.relatedTarget as Node)) {
-                      setOpenDropdown(null);
-                    }
-                  }}
-                  onMouseLeave={() => {
-                    // Cerrar el dropdown cuando el mouse sale (opcional)
-                    if (openDropdown === "nuestraJornada") {
-                      setOpenDropdown(null);
-                    }
-                  }}
-                >
+              <div
+                id="submenu-nuestra-jornada"
+                className={`dropdown-content ${openDropdown === "nuestraJornada" ? "show" : ""}`}
+                role="menu"
+                tabIndex={-1}
+              >
                 <a href="#acerca" className="dropdown-item" onClick={closeNavbar} role="menuitem">
                   Acerca de
                 </a>
