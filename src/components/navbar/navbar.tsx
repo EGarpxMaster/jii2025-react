@@ -260,7 +260,7 @@ const Navbar = () => {
             <div className="nav-item">
               <a
                 href="/registro"
-                className="nav-link btn-registro"
+                className="btn-registro"
                 onClick={closeNavbar}
               >
                 Registro

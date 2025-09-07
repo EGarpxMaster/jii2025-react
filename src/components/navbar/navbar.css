@@ -258,14 +258,14 @@ body {
   background: linear-gradient(135deg, var(--secondary-color), #00a8a8);
   position: relative;
   overflow: hidden;
-  color: var(--primary-color);
+  color: white;
   padding: 0.8rem 1.5rem;
-  border-radius: 50px;
+  border-radius: 15px;
   font-weight: 700;
   transition: all var(--transition-speed);
   display: flex;
   align-items: center;
-  height: auto;
+  height: 100%;
   margin: 1rem 0 0 0;
   justify-content: center;
   min-width: 120px;
@@ -547,6 +547,32 @@ body {
     transform: rotate(180deg);
   }
 }
+@media(min-width:780px){
+  .navbar-container {
+    padding: 0 .6rem;
+  }
+
+  .navbar-logo, .navbar-logo2 {
+    padding: 0 .8rem;
+    
+  }
+  
+  .navbar-logo img, .navbar-logo2 img {
+    max-width: 150px;
+    max-height: 60px;
+  }
+  .menu{
+    height: 115%;
+    width: auto;
+  }
+  .nav-link{
+    padding: 0;
+    font-size: 11px;
+  }
+  .nav-link .btn-registro{
+    padding: auto 1rem;
+  }
+}
 
 @media(min-width:890px){
   .navbar-container {
@@ -572,6 +598,82 @@ body {
   }
   .nav-link .btn-registro{
     padding: auto 1rem;
+  }
+}
+@media(min-width:960px){
+  .navbar-container {
+    padding: 0 1rem;
+  }
+
+  .navbar-logo, .navbar-logo2 {
+    padding: 0 1.2rem;
+    
+  }
+  
+  .navbar-logo img, .navbar-logo2 img {
+    max-width: 180px;
+    max-height: 60px;
+  }
+  .menu{
+    height: 115%;
+    width: auto;
+  }
+  .nav-link{
+    padding: 0;
+    font-size: 13px;
+  }
+  .nav-link .btn-registro{
+    padding: auto 1.1rem;
+  }
+}
+
+@media(min-width:1024px){
+  .navbar-container {
+    padding: 0 1.5rem;
+  }
+
+  .navbar-logo, .navbar-logo2 {
+    padding: 0 1.5rem;
+    
+  }
+  
+  .navbar-logo img, .navbar-logo2 img {
+    max-width: 200px;
+    max-height: 70px;
+  }
+  .menu{
+    height: 120%;
+    width: auto;
+  }
+  .nav-link{
+    padding: 0;
+    font-size: 14px;
+  }
+}
+@media(min-width:1200px){
+  .navbar-container {
+    padding: 0 2rem;
+  }
+
+  .navbar-logo, .navbar-logo2 {
+    padding: 0 2rem;
+    
+  }
+  
+  .navbar-logo img, .navbar-logo2 img {
+    max-width: 220px;
+    max-height: 70px;
+  }
+  .menu{
+    height: 120%;
+    width: auto;
+  }
+  .nav-link {
+    font-size: .8rem;
+    padding: 1rem .65rem;
+  }
+  .nav-link .btn-registro{
+    padding: auto 2.3rem;
   }
 }
 
