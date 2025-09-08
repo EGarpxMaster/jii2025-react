@@ -1,0 +1,23 @@
+/* Activities Styling - Mobile First Approach */
+:root {
+  --primary-color: #1b1c39;
+  --secondary-color: #1ECECA;
+  --text-color: #2d3e50;
+  --light-color: #f9f9f9;
+  --font-family: "Montserrat", sans-serif;
+  --transition-speed: 0.3s;
+}
+
+.headercard {
+    background-color: var(--primary-color);
+    color: white;
+    text-align: center;
+    font-family: var(--font-family);
+}
+
+/* Para forzar que el contenido fluya verticalmente por columnas */
+@media (min-width: 768px) {
+  .grid-cols-2 {
+    grid-auto-flow: row;
+  }
+}
