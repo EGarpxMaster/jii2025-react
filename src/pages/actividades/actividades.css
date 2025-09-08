@@ -1,827 +1,801 @@
-/* Activities Styling - Mobile First Approach */
+/* actividades.css - Versión Mejorada para Móviles y Speakers Múltiples */
 :root {
   --primary-color: #1b1c39;
-  --secondary-color: #1ECECA;
+  --secondary-color: #00d4d4;
   --text-color: #2d3e50;
   --light-color: #f9f9f9;
-  --font-family: "Montserrat", sans-serif;
+  --font-family: "Inter", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --transition-speed: 0.3s;
+  --border-radius: 12px;
+  --shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  --shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
-/* Base Styles (Mobile First) */
-.contenedor {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  width: 100%;
-  max-width: 100%;
-  margin: 5rem auto 0;
-  padding: 0 15px;
-  margin-bottom: 3rem;
-  margin-top: 8rem;
-}
-
-.contenedor h2 {
-  font-size: 2.2rem;
-  color: var(--primary-color);
-  margin-bottom: 1.5rem;
+/* Reset y estilos base */
+.actividades-container {
+  font-family: var(--font-family);
+  color: var(--text-color);
+  line-height: 1.6;
+  scroll-behavior: smooth;
+  padding-top: 5rem;
   position: relative;
 }
 
-.contenedor h2::after {
-  content: '';
-  position: absolute;
-  bottom: -8px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80px;
-  height: 3px;
-  background-color: var(--secondary-color);
+.actividades-container * {
+  box-sizing: border-box;
 }
 
+/* Contenedor principal */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Hero Section - Optimizado para móviles */
+.actividades-hero {
+  background: linear-gradient(135deg, var(--primary-color), #2a2b4a);
+  color: white;
+  padding: 2rem 1rem;
+  text-align: center;
+}
+
+.actividades-hero h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 1.2rem;
+  line-height: 1.3;
+}
+
+.actividades-hero p {
+  font-size: 1rem;
+  max-width: 100%;
+  margin: 0 auto 1.5rem;
+  line-height: 1.5;
+}
+
+.actividades-hero-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  align-items: center;
+}
+/* actividades.css - Añadí estos estilos adicionales */
+.actividades-hero-buttons button {
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+}
+
+.actividades-hero-buttons button:active {
+  transform: translateY(1px);
+}
+
+/* Mejorar la experiencia de scroll para las secciones */
+#conferencias, #workshops {
+  scroll-behavior: smooth;
+}
+.actividades-hero-btn-primary,
+.actividades-hero-btn-secondary {
+  display: block;
+  width: 100%;
+  max-width: 250px;
+  text-align: center;
+  padding: 0.8rem 1.2rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.actividades-hero-btn-primary {
+  background-color: var(--secondary-color);
+  color: white;
+}
+
+.actividades-hero-btn-primary:hover {
+  background-color: #00b4b4;
+  transform: translateY(-2px);
+}
+
+.actividades-hero-btn-primary::before, .actividades-hero-btn-secondary::before{
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.7s ease;
+}
+.actividades-hero-btn-primary:hover::before, .actividades-hero-btn-secondary:hover::before{
+  left: 100%;
+}
+
+.actividades-hero-btn-secondary {
+  border: 2px solid white;
+  color: white;
+  background-color: transparent;
+}
+
+.actividades-hero-btn-secondary:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+/* Secciones */
+.actividades-section {
+  padding: 2.5rem 0;
+  background-color: #f9fafb;
+}
+
+.actividades-section-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 0 0.5rem;
+}
+
+.actividades-section-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin-bottom: 1.8rem;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 2rem;
+}
+
+.actividades-section-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0.6rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4rem;
+  height: 0.25rem;
+  background-color: var(--secondary-color);
+  border-radius: 5px;
+}
+
+.actividades-section-description {
+  color: #2e3135;
+  max-width: 100%;
+  margin: 0 auto;
+  font-size: 1.2rem;
+  line-height: 1.5;
+  padding: 0 0.5rem;
+}
+
+/* Activities Grid - Optimizado para móviles */
 .activities-container {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 20px;
+  gap: 1.5rem;
   width: 100%;
-  max-width: 350px;
-  margin: 0 auto 3rem;
+  padding: 0 0.5rem;
 }
 
+/* Activity Card - Mejorado para móviles */
 .activity-card {
   background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  border-radius: var(--border-radius);
   overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: all var(--transition-speed) ease;
   cursor: pointer;
   display: flex;
   flex-direction: column;
   height: 100%;
+  box-shadow: var(--shadow);
+  border: 1px solid #e5e7eb;
+  -webkit-tap-highlight-color: transparent;
+  will-change: transform;
 }
 
 .activity-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12);
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-hover);
 }
 
 .activity-header {
-  padding-bottom: 8px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   position: relative;
+  overflow: hidden;
+}
+
+.activity-card:active {
+  transform: scale(0.98);
 }
 
 .activity-logo {
   width: 100%;
-  height: 160px;
+  height: 180px;
   object-fit: cover;
   transition: transform 0.5s ease;
 }
 
-.activity-card h3 {
-  font-size: 1.45rem;
-  color: var(--primary-color);
-  margin: 8px;
+.activity-card:hover .activity-logo {
+  transform: scale(1.05);
+}
+
+.activity-badge {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 10;
+  padding: 0.35rem 0.8rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
   font-weight: 600;
-  line-height: 1.3;
+}
+
+.activity-badge-conference {
+  background-color: var(--secondary-color);
+  color: white;
+}
+
+.activity-badge-workshop {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.activity-card h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  margin: 0;
+  padding: 1rem 1rem 0.5rem;
+  line-height: 1.4;
 }
 
 .activity-description {
-  padding: 0 15px;
+  padding: 0 1rem;
   flex-grow: 1;
 }
 
 .activity-description p {
-  font-size: 1.25rem;
-  line-height: 1.4;
+  font-size: 0.9rem;
+  line-height: 1.5;
   color: var(--text-color);
-  margin-bottom: 15px;
+  margin-bottom: 1rem;
 }
 
-.speaker-info {
+.actividades-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
   display: flex;
   align-items: center;
-  padding: 10px 15px;
-  background-color: #f5f5f5;
-  border-top: 1px solid #eaeaea;
+  justify-content: center;
+  padding: 0.5rem;
+  animation: modalFadeIn 0.3s ease-out;
+}
+
+.scroll-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(to right, var(--secondary-color) 0%, var(--secondary-color) var(--scroll-progress, 0%), transparent var(--scroll-progress, 0%), transparent 100%);
+  z-index: 1000;
+  transition: background 0.3s ease;
+}
+
+/* Speaker Info - Mejorado para móviles y múltiples speakers */
+.speaker-info {
+  padding: 1rem;
+  background: linear-gradient(to right, rgba(27, 28, 57, 0.03), rgba(42, 43, 74, 0.03));
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
   margin-top: auto;
 }
 
-.speaker-image {
-  width: 40px;
-  height: 40px;
-  border-radius: 100%;
-  object-fit: cover;
-  margin-right: 5px;
+/* Speaker único */
+.speaker-single {
+  display: flex;
+  align-items: center;
 }
 
-.speakers-image {
-  width: 40px;
-  height: 40px;
-  border-radius: 100%;
+.speaker-image {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
   object-fit: cover;
+  margin-right: 0.8rem;
+  border: 2px solid white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  flex-shrink: 0;
 }
 
 .speaker-name {
-  justify-content: start;
-  text-align: left;
   font-weight: 500;
   color: var(--primary-color);
+  font-size: 0.9rem;
   margin: 0;
-  font-size: 1.05rem;
-  
+  background: white;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
-.speakers-name {
-  font-weight: 500;
+/* Múltiples speakers - Mejorado */
+.speaker-multiple {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.speaker-multiple-title {
+  font-size: 0.9rem;
+  font-weight: 600;
   color: var(--primary-color);
-  margin: 0;
-  font-size: 1.05rem;
-  min-width: 100px;
-  display: flex; /* Si es un contenedor flexible */
+  margin: 0 0 0.2rem;
 }
 
-/* Modal styles - Mobile First */
-.modal {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+.speaker-multiple-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.speaker-multiple-item {
+  display: flex;
+  align-items: center;
+  background: white;
+  padding: 0.6rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.speaker-multiple-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 0.8rem;
+  border: 2px solid white;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+}
+
+.speaker-multiple-name {
+  font-size: 0.9rem;
+  color: var(--primary-color);
+  font-weight: 500;
+  margin: 0;
+}
+
+
+
+.actividades-modal-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+}
+
+.actividades-modal-content {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 100%;
+  max-height: 95vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
   background-color: white;
-  border-radius: 10px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-  width: 95%;
-  padding: 0;
-  box-sizing: border-box;
-  z-index: 9999;
-  transition: all 0.3s ease;
-  max-height: 90vh;
-  overflow-y: auto;
+  border-radius: 1rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.actividades-modal-content:focus {
+  outline: 2px solid var(--secondary-color);
+  outline-offset: 2px;
+}
+
+.actividades-modal-header {
+  padding: 1.2rem;
+  background: linear-gradient(to right, var(--primary-color), #2a2b4a);
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.actividades-hero-btn-primary:focus,
+.actividades-hero-btn-secondary:focus,
+.actividades-modal-close:focus {
+  outline: 2px solid var(--secondary-color);
+  outline-offset: 2px;
+}
+
+.actividades-modal-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin: 0;
+  padding-right: 1rem;
+  line-height: 1.4;
+}
+
+/* Botón de cerrar en el header */
+.actividades-modal-header .actividades-modal-close {
+  background: transparent;
   border: none;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  display: block;
 }
 
-.modal::backdrop {
-  background-color: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(2px);
+.actividades-modal-body {
+  overflow-y: auto;
+  flex: 1;
+  padding: 1.2rem;
 }
 
-.modal-container {
+.actividades-modal-grid {
   display: flex;
   flex-direction: column;
+  gap: 1.5rem;
 }
 
-.modal-content {
-  padding: 15px 10px;
+.actividades-modal-main {
+  max-width: none;
+  color: var(--text-color);
+}
+
+.actividades-modal-main p {
+  margin-bottom: 1rem;
+  line-height: 1.6;
+  font-size: 0.95rem;
+  color: #374151;
+}
+
+.actividades-modal-main ul, 
+.actividades-modal-main ol {
+  margin-bottom: 1rem;
+  padding-left: 1.2rem;
+}
+
+.actividades-modal-main li {
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+  font-size: 0.95rem;
+}
+
+.actividades-modal-main h5 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.actividades-modal-sidebar {
+  background-color: #f9fafb;
+  padding: 1.2rem;
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+}
+
+.actividades-modal-sidebar h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--secondary-color);
+}
+
+.actividades-modal-speakers {
   display: flex;
   flex-direction: column;
+  gap: 1.2rem;
 }
 
-.modal-speaker {
-  padding: 10px;
-  background-color: #f5f7fa;
+.actividades-modal-speaker {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  border-top: 1px solid #eaeaea;
-  border-radius: 0 0 10px 10px;
 }
 
-.modal h3 {
-  font-size: 1.5rem;
-  color: var(--primary-color);
-  margin: 0 0 15px;
-  text-align: center;
-  position: relative;
-  padding-bottom: 10px;
-}
-
-.modal h3::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60px;
-  height: 2px;
-  background-color: var(--secondary-color);
-}
-
-.modal-description {
-  margin-bottom: 20px;
-}
-
-.modal-description p, .modal-description li {
-  font-size: 1.35rem;
-  line-height: 1.5;
-  color: var(--text-color);
-  text-align: justify;
-}
-
-.modal-description ul, .modal-description ol {
-  padding-left: 15px;
-  margin-bottom: 15px;
-}
-
-.modal-speaker-image {
-  width: 80px;
-  height: 80px;
+.actividades-modal-speaker-image {
+  width: 5rem;
+  height: 5rem;
   border-radius: 50%;
   object-fit: cover;
-  margin-bottom: 15px;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+  border: 3px solid white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 0.75rem;
 }
 
-.modal-speaker h4 {
-  font-size: 1.2rem;
-  color: var(--primary-color);
-  margin: 0 0 8px;
-}
-
-.speaker-bio {
-  font-size: 1.15rem;
-  line-height: 1.4;
-  color: var(--text-color);
-  margin-bottom: 8px;
-}
-
-.speaker-institution {
-  font-size: 1.2rem;
+.actividades-modal-speaker-name {
   font-weight: 600;
   color: var(--primary-color);
-  margin-bottom: 15px; /* Añadido para dar espacio antes del botón en móviles */
+  margin: 0 0 0.4rem;
+  font-size: 1rem;
 }
 
-/* Button styling */
-.modal-button {
+.actividades-modal-speaker-institution {
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin: 0 0 0.5rem;
+}
+
+.actividades-modal-speaker-bio {
+  font-size: 0.85rem;
+  color: #4b5563;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.actividades-modal-footer {
+  padding: 1rem;
+  border-top: 1px solid #e5e7eb;
+  background-color: #f9fafb;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.actividades-modal-footer .actividades-modal-close {
   background-color: var(--primary-color);
   color: white;
-  border: none;
-  border-radius: 6px;
-  padding: 10px 20px;
-  font-size: 1.2rem;
+  padding: 0.6rem 1.5rem;
+  border-radius: 0.5rem;
   font-weight: 500;
+  border: none;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  align-self: center;
-  outline: none;
-  box-shadow: none;
+  transition: background-color 0.3s;
+  font-size: 0.95rem;
 }
 
-/* Para dispositivos móviles, el botón no se muestra en su ubicación original */
-.modal-content .modal-button {
-  display: none;
+.actividades-modal-footer .actividades-modal-close:hover {
+  background-color: #2a2b4a;
 }
 
-/* Para dispositivos móviles, mostramos el botón en la parte inferior del modal-speaker */
-.modal-speaker .modal-button {
-  display: block;
-  margin-top: 10px;
-}
-
-.modal-button:hover {
-  background-color: var(--secondary-color);
-  transform: scale(1.05);
-  outline: none;
-  box-shadow: none;
-}
-
-.modal-button:focus {
-  outline: none;
-  box-shadow: none;
-}
-
-@media screen and (min-width: 375px){
-  .contenedor h2{
-    font-size: 2.5rem;
-  }
-  .activity-card h3 {
-  font-size: 1.5rem;
-  color: var(--primary-color);
-  margin: 8px;
-  font-weight: 600;
-  line-height: 1.3;
-  }
-
-  .activity-description p {
-    font-size: 1.35rem;
-    line-height: 1.4;
-    color: var(--text-color);
-    margin-bottom: 15px;
+/* Responsive adjustments - Tabletas */
+@media (min-width: 640px) {
+  .actividades-hero {
+    padding: 3rem 1.5rem;
   }
   
-  .speaker-name {
-  font-size: 1.2rem;
-  }
-
-  .speakers-name {
-    font-size: 1.2rem;
-  }
-}
-
-@media screen and (min-width: 425px){
-  .contenedor h2{
-    font-size: 2.5rem;
-  }
-  .activity-card h3 {
-  font-size: 1.5rem;
-  color: var(--primary-color);
-  margin: 8px;
-  font-weight: 600;
-  line-height: 1.3;
-  }
-
-  .activity-description p {
-    font-size: 1.35rem;
-    line-height: 1.4;
-    color: var(--text-color);
-    margin-bottom: 15px;
+  .actividades-hero h1 {
+    font-size: 2.2rem;
   }
   
-  .speaker-name {
-  font-size: 1.2rem;
-  }
-
-  .speakers-name {
-    font-size: 1.2rem;
-  }
-  
-  .modal-speaker-image {
-  width: 100px;
-  height: 100px;
-  }
-  
-  .modal-speakers-image {
-  width: 100px;
-  height: 100px;
-  }
-
-  .modal-content h3 {
-  font-size: 1.75rem;
-  }
-  
-  .modal-content p {
-  font-size: 1.5rem;
-  }
-  
-  .modal-speaker h4 {
-  font-size: 1.4rem;
-  color: var(--primary-color);
-  margin: 0 0 8px;
-  }
-  
-  .speaker-bio {
-  font-size: 1.4rem;
-  }
-
-  .speaker-institution {
-    font-size: 1.3rem;
-  }
-}
-
-/* Tablet styles */
-@media screen and (min-width: 576px) {
-  .contenedor {
-    margin-top: 8rem;
-    padding: 0 20px;
-  }
-  
-  .contenedor h2 {
-    font-size: 2.5rem;
-    margin-bottom: 2rem;
-  }
-  
-  .contenedor h2::after {
-    width: 100px;
-    height: 3px;
-    bottom: -10px;
-  }
-  
-  .activities-container {
-    grid-template-columns: repeat(2, 1fr); /* Siempre 2 columnas en tablets */
-    max-width: 700px; /* Ajustado para 2 columnas */
-    gap: 25px;
-  }
-  
-  .activity-logo {
-    height: 130px;
-  }
-  
-  .activity-card h3 {
-    font-size: 1.23rem;
-    margin: 10px 15px;
-  }
-  
-  .activity-description p {
-    font-size: 1.15rem;
-    line-height: 1.5;
-  }
-  
-  .speaker-image {
-    width: 50px;
-    height: 50px;
-  }
-  
-  .speakers-image {
-    width: 50px;
-    height: 50px;
-  }
-  
-  .speaker-name {
-    font-size: 1rem;
-  }
-  
-  .speakers-name {
-    font-size: 1rem;
-  }
-  
-  .modal {
-    width: 90%;
-    max-width: 500px;
-  }
-  
-  .modal-content, .modal-speaker {
-    padding: 20px;
-  }
-  
-  .modal-content h3 {
-    font-size: 1.7rem;
-    margin-bottom: 20px;
-  }
-  
-  .modal-description p, .modal-description li {
-    font-size: 1.4rem;
-  }
-  
-  .modal-speaker-image {
-    width: 100px;
-    height: 100px;
-  }
-  
-  .modal-speaker h4 {
-    font-size: 1.4rem;
-  }
-  
-  .modal-speaker p {
-    font-size: 1.3rem;
-  }
-  
-  .speaker-institution {
-    font-size: 1.3rem;
-  }
-  
-  .modal-button {
-    font-size: 1.3rem;
-  }
-}
-
-/* Desktop styles */
-@media screen and (min-width: 768px) {
-  .contenedor {
-    margin-top: 9rem;
-    margin-bottom: 5rem;
-    max-width: 1200px;
-  }
-  
-  .contenedor h2 {
-    font-size: 3rem;
-    margin-bottom: 2.5rem;
-  }
-  
-  .activities-container {
-    grid-template-columns: repeat(2, 1fr); /* Mantiene 2 columnas para tablets más grandes */
-    gap: 30px;
-    margin-bottom: 4rem;
-  }
-  
-  .activity-logo {
-    height: 150px;
-  }
-  
-  .activity-card h3 {
-    font-size: 1.4rem;
-    min-height: 50px;
-  }
-  
-  .activity-description p {
-    font-size: 1.2rem;
-  }
-  
-  .speaker-image {
-    width: 50px;
-    height: 50px;
-    margin-right: 15px;
-  }
-  
-  .speaker-name {
-    font-size: 1.15rem;
-  }
-  
-  .speakers-name {
-    font-size: 1.15rem;
-  }
-  
-  .modal {
-    max-width: 800px;
-  }
-  
-  .modal-container {
-    flex-direction: row;
-  }
-  
-  .modal-content {
-    flex: 3;
-    padding: 20px;
-  }
-  
-  /* En pantallas más grandes, el botón vuelve a su posición original */
-  .modal-content .modal-button {
-    display: block;
-    margin-top: 20px;
-  }
-
-  .modal-speaker .modal-button {
-    display: none;
-  }
-  
-  .modal-speaker {
-    flex: 2;
-    border-top: none;
-    border-left: 1px solid #eaeaea;
-    border-radius: 0 10px 10px 0;
-    padding: 30px;
-  }
-  
-  .modal h3 {
-    font-size: 1.85rem;
-    padding-bottom: 15px;
-    margin: 0 1px 0 1px;
-  }
-  
-  .modal h3::after {
-    width: 80px;
-    height: 3px;
-  }
-  
-  .modal-description p{
-    margin-top: 10px;
-  }
-  .modal-description p, .modal-description li {
-    font-size: 1.4rem; 
-    margin-bottom: 15px;
-  }
-  
-  .modal-speaker-image {
-    width: 120px;
-    height: 120px;
-    margin-bottom: 20px;
-  }
-  
-  .modal-speaker h4 {
-    font-size: 1.4rem;
-    margin-bottom: 10px;
-  }
-  
-  .speaker-bio {
+  .actividades-hero p {
     font-size: 1.1rem;
+    max-width: 80%;
   }
   
-  .speaker-institution {
-    font-size: 1.1rem;
-  }
-  
-  .modal-button {
-    padding: 12px 25px;
-    font-size: 1.4rem;
-  }
-}
-
-/* Large desktop styles */
-@media screen and (min-width: 1024px) {
-  .activities-container {
-    grid-template-columns: repeat(3, 1fr); /* 4 columnas para pantallas grandes */
-    max-width: 1100px;
-  }
-  
-  .contenedor{
-    margin-top: 10rem;
-  }
-  
-  .contenedor h2 {
-    font-size: 3rem;
-  }
-  
-  .activity-logo {
-    height: 150px;
-  }
-  
-  .activity-card h3 {
-    font-size: 1.4rem;
-    min-height: 50px;
-  }
-  
-  .activity-description p {
-    font-size: 1.2rem;
-  }
-  
-  .speaker-image {
-    width: 60px;
-    height: 60px;
-    margin-right: 15px;
-  }
-  
-  .speaker-name {
-    font-size: 1.15rem;
-  }
-  
-  .modal {
-    max-width: 800px;
-  }
-  
-  .modal-container {
+  .actividades-hero-buttons {
     flex-direction: row;
+    justify-content: center;
   }
   
-  .modal-content {
-    flex: 3;
-    padding: 30px;
+  .actividades-hero-btn-primary,
+  .actividades-hero-btn-secondary {
+    width: auto;
+    min-width: 180px;
   }
   
-  /* En pantallas más grandes, el botón vuelve a su posición original */
-  .modal-content .modal-button {
-    display: block;
-    margin-top: 20px;
-  }
-
-  .modal-speaker .modal-button {
-    display: none;
+  .activities-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.8rem;
+    padding: 0 1rem;
   }
   
-  .modal-speaker {
-    flex: 2;
-    border-top: none;
-    border-left: 1px solid #eaeaea;
-    border-radius: 0 10px 10px 0;
-    padding: 30px;
+  .actividades-section-title {
+    font-size: 2rem;
   }
   
-  .modal h3 {
-    font-size: 1.85rem;
-    padding-bottom: 15px;
+  .actividades-modal {
+    padding: 1rem;
   }
   
-  .modal h3::after {
-    width: 80px;
-    height: 3px;
-  }
-  
-  .modal-description p, .modal-description li {
-    font-size: 1.4rem;
-    margin-bottom: 15px;
-  }
-  
-  .modal-speaker-image {
-    width: 120px;
-    height: 120px;
-    margin-bottom: 20px;
-  }
-  
-  .modal-speaker h4 {
-    font-size: 1.4rem;
-    margin-bottom: 10px;
-  }
-  
-  .speaker-bio {
-    font-size: 1rem;
-  }
-  
-  .speaker-institution {
-    font-size: 1rem;
-  }
-  
-  .modal-button {
-    padding: 12px 25px;
-    font-size: 1.4rem;
-  }
-}
-
-/* Large desktop styles */
-@media screen and (min-width: 1440px) {
-  .contenedor{
+  .actividades-modal-content {
     max-width: 90%;
   }
-  .activities-container {
-  grid-template-columns: repeat(4, 1fr);
-  max-width: 1400px;
+  
+  .actividades-modal-title {
+    font-size: 1.5rem;
   }
   
-  .contenedor h2 {
-    font-size: 3rem;
-  }
-  
-  .activity-logo {
-    height: 150px;
-  }
-  
-  .activity-card h3 {
-    font-size: 1.4rem;
-    min-height: 50px;
-  }
-  
-  .activity-description p {
-    font-size: 1.2rem;
-  }
-  
-  .speaker-image {
-    width: 60px;
-    height: 60px;
-    margin-right: 15px;
-  }
-  
-  .speaker-name {
-    font-size: 1.15rem;
-  }
-  
-  .modal {
-    max-width: 1000px;
-  }
-  
-  .modal-container {
+  .actividades-modal-grid {
     flex-direction: row;
   }
   
-  .modal-content {
-    flex: 3;
-    padding: 30px;
-  }
-  
-  /* En pantallas más grandes, el botón vuelve a su posición original */
-  .modal-content .modal-button {
-    display: block;
-    margin-top: 20px;
-  }
-
-  .modal-speaker .modal-button {
-    display: none;
-  }
-  
-  .modal-speaker {
+  .actividades-modal-main {
     flex: 2;
-    border-top: none;
-    border-left: 1px solid #eaeaea;
-    border-radius: 0 10px 10px 0;
-    padding: 30px;
   }
   
-  .modal h3 {
-    font-size: 1.85rem;
-    padding-bottom: 15px;
-  }
-  
-  .modal h3::after {
-    width: 80px;
-    height: 3px;
-  }
-  
-  .modal-description p, .modal-description li {
-    font-size: 1.4rem;
-    margin-bottom: 15px;
-  }
-  
-  .modal-speaker-image {
-    width: 120px;
-    height: 120px;
-    margin-bottom: 20px;
-  }
-  
-  .modal-speaker h4 {
-    font-size: 1.4rem;
-    margin-bottom: 10px;
-  }
-  
-  .speaker-bio {
-    font-size: 1rem;
-  }
-  
-  .speaker-institution {
-    font-size: 1rem;
-  }
-  
-  .modal-button {
-    padding: 12px 25px;
-    font-size: 1.4rem;
+  .actividades-modal-sidebar {
+    flex: 1;
   }
 }
 
-@media screen and (min-width: 2560px) {
-  .activities-container {
-  max-width: 1500px;
+/* Responsive adjustments - Desktop */
+@media (min-width: 1024px) {
+  .actividades-hero {
+    padding: 4rem 2rem;
   }
   
-  .contenedor{
-    margin-top: 12rem;
+  .actividades-hero h1 {
+    font-size: 2.5rem;
+  }
+  
+  .actividades-hero p {
+    font-size: 1.2rem;
+    max-width: 60%;
+  }
+  
+  .activities-container {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    padding: 0;
+  }
+  
+  .actividades-section {
+    padding: 3.5rem 0;
+  }
+  
+  .actividades-section-title {
+    font-size: 2.25rem;
+  }
+  
+  .actividades-modal-content {
+    max-width: 64rem;
+  }
+}
+
+/* Animation for modal */
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Custom scrollbar for modal */
+.actividades-modal-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.actividades-modal-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.actividades-modal-body::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.actividades-modal-body::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Focus styles for accessibility */
+.activity-card:focus {
+  outline: 2px solid var(--secondary-color);
+  outline-offset: 2px;
+}
+
+button:focus {
+  outline: 2px solid var(--secondary-color);
+  outline-offset: 2px;
+}
+
+/* IDs para la navegación por anclas */
+#conferencias,
+#workshops {
+  scroll-margin-top: 5rem;
+}
+
+/* Mejora para textos largos */
+.text-balance {
+  text-wrap: balance;
+}
+
+/* Mejoras de rendimiento para móviles */
+@media (prefers-reduced-motion: reduce) {
+  .activity-card,
+  .activity-logo,
+  .actividades-hero-btn-primary,
+  .actividades-hero-btn-secondary {
+    transition: none;
+  }
+}
+
+/* Clase para limitar líneas de texto */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* actividades.css - Añadir al final */
+.activity-logo {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* actividades.css - Añadir estilos para skeleton */
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  border-radius: var(--border-radius);
+}
+
+.skeleton-text {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  border-radius: 4px;
+  height: 1em;
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Mejorar el rendimiento en dispositivos con preferencia de reducción de movimiento */
+@media (prefers-reduced-motion: reduce) {
+  .activity-card,
+  .activity-logo,
+  .actividades-hero-btn-primary,
+  .actividades-hero-btn-secondary,
+  .scroll-progress-bar {
+    transition: none;
+    animation: none;
+  }
+  
+  .activity-card:hover {
+    transform: none;
+  }
+  
+  .activity-card:hover .activity-logo {
+    transform: none;
+  }
+}
+
+/* Mejorar la visualización en modo de alto contraste */
+@media (prefers-contrast: high) {
+  .activity-card {
+    border: 2px solid var(--primary-color);
+  }
+  
+  .actividades-hero-btn-secondary {
+    border: 3px solid white;
   }
 }

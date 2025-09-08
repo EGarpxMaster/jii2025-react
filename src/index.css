@@ -1,3 +1,454 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Mobile First - Base Styles for 320px */
+.form-section {
+  display: flex;
+  justify-content: center;
+  min-height: 60vh;
+  background-color: var(--light-color);
+}
+
+.form-container {
+  width: 100%;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px var(--shadow-color);
+  padding: 1.5rem;
+  margin-top: 8rem;
+  margin-bottom: 3rem;
+  transition: all var(--transition-speed);
+}
+
+.form-container:hover {
+  box-shadow: 0 8px 20px rgba(27, 28, 57, 0.15);
+  transform: translateY(-3px);
+}
+
+.form-container h2 {
+  color: var(--primary-color);
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  position: relative;
+}
+
+.form-container h2::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70px;
+  height: 3px;
+  background-color: var(--secondary-color);
+}
+
+.form-description {
+  text-align: justify;
+  color: var(--text-color);
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+}
+
+.form-group {
+  margin-bottom: 1.2rem;
+  position: relative;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: var(--text-color);
+  font-size: 0.9rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  transition: all var(--transition-speed);
+  font-family: inherit;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--secondary-color);
+  outline: none;
+  box-shadow: 0 0 6px rgba(30, 206, 202, 0.3);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+fieldset {
+  border: 1.5px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.2rem;
+}
+
+fieldset legend {
+  padding: 0 8px;
+  color: var(--text-color);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.form-group input[type="submit"] {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all var(--transition-speed);
+  padding: 12px;
+  font-size: 0.9rem;
+}
+
+.form-group input[type="submit"]:hover {
+  background-color: var(--secondary-color);
+  transform: translateY(-2px);
+  box-shadow: 0 3px 10px rgba(27, 28, 57, 0.2);
+}
+
+::placeholder {
+  color: #a0a0a0;
+  opacity: 1;
+}
+
+input:invalid,
+select:invalid,
+textarea:invalid {
+  border-color: #ff6b6b;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+.input-error {
+  animation: shake 0.5s ease-in-out;
+  border-color: #ff6b6b !important;
+}
+
+/* Media Query for 375px */
+@media (min-width: 375px) {
+  .form-section {
+    padding: 1.2rem;
+  }
+
+  .form-container {
+    padding: 1.7rem;
+  }
+
+  .form-container h2 {
+    font-size: 1.6rem;
+  }
+
+  .form-description {
+    font-size: 0.95rem;
+  }
+}
+
+/* Media Query for 425px */
+@media (min-width: 425px) {
+  .form-section {
+    padding: 1.5rem;
+  }
+
+  .form-container h2 {
+    font-size: 1.7rem;
+  }
+
+  .form-description {
+    font-size: 1.1rem;
+  }
+
+  .form-group label {
+    font-size: 1rem;
+  }
+
+  fieldset legend {
+    font-size: 1rem;
+  }
+}
+
+/* Media Query for 576px */
+@media (min-width: 576px) {
+  .form-section {
+    padding: 1.8rem;
+  }
+
+  .form-container h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1.7rem;
+  }
+
+  .form-container h2::after {
+    width: 80px;
+  }
+
+  .form-description {
+    font-size: 1.05rem;
+  }
+
+  .form-group label {
+    font-size: 1rem;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    padding: 11px;
+    font-size: 0.95rem;
+  }
+
+  fieldset {
+    padding: 1.2rem;
+  }
+
+  fieldset legend {
+    font-size: 1rem;
+  }
+}
+
+/* Media Query for 768px */
+@media (min-width: 768px) {
+  .form-section {
+    padding: 2rem;
+  }
+
+  .form-container {
+    padding: 2.5rem;
+    max-width: 700px;
+    margin-top: 8rem;
+    margin-bottom: 5rem;
+  }
+
+  .form-container h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .form-container h2::after {
+    width: 90px;
+    height: 3.5px;
+    bottom: -10px;
+  }
+
+  .form-description {
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-group label {
+    margin-bottom: 0.6rem;
+    font-size: 1.05rem;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    font-size: 1rem;
+    border-radius: 9px;
+  }
+
+  .form-group textarea {
+    min-height: 90px;
+  }
+
+  fieldset {
+    padding: 1.4rem;
+    border-radius: 9px;
+    margin-bottom: 1.5rem;
+  }
+
+  fieldset legend {
+    font-size: 1.05rem;
+    padding: 0 10px;
+  }
+
+  .form-group input[type="submit"] {
+    font-size: 0.95rem;
+    letter-spacing: 0.8px;
+  }
+}
+
+/* Media Query for 1024px */
+@media (min-width: 1024px) {
+  .form-container {
+    max-width: 800px;
+    margin-top: 10rem;
+    margin-bottom: 5.5rem;
+  }
+
+  .form-container h2 {
+    font-size: 2.2rem;
+  }
+
+  .form-container h2::after {
+    width: 100px;
+    height: 4px;
+  }
+
+  .form-description {
+    font-size: 1.15rem;
+  }
+
+  .form-group label {
+    font-size: 1.1rem;
+    margin-bottom: 0.7rem;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    padding: 12px;
+    font-size: 1rem;
+    border-radius: 10px;
+  }
+
+  .form-group textarea {
+    min-height: 100px;
+  }
+
+  fieldset {
+    padding: 0 1.5rem 0 0;
+    border-radius: 10px;
+  }
+
+  fieldset legend {
+    font-size: 1.1rem;
+  }
+
+  .form-group input[type="submit"] {
+    letter-spacing: 1px;
+  }
+}
+
+/* Media Query for 1200px */
+@media (min-width: 1200px) {
+  .form-container {
+    max-width: 900px;
+  }
+
+  .form-container h2 {
+    font-size: 2.25rem;
+  }
+
+  .form-description {
+    font-size: 1.2rem;
+  }
+}
+
+/* Media Query for 1440px */
+@media (min-width: 1440px) {
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    padding: 14px;
+  }
+
+  .form-group input[type="submit"] {
+    padding: 15px;
+  }
+}
+
+/* Media Query for 1920px */
+@media (min-width: 1920px) {
+
+  .form-container h2 {
+    font-size: 2.5rem;
+  }
+
+  .form-description {
+    font-size: 1.3rem;
+  }
+
+  .form-group label {
+    font-size: 1.2rem;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    font-size: 1.1rem;
+  }
+
+  fieldset legend {
+    font-size: 1.2rem;
+  }
+}
+
+/* Media Query for 2560px */
+@media (min-width: 2560px) {
+
+  .form-container h2 {
+    font-size: 2.8rem;
+  }
+
+  .form-container h2::after {
+    width: 120px;
+    height: 5px;
+  }
+
+  .form-description {
+    font-size: 1.4rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .form-group {
+    margin-bottom: 2rem;
+  }
+
+  .form-group label {
+    font-size: 1.3rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    padding: 16px;
+    font-size: 1.2rem;
+    border-radius: 12px;
+  }
+
+  .form-group textarea {
+    min-height: 120px;
+  }
+
+  fieldset {
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+  }
+
+  fieldset legend {
+    font-size: 1.3rem;
+    padding: 0 12px;
+  }
+
+  .form-group input[type="submit"] {
+    font-size: 1.2rem;
+    padding: 18px;
+  }
+}

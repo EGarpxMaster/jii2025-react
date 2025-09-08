@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import "./actividades.css"; // <-- coloca aquí el CSS que compartiste
+import "./actividades.css"; 
 
 // Tipos
 type Speaker = {
@@ -199,7 +199,7 @@ const activitiesData: Activity[] = [
     banner: "/assets/images/actividades/banners/W4.png",
     title: "Introducción a Rmarkdown",
     description:
-      "Generación de reportes científicos reproducibles utilizando R y Markdown.",
+      "Generación de reportes científicos reproducibles utilizando R và Markdown.",
     speakers: [
       {
         name: "Dr. Julio César Ramírez Pacheco",
@@ -351,130 +351,156 @@ function useModalControls(isOpen: boolean, onClose: () => void) {
     };
   }, [isOpen, onClose]);
 }
+// Tipa las props del modal
+type ModalProps = {
+  open: boolean;
+  title: string;
+  children: React.ReactNode;
+  onClose: () => void;
+  speakers?: Speaker[]; // opcional
+};
 
-// Componente Modal (Tailwind + accesible)
+// Componente Modal mejorado (reemplaza tu Modal por este)
 function Modal({
   open,
   title,
   children,
   onClose,
-}: {
-  open: boolean;
-  title: string;
-  children: React.ReactNode;
-  onClose: () => void;
-}) {
+  speakers = [],
+}: ModalProps) {
   useModalControls(open, onClose);
 
+  const contentRef = React.useRef<HTMLDivElement>(null);
+
+  // Enfocar el contenedor del modal al abrir
+  useEffect(() => {
+    if (open && contentRef.current) {
+      contentRef.current.focus();
+    }
+  }, [open]);
+
   if (!open) return null;
+
   return (
-    <div
-      aria-modal
-      role="dialog"
-      aria-label={title}
-      className="fixed inset-0 z-[999] flex items-center justify-center p-4"
-    >
-      {/* Backdrop */}
+    <div className="actividades-modal">
       <div
-        className="absolute inset-0 bg-black/60"
+        className="actividades-modal-backdrop"
         onClick={onClose}
       />
-      {/* Contenido */}
-      <div className="relative z-10 w-full max-w-5xl">
-        <div className="bg-white rounded-xl shadow-2xl overflow-hidden">
-          <div className="grid grid-cols-1 md:grid-cols-3">
-            <div className="md:col-span-2 p-6 text-left">
-              <h3 className="text-2xl font-semibold text-[var(--primary-color)] mb-3">
-                {title}
-              </h3>
-              {children}
-              <button
-                onClick={onClose}
-                className="mt-5 inline-flex items-center rounded-lg border border-transparent bg-[var(--secondary-color)] px-4 py-2 font-medium text-white transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2"
-              >
-                Cerrar
-              </button>
-            </div>
-            <div className="border-t md:border-t-0 md:border-l p-6 space-y-4 bg-[#fafafa] text-left">
-              {/* El slot de speaker se inyecta desde el padre */}
-              <div id="modal-speaker-slot" />
-            </div>
+
+      <div
+        className="actividades-modal-content"
+        ref={contentRef}
+        tabIndex={-1} // necesario para poder recibir foco
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="actividades-modal-title"
+      >
+        <div className="actividades-modal-header">
+          <h3 id="actividades-modal-title" className="actividades-modal-title">
+            {title}
+          </h3>
+
+          <button
+            onClick={onClose}
+            className="actividades-modal-close"
+            aria-label="Cerrar modal"
+          >
+            &times;
+          </button>
+        </div>
+
+        <div className="actividades-modal-body">
+          <div className="actividades-modal-grid">
+            <div className="actividades-modal-main">{children}</div>
+
+            {speakers.length > 0 && (
+              <div className="actividades-modal-sidebar">
+                <h4>Ponente(s)</h4>
+                <div className="actividades-modal-speakers">
+                  {speakers.map((speaker) => (
+                    <div key={speaker.name} className="actividades-modal-speaker">
+                      {speaker.image && (
+                        <img
+                          src={speaker.image}
+                          alt={`Imagen de ${speaker.name}`}
+                          className="actividades-modal-speaker-image"
+                          loading="lazy"
+                        />
+                      )}
+                      <h5 className="actividades-modal-speaker-name">{speaker.name}</h5>
+                      {speaker.institution && (
+                        <p className="actividades-modal-speaker-institution">
+                          {speaker.institution}
+                        </p>
+                      )}
+                      {speaker.bio && (
+                        <p className="actividades-modal-speaker-bio">{speaker.bio}</p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
+        </div>
+
+        <div className="actividades-modal-footer">
+          <button onClick={onClose} className="actividades-modal-close">
+            Cerrar
+          </button>
         </div>
       </div>
     </div>
   );
 }
 
-// Presentación compacta de speakers dentro de la card
+// Presentación compacta de speakers dentro de la card - CORREGIDO
 function SpeakersRow({ speakers }: { speakers: Speaker[] }) {
   return (
     <div className="speaker-info">
       {speakers.length === 1 ? (
-        <>
+        <div className="speaker-single">
           <img
             src={speakers[0].image}
             alt={`Imagen del ponente ${speakers[0].name}`}
             className="speaker-image"
             loading="lazy"
           />
-          <p className="speaker-name">{speakers[0].name}</p>
-        </>
+          <span className="speaker-name">{speakers[0].name}</span>
+        </div>
       ) : (
-        <div className="flex gap-4 items-center w-full">
-          {speakers.map((s) => (
-            <div key={s.name} className="speaker-details flex items-center gap-2">
-              <img
-                src={s.image}
-                alt={`Imagen del ponente ${s.name}`}
-                className="speakers-image"
-                loading="lazy"
-              />
-              <p className="speakers-name">{s.name}</p>
-            </div>
-          ))}
+        <div className="speaker-multiple">
+          <p className="speaker-multiple-title">Ponentes:</p>
+          <div className="speaker-multiple-list">
+            {speakers.map((speaker) => (
+              <div key={speaker.name} className="speaker-multiple-item">
+                <img
+                  src={speaker.image}
+                  alt={`Imagen del ponente ${speaker.name}`}
+                  className="speaker-multiple-image"
+                  loading="lazy"
+                />
+                <span className="speaker-multiple-name">{speaker.name}</span>
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>
   );
 }
 
-// Bloque de detalle del ponente dentro del modal
-function ModalSpeakers({ speakers }: { speakers: Speaker[] }) {
-  return (
-    <div className="space-y-6">
-      {speakers.map((s) => (
-        <div key={s.name} className="flex items-start gap-4">
-          <img
-            src={s.image}
-            alt={`Imagen del ponente ${s.name}`}
-            className="w-20 h-20 rounded-full object-cover"
-            loading="lazy"
-          />
-          <div>
-            <h4 className="text-lg font-semibold text-[var(--primary-color)]">
-              {s.name}
-            </h4>
-            {s.bio && <p className="text-[var(--text-color)] text-sm mt-1">{s.bio}</p>}
-            {s.institution && (
-              <p className="text-sm text-gray-500 mt-1">{s.institution}</p>
-            )}
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-// Card reutilizable
+// Card reutilizable mejorada - CORREGIDA
 function ActivityCard({ activity, onOpen }: { activity: Activity; onOpen: () => void }) {
   return (
-    <article
+    <div
       className="activity-card"
-      role="button"
-      tabIndex={0}
       onClick={onOpen}
       onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && onOpen()}
+      tabIndex={0}
+      role="button"
+      aria-label={`Ver detalles de ${activity.title}`}
     >
       <div className="activity-header">
         <img
@@ -483,47 +509,76 @@ function ActivityCard({ activity, onOpen }: { activity: Activity; onOpen: () => 
           className="activity-logo"
           loading="lazy"
         />
-        <h3>{activity.title}</h3>
+        <span className={`activity-badge ${
+          activity.kind === "conference" 
+            ? "activity-badge-conference" 
+            : "activity-badge-workshop"
+        }`}>
+          {activity.kind === "conference" ? "Conferencia" : "Workshop"}
+        </span>
       </div>
+      
+      <h3>{activity.title}</h3>
+      
       <div className="activity-description">
         <p>{activity.description}</p>
       </div>
+      
       <SpeakersRow speakers={activity.speakers} />
-    </article>
+    </div>
   );
 }
 
-// Sección genérica (conferencias o workshops)
+// Sección genérica (conferencias o workshops) - CORREGIDA
 function ActivitiesSection({
   title,
+  id,
   items,
   onOpen,
 }: {
   title: string;
+  id: string;
   items: Activity[];
   onOpen: (id: string) => void;
 }) {
   return (
-    <section className="contenedor">
-      <h2 id={title.toLowerCase().includes("workshop") ? "workshops" : "conferencias"}>
-        {title}
-      </h2>
-      <div className="activities-container">
-        {items.map((a) => (
-          <ActivityCard key={a.id} activity={a} onOpen={() => onOpen(a.id)} />
-        ))}
+    <section id={id} className="actividades-section">
+      <div className="container">
+        <div className="actividades-section-header">
+          <h2 className="actividades-section-title">{title}</h2>
+          <p className="actividades-section-description">
+            {title.includes("Conferencias") 
+              ? "Sesiones magistrales con expertos en diferentes áreas de la ingeniería industrial"
+              : "Talleres prácticos para desarrollar habilidades específicas en el ámbito industrial"}
+          </p>
+        </div>
+        
+        <div className="activities-container">
+          {items.map((activity) => (
+            <ActivityCard 
+              key={activity.id} 
+              activity={activity} 
+              onOpen={() => onOpen(activity.id)} 
+            />
+          ))}
+        </div>
       </div>
     </section>
   );
 }
 
+// Componente principal - CORREGIDO
+// actividades.tsx - Componente principal actualizado
 export default function Activities() {
   const [openId, setOpenId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   const conferences = useMemo(
     () => activitiesData.filter((a) => a.kind === "conference"),
     []
   );
+  
   const workshops = useMemo(
     () => activitiesData.filter((a) => a.kind === "workshop"),
     []
@@ -534,53 +589,206 @@ export default function Activities() {
     [openId]
   );
 
+  // Simular carga de datos
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+    
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Efecto para la barra de progreso de scroll
+  useEffect(() => {
+    const updateScrollProgress = () => {
+      const scrollPx = document.documentElement.scrollTop;
+      const winHeightPx = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (scrollPx / winHeightPx) * 100;
+      setScrollProgress(scrolled);
+    };
+
+    window.addEventListener('scroll', updateScrollProgress);
+    return () => window.removeEventListener('scroll', updateScrollProgress);
+  }, []);
+
+  // Componente Skeleton
+  const SkeletonCard = () => (
+    <div className="activity-card">
+      <div className="activity-header">
+        <div className="activity-logo skeleton"></div>
+        <span className={`activity-badge skeleton`}></span>
+      </div>
+      <div className="skeleton-text" style={{height: '24px', margin: '1rem'}}></div>
+      <div className="activity-description">
+        <div className="skeleton-text" style={{height: '16px', marginBottom: '0.5rem'}}></div>
+        <div className="skeleton-text" style={{height: '16px', width: '80%'}}></div>
+      </div>
+      <div className="speaker-info">
+        <div className="speaker-single">
+          <div className="speaker-image skeleton"></div>
+          <span className="speaker-name skeleton-text" style={{width: '120px', height: '16px'}}></span>
+        </div>
+      </div>
+    </div>
+  );
+
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (!element) return;
+    
+    const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+    const offsetPosition = elementPosition - 80; // Ajustar para el header fijo
+    
+    const startPosition = window.pageYOffset;
+    const distance = offsetPosition - startPosition;
+    const duration = 800;
+    let startTime: number | null = null;
+    
+    function animation(currentTime: number) {
+      if (startTime === null) startTime = currentTime;
+      const timeElapsed = currentTime - startTime;
+      const run = easeInOutQuad(timeElapsed, startPosition, distance, duration);
+      window.scrollTo(0, run);
+      if (timeElapsed < duration) requestAnimationFrame(animation);
+    }
+    
+    // Función de easing para animación suave
+    function easeInOutQuad(t: number, b: number, c: number, d: number): number {
+      t /= d/2;
+      if (t < 1) return c/2*t*t + b;
+      t--;
+      return -c/2 * (t*(t-2) - 1) + b;
+    }
+    
+    requestAnimationFrame(animation);
+  };
+
   return (
     <div className="actividades-container">
-      {/* Sección de Conferencias */}
-      <ActivitiesSection
-        title="Conferencias Magistrales"
-        items={conferences}
-        onOpen={setOpenId}
+      {/* Barra de progreso de scroll */}
+      <div 
+        className="scroll-progress-bar" 
+        style={{ '--scroll-progress': `${scrollProgress}%` } as React.CSSProperties}
       />
+      <main className="w-full mt-[-80px] md:mt-[-80px]">
+      {/* Hero Section */}
+      <section className="actividades-hero">
+        <div className="container">
+          <h1>Actividades Académicas</h1>
+          <p className="text-balance">
+            Descubre todas las conferencias magistrales y workshops especializados 
+            que tenemos preparados para ti en esta jornada de ingeniería industrial.
+          </p>
+          <div className="actividades-hero-buttons">
+            <button 
+              onClick={() => scrollToSection('conferencias')} 
+              className="actividades-hero-btn-primary"
+            >
+              Ver Conferencias
+            </button>
+            <button 
+              onClick={() => scrollToSection('workshops')} 
+              className="actividades-hero-btn-secondary"
+            >
+              Ver Workshops
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* Sección de Conferencias */}
+      <section id="conferencias" className="actividades-section">
+        <div className="container">
+          <div className="actividades-section-header">
+            <h2 className="actividades-section-title">Conferencias Magistrales</h2>
+            <p className="actividades-section-description">
+              Sesiones magistrales con expertos en diferentes áreas de la ingeniería industrial
+            </p>
+          </div>
+          
+          <div className="activities-container">
+            {isLoading ? (
+              Array.from({ length: 4 }).map((_, index) => (
+                <SkeletonCard key={index} />
+              ))
+            ) : (
+              conferences.map((activity) => (
+                <ActivityCard 
+                  key={activity.id} 
+                  activity={activity} 
+                  onOpen={() => setOpenId(activity.id)} 
+                />
+              ))
+            )}
+          </div>
+        </div>
+      </section>
 
       {/* Sección de Workshops */}
-      <ActivitiesSection title="Workshops" items={workshops} onOpen={setOpenId} />
+      <section id="workshops" className="actividades-section">
+        <div className="container">
+          <div className="actividades-section-header">
+            <h2 className="actividades-section-title">Workshops Especializados</h2>
+            <p className="actividades-section-description">
+              Talleres prácticos para desarrollar habilidades específicas en el ámbito industrial
+            </p>
+          </div>
+          
+          <div className="activities-container">
+            {isLoading ? (
+              Array.from({ length: 4 }).map((_, index) => (
+                <SkeletonCard key={index} />
+              ))
+            ) : (
+              workshops.map((activity) => (
+                <ActivityCard 
+                  key={activity.id} 
+                  activity={activity} 
+                  onOpen={() => setOpenId(activity.id)} 
+                />
+              ))
+            )}
+          </div>
+        </div>
+      </section>
+    </main>
 
       {/* Modal */}
-      <Modal open={!!current} title={current?.modal.title || ""} onClose={() => setOpenId(null)}>
-        {/* Contenido principal del modal */}
-        {current?.modal.paragraphs?.map((p, i) => (
-          <p key={i} className="text-[var(--text-color)] leading-relaxed mb-3">
-            {p}
-          </p>
-        ))}
-        {current?.modal.bullets && current.modal.bullets.length > 0 && (
-          <ul className="list-disc pl-6 space-y-1 text-[var(--text-color)]">
-            {current.modal.bullets.map((b, i) => (
-              <li key={i}>{b}</li>
-            ))}
-          </ul>
-        )}
-        {current?.modal.numbered && current.modal.numbered.length > 0 && (
-          <ol className="list-decimal pl-6 space-y-1 text-[var(--text-color)]">
-            {current.modal.numbered.map((n, i) => (
-              <li key={i}>{n}</li>
-            ))}
-          </ol>
-        )}
-
-        {/* Columna de speakers dentro del propio modal (lado derecho) */}
-        <div className="mt-6 md:mt-0 md:absolute md:right-6 md:top-6 md:w-[33%] md:translate-y-0">
-          {/* Para mantener estructura clara, lo renderizamos aquí abajo y lo movemos con grid en el contenedor Modal */}
-        </div>
-      </Modal>
-
-      {/* Renderizamos los speakers del modal por fuera para simplificar la estructura */}
       {current && (
-        <div className="hidden">{/* punto de montaje invisible */}
-          <ModalSpeakers speakers={current.speakers} />
-        </div>
+        <Modal 
+          open={!!current} 
+          title={current.modal.title} 
+          onClose={() => setOpenId(null)}
+          speakers={current.speakers}
+        >
+          {current.modal.paragraphs?.map((paragraph, index) => (
+            <p key={index}>{paragraph}</p>
+          ))}
+          
+          {current.modal.bullets && current.modal.bullets.length > 0 && (
+            <>
+              <h5>Puntos clave:</h5>
+              <ul>
+                {current.modal.bullets.map((bullet, index) => (
+                  <li key={index}>{bullet}</li>
+                ))}
+              </ul>
+            </>
+          )}
+          
+          {current.modal.numbered && current.modal.numbered.length > 0 && (
+            <>
+              <h5>Contenido del taller:</h5>
+              <ol>
+                {current.modal.numbered.map((item, index) => (
+                  <li key={index}>{item}</li>
+                ))}
+              </ol>
+            </>
+          )}
+        </Modal>
       )}
     </div>
+    
   );
 }
