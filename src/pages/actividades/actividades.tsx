@@ -31,7 +31,7 @@ const activitiesData: Activity[] = [
     kind: "conference",
     banner: "/assets/images/actividades/banners/C1.jpg",
     title:
-      "El Sistema General de Unidades de Medida y sus equivalencias NOM-008-SE-2021",
+      "Optimización en una línea de producción: un caso real.",
     description:
       "Se dará a conocer el marco legal y normativo sobre el uso del SGUM en las Universidades y Escuelas a nivel Nacional.",
     speakers: [

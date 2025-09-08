@@ -171,6 +171,17 @@ const Navbar = () => {
 
             <div className="nav-item">
               <a
+                href="/staff"
+                className={`nav-link ${isActive("/staff") ? "is-active" : ""}`}
+                onClick={closeNavbar}
+              >
+                <FontAwesomeIcon icon={faClock} className="home-icon" />
+                Staff
+              </a>
+            </div>
+
+            <div className="nav-item">
+              <a
                 href="/concurso"
                 className={`nav-link ${isActive("/concurso") ? "is-active" : ""}`}
                 onClick={closeNavbar}
