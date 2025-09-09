@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import Xarrow from "react-xarrows";
-import "./concurso.css"; // <-- coloca aquí el CSS que compartiste
+import { ChevronRight, Trophy, Users, Clock, Target } from "lucide-react";
 
 type ModalSection = {
   type: "paragraph" | "bullet" | "numbered";
@@ -11,10 +11,9 @@ type Seccion = {
   id: number;
   title: string;
   banner: string;
-  description: string;
   modal: {
     title: string;
-    sections: ModalSection[]; // lista numerada
+    sections: ModalSection[];
   };  
 }
 
@@ -23,13 +22,12 @@ const rallySteps: Seccion[] = [
     id: 1,
     banner: "/assets/images/concurso/juego1.jpg",
     title: "Juego 1: Pañuelo",
-    description: "Materiales necesarios: \n•	4 conos (para delimitar el área de juego y las bases de los equipos). \n•	1 paliacate (pañuelo). \n•	Cartel con nombre del juego y un dibujo relacionado. \n\n Staff requerido: 1 persona por equipo. \n\n Duración: 15 minutos.",
     modal: {
       title: "Juego 1: Pañuelo",
       sections: [
         { type: "paragraph", content: "Objetivo: Fomentar la agilidad física, la rapidez de reacción y el razonamiento matemático mediante la resolución de operaciones que determinan qué jugador participará en cada turno." },
         { type: "paragraph", content: "Reglas específicas: "},
-        { type: "bullet", content: "Está prohibido correr de espaldas "},
+        { type: "bullet", content: "Está prohibido correr de espaldas " },
         { type: "bullet", content: "No se permiten agresiones físicas; el toque debe ser limpio en la espalda"},
         { type: "paragraph", content: "Desarrollo del juego / Reglas: "},
         { type: "numbered", content: "Los jugadores se dividen en dos equipos con el mismo número de participantes"},
@@ -47,7 +45,6 @@ const rallySteps: Seccion[] = [
     id: 2,
     banner: "/assets/images/concurso/juego2.jpg",
     title: "Juego 2: Zoteball",
-    description: "Materiales necesarios: \n• 2 cubetas con agua (una por equipo). \n• 1 jabón Zote (pelota de juego). \n• 4 conos para delimitar la zona. \n• Cartel con nombre del juego y un dibujo relacionado. \n\n Staff requerido: 1 persona por equipo. \n\n Duración: 15 minutos.",
     modal: {
       title: "Juego 2: Zoteball",
       sections: [
@@ -72,7 +69,6 @@ const rallySteps: Seccion[] = [
     id: 3,
     banner: "/assets/images/actividades/banners/C1.jpg",
     title: "Juego 3: Rally del tesoro",
-    description: "Materiales necesarios: \n• Pistas impresas o escritas (una por cada punto del recorrido). \n• 2 cofres simulados (pueden ser cajas decoradas o cualquier objeto que represente el 'tesoro'). \n• Espacios previamente definidos para esconder las pistas y los cofres. \n• Cartel con nombre del juego y un dibujo relacionado. \n\n Staff requerido: 1 persona por equipo y personal adicional según el número de pistas. \n\n Duración: 15 minutos.",
     modal: {
       title: "Juego 3: Rally del tesoro",
       sections: [
@@ -97,7 +93,6 @@ const rallySteps: Seccion[] = [
     id: 4,
     banner: "/assets/images/actividades/banners/C1.jpg",
     title: "Juego 4: Fútbol en parejas",
-    description: "Materiales necesarios: \n• 1 balón de fútbol. \n• Cintas o cuerdas para atar de un pie a los integrantes de cada pareja. \n• 8 conos para marcar el área de juego y las porterías. \n• Cartel con nombre del juego y un dibujo relacionado. \n\n Staff requerido: 1 persona por equipo. \n\n Duración: 15 minutos",
     modal: {
       title: "Juego 4: Fútbol en parejas",
       sections: [
@@ -133,6 +128,27 @@ function useModalControls(isOpen: boolean, onClose: () => void) {
   }, [isOpen, onClose]);
 }
 
+// Hook para animaciones de scroll
+function useScrollAnimations() {
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-in');
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    const cards = document.querySelectorAll('.game-card');
+    cards.forEach((card) => observer.observe(card));
+
+    return () => observer.disconnect();
+  }, []);
+}
+
 function Modal({
   open,
   title,
@@ -152,20 +168,25 @@ function Modal({
       aria-modal
       role="dialog"
       aria-label={title}
-      className="fixed inset-0 z-[999] flex items-center justify-center p-4"
+      className="fixed inset-0 z-[999] flex items-center justify-center p-4 backdrop-blur-md"
     >
-      <div className="absolute inset-0 bg-black/60" onClick={onClose} />
-      <div className="relative z-10 w-full max-w-5xl">
-        <div className="bg-white rounded-xl shadow-2xl overflow-hidden">
-          <div className="p-6 text-left">
-            <h3 className="text-2xl font-semibold mb-3">{title}</h3>
+      <div className="absolute inset-0 bg-gradient-to-br from-black/40 to-black/60" onClick={onClose} />
+      <div className="relative z-10 w-full max-w-6xl max-h-[85vh] overflow-auto">
+        <div className="bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 overflow-hidden modal-content">
+          <div className="p-6 md:p-8 text-left">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-2xl md:text-3xl font-bold text-gray-800">{title}</h3>
+              <button
+                onClick={onClose}
+                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                aria-label="Cerrar modal"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
             {children}
-            <button
-              onClick={onClose}
-              className="mt-5 inline-flex items-center rounded-lg bg-blue-600 px-4 py-2 text-white"
-            >
-              Cerrar
-            </button>
           </div>
         </div>
       </div>
@@ -177,171 +198,57 @@ export default function Concurso() {
   const [openId, setOpenId] = useState<number | null>(null);
   const current = useMemo(() => rallySteps.find((a) => a.id === openId) || null, [openId]);
 
+  useScrollAnimations();
+
   return (
-    <div>
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center py-10">
-      {/* Header */}
-      <section className="headercard mt-10 w-full flex items-center justify-center pb-0 py-12 bg-gradient-to-b from-blue-100 to-gray-50">
-        <img
-          src="/assets/images/concurso/logorally.jpg"
-          alt="Logo Rally"
-          className="w-28 h-28 mr-6"
-        />
-        <div className="text-left">
-          <h1 className="relative text-4xl md:text-5xl font-bold text-gray-800 inline-block pb-1 after:content-[''] after:block after:h-1 after:bg-[var(--secondary-color)] after:mt-1 after:w-1/2 after:mx-auto">
-            
+    <div className="concurso-container min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-cyan-50">
+      {/* Barra de progreso de scroll */}
+      <div className="scroll-progress-bar" />
+      
+      {/* Header mejorado */}
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-[#1b1c39]"></div>
+        <div className="absolute inset-0 bg-pattern-dots opacity-20"></div>
+        <div className="relative z-10 flex flex-col items-center justify-center min-h-[60vh] px-4 text-center text-white">
+          <div className="mb-8 transform hover:scale-110 transition-transform duration-500">
+            <img
+              src="/assets/images/concurso/logorally.jpg"
+              alt="Logo Rally"
+              className="w-24 h-24 md:w-32 md:h-32 mx-auto rounded-full shadow-2xl border-4 border-white/30"
+            />
+          </div>
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-4 text-shadow-lg">
             Mundialito Industrial
           </h1>
-          <p className="mt-4 text-lg text-gray-600 max-w-2xl">
-            
+          <p className="text-lg md:text-xl max-w-2xl text-white/90 leading-relaxed">
+            Participa en emocionantes juegos que pondrán a prueba tu agilidad, estrategia y conocimientos
           </p>
+          
+          {/* Stats cards */}
+          <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-2xl">
+            <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 text-center border border-white/20">
+              <Trophy className="w-8 h-8 mx-auto mb-2 text-yellow-300" />
+              <div className="text-2xl font-bold">4</div>
+              <div className="text-sm opacity-90">Juegos</div>
+            </div>
+            <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 text-center border border-white/20">
+              <Users className="w-8 h-8 mx-auto mb-2 text-green-300" />
+              <div className="text-2xl font-bold">6</div>
+              <div className="text-sm opacity-90">Jugadores</div>
+            </div>
+            <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 text-center border border-white/20">
+              <Clock className="w-8 h-8 mx-auto mb-2 text-blue-300" />
+              <div className="text-2xl font-bold">120</div>
+              <div className="text-sm opacity-90">Minutos</div>
+            </div>
+            <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 text-center border border-white/20">
+              <Target className="w-8 h-8 mx-auto mb-2 text-red-300" />
+              <div className="text-2xl font-bold">∞</div>
+              <div className="text-sm opacity-90">Diversión</div>
+            </div>
+          </div>
         </div>
       </section>
-
-      <div className="relative w-full max-w-6xl mx-auto py-12">
-        <div className="flex flex-col gap-16">
-        {rallySteps.map((step, index) => (
-          <div
-            key={step.id}
-            className={`flex w-full relative ${index % 2 === 0 ? "justify-start" : "justify-end"}`}
-          >     
-
-        <div className="relative w-2/3">
-          {/* Punto lateral ficticio para que la flecha avance un poco */}
-          <div
-            id={`card-side-${step.id}`}
-            className={`absolute w-4 h-4
-              ${index % 2 === 0 ? "right-0" : "left-0"} top-1/2 transform -translate-y-1/2 z-20`}
-          />
-
-          {/* Tarjeta */}
-          <div
-            id={`card-${step.id}`}
-            onClick={() => setOpenId(step.id)}
-            className={`relative bg-white shadow-xl rounded-3xl p-8 border border-gray-200 z-10
-              cursor-pointer transition transform hover:scale-105 hover:shadow-2xl
-              ${openId === step.id ? "ring-4 ring-blue-400" : ""}`}
-          >
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-            <div className="flex flex-col items-center justify-center text-center h-full">
-              <h2 className="text-2xl font-bold mb-4 text-gray-800">{step.title}</h2>
-              <img
-                src={step.banner}
-                alt={step.title}
-                className="w-full h-48 object-cover rounded-xl shadow-sm"
-                loading="lazy"
-              />
-            </div>
-            <div>
-              <p className="text-gray-700 leading-relaxed whitespace-pre-line">{step.description}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      </div>
-    ))}
-  </div>
-
-  {/* Conexiones entre tarjetas */}
-  {rallySteps.map((step, index) => {
-    if (index === rallySteps.length - 1) return null;
-
-    return (
-      <Xarrow
-        start={`card-side-${step.id}`}                   // punto lateral de salida
-        end={`card-${rallySteps[index + 1].id}`}        // punto superior de la siguiente tarjeta
-        startAnchor={index % 2 === 0 ? "right" : "left"} // lado de salida
-        endAnchor={{
-          position: "top",
-          offset: { x: index % 2 === 0 ? 200 : -200, y: 0 }, // ajusta derecha/izquierda
-        }}                             // entrada arriba
-        color="gray"
-        strokeWidth={3}
-        path="grid"                                      // estilo cuadrado/zigzag
-        curveness={0.2}
-        dashness={false}
-        zIndex={0}                                       // detrás de las tarjetas
-        showHead={true}                                  // flecha
-      />
-    );
-  })}
-</div>
-
-        
-      </div>
-
-      <Modal open={!!current} title={current?.modal.title || ""} onClose={() => setOpenId(null)}>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Columna izquierda */}
-      <div className="space-y-4">
-            {current?.modal.sections
-              .slice(0, Math.ceil((current.modal.sections?.length ?? 0) / 2))
-              .map((s, i) => {
-                if (s.type === "numbered") return null;
-                return renderSection(s, i);
-              })}
-      
-            {/* Bloque de numbered en izquierda */}
-            <ol className="list-decimal pl-6 text-gray-800 list-inside space-y-1">
-              {current?.modal.sections
-                .slice(0, Math.ceil((current.modal.sections?.length ?? 0) / 2))
-                .filter(s => s.type === "numbered")
-                .map((s, i) => (
-                  <li key={i}>{s.content}</li>
-                ))}
-            </ol>
-          </div>
-      
-          {/* Columna derecha */}
-          <div className="space-y-4">
-            {current?.modal.sections
-              .slice(Math.ceil((current.modal.sections?.length ?? 0) / 2))
-              .map((s, i) => {
-                if (s.type === "numbered") return null;
-                return renderSection(s, i + Math.ceil((current.modal.sections?.length ?? 0) / 2));
-              })}
-      
-            {/* Bloque de numbered en derecha, continúa la numeración */}
-            <ol
-              className="list-decimal pl-6 text-gray-800 list-inside space-y-1"
-              start={
-                (current?.modal.sections
-                  ?.slice(0, Math.ceil((current.modal.sections?.length ?? 0) / 2))
-                  ?.filter(s => s.type === "numbered").length ?? 0) + 1
-              }
-            >
-              {current?.modal.sections
-                .slice(Math.ceil((current.modal.sections?.length ?? 0) / 2))
-                .filter(s => s.type === "numbered")
-                .map((s, i) => (
-                  <li key={i}>{s.content}</li>
-                ))}
-            </ol>
-          </div>
-        </div>
-      </Modal>
     </div>
-  );
+  )
 }
-
-function renderSection(s: ModalSection, i: number) {
-  switch (s.type) {
-    case "paragraph":
-      return <p key={i} className="text-gray-800 leading-relaxed">{s.content}</p>;
-    case "bullet":
-      return (
-        <ul key={i} className="list-disc pl-6 text-gray-800">
-          <li>{s.content}</li>
-        </ul>
-      );
-    case "numbered":
-      return (
-        <ol key={i} className="list-decimal pl-6 text-gray-800 list-inside">
-          <li>{s.content}</li>
-        </ol>
-      );
-  }
-}
-
-

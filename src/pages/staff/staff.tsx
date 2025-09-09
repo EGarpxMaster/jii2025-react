@@ -134,7 +134,7 @@ const StaffPage: React.FC<StaffPageProps> = ({ className = '' }) => {
   };
 
   return (
-      <main className="w-full mt-[0px] md:mt-[0px]">
+      <main className="w-full mt-[-80px] md:mt-[-80px]">
       <div className={`staff-container ${className}`}>
         {/* Hero Section */}
         <div className="staff-hero">
