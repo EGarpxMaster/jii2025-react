@@ -1,13 +1,4 @@
-<<<<<<< Updated upstream
-export default function Concurso() {
-  return (
-    <div className="w-full">
-      
-      <main className="w-full mt-[100px] md:mt-[90px]">
-      </main>
-=======
 import React, { useEffect, useMemo, useState } from "react";
-import Xarrow from "react-xarrows";
 import { ChevronRight, Trophy, Users, Clock, Target } from "lucide-react";
 
 type ModalSection = {
@@ -209,6 +200,7 @@ export default function Concurso() {
   useScrollAnimations();
 
   return (
+     <main className="w-full mt-[100px] md:mt-[100px]">
     <div className="concurso-container min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-cyan-50">
       {/* Barra de progreso de scroll */}
       <div className="scroll-progress-bar" />
@@ -257,7 +249,7 @@ export default function Concurso() {
           </div>
         </div>
       </section>
->>>>>>> Stashed changes
     </div>
+    </main>
   )
 }
