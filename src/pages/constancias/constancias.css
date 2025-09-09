@@ -32,12 +32,13 @@ body {
   line-height: 1.6;
 }
 
+/* Base */
 .registro-section {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem 1rem;
+  padding: 0rem 1rem 2rem;
   background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
 }
 
@@ -329,7 +330,7 @@ body {
 /* Responsive adjustments */
 @media (max-width: 640px) {
   .registro-section {
-    padding: 1rem;
+    padding: -1rem 1rem 1rem; 
   }
   
   .registro-header {

@@ -127,7 +127,7 @@ const ConstanciaPage: React.FC = () => {
   };
 
   return (
-    <main className="w-full  md:pt--2">
+    <main className="w-full">
       {/* Fondo degradado con patrón sutil (misma vibra que el sitio) */}
       <section className="registro-section">
         <div className="registro-container">

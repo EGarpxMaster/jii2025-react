@@ -6,8 +6,11 @@ const API_URL = "/api/registro";
 type Categoria = "Estudiante" | "Ponente" | "Asistente externo";
 type Programa =
   | "Ingeniería Industrial"
-  | "Ingeniería en Datos"
-  | "Ingeniería Ambiental";
+  | "Ingeniería Ambiental"
+  | "Ingeniería en Datos e Inteligencia Organizacional"
+  | "Ingeniería en Logística y Cadena de Suministro"
+  | "Ingeniería en Inteligencia Artificial Nuevo"
+  | "Ingeniería en Industrias Alimentarias";
 
 type FormData = {
   apellidoPaterno: string;
@@ -26,8 +29,11 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
 
 const programas: Programa[] = [
   "Ingeniería Industrial",
-  "Ingeniería en Datos",
   "Ingeniería Ambiental",
+  "Ingeniería en Datos e Inteligencia Organizacional",
+  "Ingeniería en Logística y Cadena de Suministro",
+  "Ingeniería en Inteligencia Artificial Nuevo",
+  "Ingeniería en Industrias Alimentarias"
 ];
 
 const RegistroParticipanteForm: React.FC = () => {
