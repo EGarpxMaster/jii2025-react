@@ -101,9 +101,9 @@ function GalleryMosaic({
 
   return (
 <section className="text-gray-700 body-font bg-white">
-      <div className="container px-4 sm:px-5 py-12 mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="historia-h2 font-bold title-font text-gray-900 mb-4 mt-12">Galería de Momentos</h2>
+      <div className="container px-4 sm:px-8 py-12">
+        <div className="text-center mb-12 mt-8">
+          <h2 className="historia-h2 font-bold title-font text-gray-900 mb-4 p-8">Galería de Momentos</h2>
           <div className="flex mt-2 justify-center">
             <div className="w-16 h-1 rounded-full bg-[#00d4d4] inline-flex"></div>
           </div>
@@ -145,7 +145,7 @@ function GalleryMosaic({
           ))}
         </div>
 
-        <div className="flex justify-center m-10">
+        <div className="flex justify-center pb-12 pt-12">
           <a href="/galeria" id="btn_galery" className="inline-flex items-center bg-[#00d4d4] text-white px-6 py-3 rounded-full font-medium">
             Ver galería completa
             <svg className="w-4 h-4 ml-2" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round">
