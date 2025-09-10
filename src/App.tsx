@@ -6,7 +6,6 @@ import Actividades from './pages/actividades/actividades';
 import Concurso from './pages/concurso/concurso';
 import Constancias from './pages/constancias/constancias';
 import Registro from './pages/registro/registro';
-import AsistenciaPage from './pages/asistencia';
 import Aliados from './pages/aliados/aliados';
 import Staff from './pages/staff/staff';
 import Navbar from "./components/navbar/navbar";
@@ -27,7 +26,6 @@ function App() {
             <Route path="/staff" element={<Staff />} /> {/* Ruta a la página 'Staff' */}
             <Route path="/aliados" element={<Aliados />} /> {/* Ruta a la página 'Aliados' */}
             <Route path="/registro" element={<Registro />} /> {/* Ruta a la página 'Registro' */}
-            <Route path="/asistencia" element={<AsistenciaPage />} /> {/* Ruta a la página 'Asistencia' */}
           </Routes>
       </BrowserRouter>
       <Footer />

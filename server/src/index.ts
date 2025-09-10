@@ -52,7 +52,7 @@ const RegistroSchema = z.object({
  categoria: z.enum(["Estudiante", "Ponente", "Asistente externo"]),
  programa: z
   .enum(["Ingeniería Industrial", "Ingeniería Ambiental", "Ingeniería en Datos e Inteligencia Organizacional",
-  "Ingeniería en Logística y Cadena de Suministro", "Ingeniería en Inteligencia Artificial Nuevo", "Ingeniería en Industrias Alimentarias"])
+  "Ingeniería en Logística y Cadena de Suministro", "Ingeniería en Inteligencia Artificial", "Ingeniería en Industrias Alimentarias"])
   .optional(),
 });
 
