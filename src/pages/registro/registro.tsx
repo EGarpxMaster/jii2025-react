@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import RegistroComponent from "../../components/registro/registro";
 import AsistenciaComponent from "../../components/asistencia/asistencia";
+import ConstanciaComponent from "../../components/constancias/constancias";
 import "./registro.css";
 
-type ActiveTab = "registro" | "asistencia";
+type ActiveTab = "registro" | "asistencia" | "constancia";
 
-const Registro: React.FC = () => {
+const RegistroPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<ActiveTab>("registro");
 
   const handleRegistroSuccess = () => {
@@ -37,6 +38,14 @@ const Registro: React.FC = () => {
               <span className="tab-icon">📋</span>
               <span className="tab-text">Asistencia</span>
             </button>
+            <button
+              className={`tab-button ${activeTab === "constancia" ? "active" : ""}`}
+              onClick={() => setActiveTab("constancia")}
+              type="button"
+            >
+              <span className="tab-icon">🏆</span>
+              <span className="tab-text">Constancia</span>
+            </button>
           </div>
         </div>
 
@@ -54,10 +63,16 @@ const Registro: React.FC = () => {
               showHeader={false}
             />
           )}
+          {activeTab === "constancia" && (
+            <ConstanciaComponent 
+              className="tab-component"
+              showHeader={false}
+            />
+          )}
         </div>
       </div>
     </main>
   );
 };
 
-export default Registro;
+export default RegistroPage;

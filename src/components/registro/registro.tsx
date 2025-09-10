@@ -70,9 +70,9 @@ const RegistroComponent: React.FC<RegistroComponentProps> = ({
       apellidoPaterno: "Ingresa tu apellido paterno",
       apellidoMaterno: "Ingresa tu apellido materno",
       primerNombre: "Ingresa tu primer nombre",
-      segundoNombre: "Ingresa tu segundo nombre (opcional)",
-      email: "ejemplo@correo.com",
-      telefono: "10 dígitos sin espacios",
+      segundoNombre: "Ingresa tu segundo nombre",
+      email: "Correo electrónico",
+      telefono: "Teléfono (10 dígitos)",
     }),
     []
   );
