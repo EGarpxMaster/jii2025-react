@@ -61,7 +61,16 @@ const AsistenciaSchema = z.object({
  conferenciaId: z.number().int().positive("ID de conferencia inválido"),
 });
 
-// Funciones helper
+const EquipoSchema = z.object({
+ nombreEquipo: z.string().min(1, "Nombre del equipo obligatorio").max(255, "Nombre muy largo"),
+ emailCapitan: z.string().email("Correo del capitán inválido"),
+ emailsMiembros: z.array(z.string().email("Correo de miembro inválido"))
+   .min(5, "Debe tener exactamente 5 miembros adicionales")
+   .max(5, "Debe tener exactamente 5 miembros adicionales")
+   .refine(emails => new Set(emails).size === emails.length, "No pueden haber emails duplicados entre miembros")
+});
+
+// Funciones helper existentes
 const checkEmailExists = (email: string): Promise<boolean> => {
  return new Promise((resolve, reject) => {
   const query = "SELECT COUNT(*) as count FROM participantes WHERE email = ?";
@@ -94,7 +103,6 @@ const getParticipantByEmail = (email: string): Promise<any | null> => {
  });
 };
 
-// MODIFICADO: Se usa fecha_inicio y fecha_fin, y se filtra por activa = true
 const getAllConferencias = (): Promise<any[]> => {
  return new Promise((resolve, reject) => {
   const query = `
@@ -135,7 +143,6 @@ const getAsistenciasByEmail = (email: string): Promise<any[]> => {
  });
 };
 
-// MODIFICADO: Se usa fecha_inicio en la consulta
 const getAsistenciasWithConferencias = (email: string): Promise<any[]> => {
  return new Promise((resolve, reject) => {
   const query = `
@@ -169,37 +176,159 @@ const checkAsistenciaExists = (participanteId: number, conferenciaId: number): P
  });
 };
 
-// Función para generar PDF de constancia
+// === FUNCIONES HELPER PARA EQUIPOS ===
+
+const checkEquipoNameExists = (nombreEquipo: string): Promise<boolean> => {
+ return new Promise((resolve, reject) => {
+  const query = "SELECT COUNT(*) as count FROM equipos WHERE nombre_equipo = ? AND activo = TRUE";
+  db.query(query, [nombreEquipo], (err, results: any[]) => {
+   if (err) {
+    reject(err);
+   } else {
+    resolve(results[0].count > 0);
+   }
+  });
+ });
+};
+
+const checkParticipantInAnyTeam = (participanteId: number): Promise<boolean> => {
+ return new Promise((resolve, reject) => {
+  const query = `
+   SELECT COUNT(*) as count 
+   FROM miembros_equipo me 
+   INNER JOIN equipos e ON me.equipo_id = e.id 
+   WHERE me.participante_id = ? AND e.activo = TRUE`;
+  db.query(query, [participanteId], (err, results: any[]) => {
+   if (err) {
+    reject(err);
+   } else {
+    resolve(results[0].count > 0);
+   }
+  });
+ });
+};
+
+const validateParticipantsForTeam = async (emails: string[]): Promise<{valid: boolean, errors: string[], participantes: any[]}> => {
+ const errors: string[] = [];
+ const participantes: any[] = [];
+
+ // Verificar que todos los emails existan
+ for (let i = 0; i < emails.length; i++) {
+  const email = emails[i];
+  const participante = await getParticipantByEmail(email);
+  
+  if (!participante) {
+   errors.push(`El participante con email ${email} no está registrado`);
+   continue;
+  }
+
+  // Verificar que sea estudiante
+  if (participante.categoria !== "Estudiante") {
+   errors.push(`${email}: Solo estudiantes pueden participar en equipos`);
+   continue;
+  }
+
+  // Verificar que no esté ya en un equipo
+  const yaEnEquipo = await checkParticipantInAnyTeam(participante.id);
+  if (yaEnEquipo) {
+   errors.push(`${email}: Ya está registrado en un equipo`);
+   continue;
+  }
+
+  participantes.push(participante);
+ }
+
+ return { valid: errors.length === 0, errors, participantes };
+};
+
+const getEquipoById = (equipoId: number): Promise<any | null> => {
+ return new Promise((resolve, reject) => {
+  const query = `
+   SELECT * FROM vista_equipos_completa WHERE id = ?`;
+  
+  db.query(query, [equipoId], (err, results: any[]) => {
+   if (err) {
+    reject(err);
+   } else {
+    resolve(results.length > 0 ? results[0] : null);
+   }
+  });
+ });
+};
+
+const getMiembrosEquipo = (equipoId: number): Promise<any[]> => {
+ return new Promise((resolve, reject) => {
+  const query = `
+   SELECT * FROM vista_miembros_equipo WHERE equipo_id = ? ORDER BY es_capitan DESC, nombre_completo ASC`;
+  
+  db.query(query, [equipoId], (err, results: any[]) => {
+   if (err) {
+    reject(err);
+   } else {
+    resolve(results);
+   }
+  });
+ });
+};
+
+const getAllEquipos = (): Promise<any[]> => {
+ return new Promise((resolve, reject) => {
+  const query = `
+   SELECT * FROM vista_equipos_completa ORDER BY creado DESC`;
+  
+  db.query(query, [], (err, results: any[]) => {
+   if (err) {
+    reject(err);
+   } else {
+    resolve(results);
+   }
+  });
+ });
+};
+
+const getEquipoByParticipantEmail = (email: string): Promise<any | null> => {
+ return new Promise((resolve, reject) => {
+  const query = `
+   SELECT e.*, vec.nombre_capitan, vec.email_capitan, vec.programa_capitan, vec.total_miembros
+   FROM equipos e
+   INNER JOIN miembros_equipo me ON e.id = me.equipo_id
+   INNER JOIN participantes p ON me.participante_id = p.id
+   INNER JOIN vista_equipos_completa vec ON e.id = vec.id
+   WHERE p.email = ? AND e.activo = TRUE`;
+  
+  db.query(query, [email], (err, results: any[]) => {
+   if (err) {
+    reject(err);
+   } else {
+    resolve(results.length > 0 ? results[0] : null);
+   }
+  });
+ });
+};
+
+// Función para generar PDF de constancia (mantenida igual)
 async function generarConstanciaPDF(participante: any, asistencias: any[]): Promise<Buffer> {
  try {
-  // Cargar la plantilla PDF
   const templatePath = path.join(process.cwd(), 'src/templates/constancia-template.pdf');
   const templateBytes = fs.readFileSync(templatePath);
   
-  // Cargar el documento PDF
   const pdfDoc = await PDFDocument.load(templateBytes);
   const pages = pdfDoc.getPages();
   const firstPage = pages[0];
   
-  // Obtener dimensiones de la página
   const { width, height } = firstPage.getSize();
-  
-  // Configurar fuente
   const font = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
   
-  // Nombre completo del participante
   const nombreCompleto = `${participante.primerNombre} ${participante.segundoNombre || ""} ${participante.apellidoPaterno} ${participante.apellidoMaterno}`.trim().toUpperCase();
   
-  // Escribir SOLO el nombre en el PDF (ajusta las coordenadas según tu plantilla)
   firstPage.drawText(nombreCompleto, {
-   x: width / 2 - (nombreCompleto.length * 8.5), // Centrado aproximado
-   y: height * 0.515, // Ajusta según tu plantilla - COORDENADA Y PRINCIPAL
+   x: width / 2 - (nombreCompleto.length * 8.5),
+   y: height * 0.515,
    size: 30,
    font: font,
    color: rgb(27/255, 28/255, 57/255),
   });
   
-  // Serializar el PDF
   const pdfBytes = await pdfDoc.save();
   return Buffer.from(pdfBytes);
   
@@ -209,9 +338,8 @@ async function generarConstanciaPDF(participante: any, asistencias: any[]): Prom
  }
 }
 
-// === RUTAS EXISTENTES ===
+// === RUTAS EXISTENTES (MANTENIDAS) ===
 
-// Ruta para verificar disponibilidad de email (GET)
 app.get("/api/registro", async (req, res) => {
  const { action, email } = req.query;
 
@@ -228,7 +356,6 @@ app.get("/api/registro", async (req, res) => {
  return res.status(400).json({ error: "Acción o parámetros inválidos" });
 });
 
-// Ruta para registrar participante (POST)
 app.post("/api/registro", async (req, res) => {
  try {
   const parsed = RegistroSchema.safeParse(req.body);
@@ -297,9 +424,6 @@ app.post("/api/registro", async (req, res) => {
  }
 });
 
-// === RUTAS PARA ASISTENCIA ===
-
-// Obtener participante por email
 app.get("/api/participante", async (req, res) => {
  const { email } = req.query;
 
@@ -321,7 +445,6 @@ app.get("/api/participante", async (req, res) => {
  }
 });
 
-// Obtener todas las conferencias
 app.get("/api/conferencias", async (req, res) => {
  try {
   const conferencias = await getAllConferencias();
@@ -332,7 +455,6 @@ app.get("/api/conferencias", async (req, res) => {
  }
 });
 
-// Obtener asistencias de un participante por email
 app.get("/api/asistencias", async (req, res) => {
  const { email } = req.query;
 
@@ -349,7 +471,6 @@ app.get("/api/asistencias", async (req, res) => {
  }
 });
 
-// Registrar asistencia
 app.post("/api/asistencias", async (req, res) => {
  try {
   const parsed = AsistenciaSchema.safeParse(req.body);
@@ -380,8 +501,6 @@ app.post("/api/asistencias", async (req, res) => {
    return res.status(404).json({ error: "Conferencia no encontrada" });
   }
 
-  // --- INICIO DE LA MODIFICACIÓN ---
-  // Verificar si la conferencia está activa para registro
   const ahora = new Date();
   const fechaInicio = new Date(conferencia.fechaInicio);
   const fechaFin = new Date(conferencia.fechaFin);
@@ -389,7 +508,6 @@ app.post("/api/asistencias", async (req, res) => {
   if (ahora < fechaInicio || ahora > fechaFin) {
     return res.status(403).json({ error: "La inscripción para esta conferencia no está disponible en este momento." });
   }
-  // --- FIN DE LA MODIFICACIÓN ---
 
   const yaExiste = await checkAsistenciaExists(participante.id, conferenciaId);
   if (yaExiste) {
@@ -427,9 +545,6 @@ app.post("/api/asistencias", async (req, res) => {
  }
 });
 
-// === RUTAS PARA CONSTANCIAS ===
-
-// Verificar si un participante puede obtener constancia
 app.get("/api/constancia/verificar", async (req, res) => {
  const { email } = req.query;
 
@@ -457,7 +572,6 @@ app.get("/api/constancia/verificar", async (req, res) => {
  }
 });
 
-// Generar y descargar constancia
 app.get("/api/constancia/generar", async (req, res) => {
  const { email } = req.query;
 
@@ -476,10 +590,8 @@ app.get("/api/constancia/generar", async (req, res) => {
    return res.status(400).json({ error: "No tienes asistencias registradas" });
   }
 
-  // Generar PDF
   const pdfBuffer = await generarConstanciaPDF(participante, asistencias);
   
-  // Configurar headers para descarga
   const nombreArchivo = `constancia-${participante.primerNombre}-${participante.apellidoPaterno}.pdf`;
   
   res.setHeader('Content-Type', 'application/pdf');
@@ -494,19 +606,286 @@ app.get("/api/constancia/generar", async (req, res) => {
  }
 });
 
-// === RUTAS GENERALES ===
+// === NUEVAS RUTAS PARA EQUIPOS ===
 
-// Ruta de prueba
-app.get("/", (req, res) => {
- res.json({ message: "API de registro, asistencia y constancias funcionando correctamente" });
+// Verificar disponibilidad de nombre de equipo
+app.get("/api/equipos/check-name", async (req, res) => {
+ const { nombre } = req.query;
+
+ if (!nombre || typeof nombre !== "string") {
+  return res.status(400).json({ error: "Nombre requerido" });
+ }
+
+ try {
+  const exists = await checkEquipoNameExists(nombre);
+  return res.json({ available: !exists });
+ } catch (error) {
+  console.error("Error verificando nombre de equipo:", error);
+  return res.status(500).json({ error: "Error verificando nombre" });
+ }
 });
 
-// Manejo de rutas no encontradas
+// Verificar si un participante puede unirse a equipos
+app.get("/api/equipos/check-participant", async (req, res) => {
+ const { email } = req.query;
+
+ if (!email || typeof email !== "string") {
+  return res.status(400).json({ error: "Email requerido" });
+ }
+
+ try {
+  const participante = await getParticipantByEmail(email);
+  
+  if (!participante) {
+   return res.json({ 
+    valid: false, 
+    error: "Participante no encontrado",
+    participante: null 
+   });
+  }
+
+  if (participante.categoria !== "Estudiante") {
+   return res.json({ 
+    valid: false, 
+    error: "Solo estudiantes pueden participar en equipos",
+    participante 
+   });
+  }
+
+  const yaEnEquipo = await checkParticipantInAnyTeam(participante.id);
+  if (yaEnEquipo) {
+   return res.json({ 
+    valid: false, 
+    error: "Ya está registrado en un equipo",
+    participante 
+   });
+  }
+
+  return res.json({ 
+   valid: true, 
+   error: null,
+   participante 
+  });
+
+ } catch (error) {
+  console.error("Error verificando participante:", error);
+  return res.status(500).json({ error: "Error interno del servidor" });
+ }
+});
+
+// Crear equipo
+app.post("/api/equipos", async (req, res) => {
+ try {
+  const parsed = EquipoSchema.safeParse(req.body);
+  if (!parsed.success) {
+   const fieldErrors: Record<string, string> = {};
+   
+   parsed.error.errors.forEach((err) => {
+    const field = err.path[0] as string;
+    fieldErrors[field] = err.message;
+   });
+
+   return res.status(422).json({
+    error: "Datos de validación incorrectos",
+    errors: fieldErrors,
+   });
+  }
+
+  const { nombreEquipo, emailCapitan, emailsMiembros } = parsed.data;
+
+  // Verificar que el nombre no exista
+  const nombreExists = await checkEquipoNameExists(nombreEquipo);
+  if (nombreExists) {
+   return res.status(409).json({ error: "El nombre del equipo ya existe" });
+  }
+
+  // Validar todos los participantes (capitán + miembros)
+  const todosEmails = [emailCapitan, ...emailsMiembros];
+  
+  // Verificar emails únicos
+  if (new Set(todosEmails).size !== todosEmails.length) {
+   return res.status(400).json({ error: "No pueden haber emails duplicados en el equipo" });
+  }
+
+  const validacion = await validateParticipantsForTeam(todosEmails);
+  if (!validacion.valid) {
+   return res.status(400).json({ 
+    error: "Error en la validación de participantes",
+    details: validacion.errors 
+   });
+  }
+
+  // Encontrar el capitán
+  const capitan = validacion.participantes.find(p => p.email === emailCapitan);
+  if (!capitan) {
+   return res.status(400).json({ error: "Error interno: capitán no encontrado" });
+  }
+
+  // Iniciar transacción
+  db.beginTransaction(async (transactionErr) => {
+   if (transactionErr) {
+    return res.status(500).json({ error: "Error iniciando transacción" });
+   }
+
+   try {
+    // Insertar equipo
+    const insertEquipoQuery = `
+     INSERT INTO equipos (nombre_equipo, capitan_id) VALUES (?, ?)`;
+    
+    db.query(insertEquipoQuery, [nombreEquipo, capitan.id], (equipoErr, equipoResults: any) => {
+     if (equipoErr) {
+      return db.rollback(() => {
+       console.error("Error insertando equipo:", equipoErr);
+       res.status(500).json({ error: "Error creando equipo" });
+      });
+     }
+
+     const equipoId = (equipoResults as any).insertId;
+
+     // Insertar miembros adicionales (el capitán ya se inserta automáticamente por trigger)
+     const miembrosAdicionales = validacion.participantes.filter(p => p.email !== emailCapitan);
+     const insertMiembrosQuery = `
+      INSERT INTO miembros_equipo (equipo_id, participante_id, es_capitan) VALUES ?`;
+     
+     const miembrosValues = miembrosAdicionales.map(m => [equipoId, m.id, false]);
+
+     db.query(insertMiembrosQuery, [miembrosValues], (miembrosErr) => {
+      if (miembrosErr) {
+       return db.rollback(() => {
+        console.error("Error insertando miembros:", miembrosErr);
+        res.status(500).json({ error: "Error agregando miembros al equipo" });
+       });
+      }
+
+      // Commit transacción
+      db.commit((commitErr) => {
+       if (commitErr) {
+        return db.rollback(() => {
+         console.error("Error en commit:", commitErr);
+         res.status(500).json({ error: "Error finalizando registro" });
+        });
+       }
+
+       // Éxito
+       res.status(201).json({
+        message: "Equipo registrado exitosamente",
+        data: {
+         id: equipoId,
+         nombreEquipo,
+         capitanEmail: emailCapitan,
+         totalMiembros: todosEmails.length,
+         creado: new Date().toISOString()
+        }
+       });
+      });
+     });
+    });
+
+   } catch (error) {
+    db.rollback(() => {
+     console.error("Error en transacción de equipo:", error);
+     res.status(500).json({ error: "Error interno del servidor" });
+    });
+   }
+  });
+
+ } catch (error) {
+  console.error("Error en POST /api/equipos:", error);
+  return res.status(500).json({
+   error: "Error interno del servidor",
+  });
+ }
+});
+
+// Obtener todos los equipos
+app.get("/api/equipos", async (req, res) => {
+ try {
+  const equipos = await getAllEquipos();
+  
+  // Para cada equipo, obtener sus miembros
+  const equiposConMiembros = await Promise.all(
+   equipos.map(async (equipo) => {
+    const miembros = await getMiembrosEquipo(equipo.id);
+    return { ...equipo, miembros };
+   })
+  );
+
+  return res.json(equiposConMiembros);
+ } catch (error) {
+  console.error("Error obteniendo equipos:", error);
+  return res.status(500).json({ error: "Error interno del servidor" });
+ }
+});
+
+// Obtener equipo por ID
+app.get("/api/equipos/:id", async (req, res) => {
+ const { id } = req.params;
+ const equipoId = parseInt(id, 10);
+
+ if (isNaN(equipoId)) {
+  return res.status(400).json({ error: "ID de equipo inválido" });
+ }
+
+ try {
+  const equipo = await getEquipoById(equipoId);
+  
+  if (!equipo) {
+   return res.status(404).json({ error: "Equipo no encontrado" });
+  }
+
+  const miembros = await getMiembrosEquipo(equipoId);
+
+  return res.json({ ...equipo, miembros });
+ } catch (error) {
+  console.error("Error obteniendo equipo:", error);
+  return res.status(500).json({ error: "Error interno del servidor" });
+ }
+});
+
+// Obtener equipo de un participante por email
+app.get("/api/equipos/by-participant", async (req, res) => {
+ const { email } = req.query;
+
+ if (!email || typeof email !== "string") {
+  return res.status(400).json({ error: "Email requerido" });
+ }
+
+ try {
+  const equipo = await getEquipoByParticipantEmail(email);
+  
+  if (!equipo) {
+   return res.json({ equipo: null, message: "No está registrado en ningún equipo" });
+  }
+
+  const miembros = await getMiembrosEquipo(equipo.id);
+
+  return res.json({ equipo: { ...equipo, miembros } });
+ } catch (error) {
+  console.error("Error obteniendo equipo del participante:", error);
+  return res.status(500).json({ error: "Error interno del servidor" });
+ }
+});
+
+// === RUTAS GENERALES ===
+
+app.get("/", (req, res) => {
+ res.json({ 
+  message: "API de registro, asistencia, constancias y equipos funcionando correctamente",
+  endpoints: {
+   registro: "/api/registro",
+   participantes: "/api/participante",
+   conferencias: "/api/conferencias",
+   asistencias: "/api/asistencias",
+   equipos: "/api/equipos",
+   constancias: "/api/constancia"
+  }
+ });
+});
+
 app.use("*", (req, res) => {
  res.status(404).json({ error: "Ruta no encontrada" });
 });
 
-// Iniciar el servidor
 const PORT = Number(process.env.PORT) || 3001;
 app.listen(PORT, () => {
  console.log(`🚀 API lista en http://localhost:${PORT}`);
