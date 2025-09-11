@@ -147,8 +147,8 @@
   background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
 }
 
-.footer-social a.whatsapp:hover {
-  background: #25d366;
+.footer-social a.tiktok:hover {
+  background: black;
 }
 
 .footer-social .social-icon {

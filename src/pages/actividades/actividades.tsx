@@ -575,7 +575,7 @@ export default function Activities() {
 
     const startPosition = window.pageYOffset;
     const distance = offsetPosition - startPosition;
-    const duration = 800;
+    const duration = 300;  //
     let startTime: number | null = null;
 
     function animation(currentTime: number) {

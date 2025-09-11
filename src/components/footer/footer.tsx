@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
   faFacebookF, 
   faInstagram, 
-  faWhatsapp 
+  faTiktok 
 } from '@fortawesome/free-brands-svg-icons';
 import './footer.css';
 
@@ -44,26 +44,15 @@ function Footer() {
               <FontAwesomeIcon icon={faInstagram} className="social-icon" />
             </a>
 
-            {/* WhatsApp - Primer contacto */}
-            <a 
-              href="https://wa.me/529982288611" 
-              target="_blank"
-              rel="noopener noreferrer" 
-              className="whatsapp whatsapp-tooltip" 
-              aria-label="Contacto 1: +52 998 228 8611"
-            >
-              <FontAwesomeIcon icon={faWhatsapp} className="social-icon" />
-            </a>
-
             {/* WhatsApp - Segundo contacto */}
             <a 
-              href="https://wa.me/529983982543" 
+              href="https://www.tiktok.com/@jornada.ing.industrial" 
               target="_blank"
               rel="noopener noreferrer" 
-              className="whatsapp whatsapp-tooltip" 
-              aria-label="Contacto 2: +52 998 398 2543"
+              className="tiktok" 
+              aria-label="@jornada.ing.industrial"
             >
-              <FontAwesomeIcon icon={faWhatsapp} className="social-icon" />
+              <FontAwesomeIcon icon={faTiktok} className="social-icon" />
             </a>
           </div>
         </div>
