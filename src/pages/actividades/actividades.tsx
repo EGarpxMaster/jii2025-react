@@ -31,23 +31,23 @@ const activitiesData: Activity[] = [
     id: "C1",
     kind: "conference",
     banner: "/assets/images/actividades/banners/C1.jpg",
-    title: "Del dato a la decisión: cómo pensar como un ingeniero y actuar como un financiero.", // [cite: 48]
+    title: "Del dato a la decisión: cómo pensar como un ingeniero y actuar como un financiero",
     description:
-      "Se aborda la gestión de operaciones desde una perspectiva financiera, resaltando la importancia de integrar el pensamiento de negocios en la práctica profesional.", // [cite: 49]
+      "Se aborda la gestión de operaciones desde una perspectiva financiera, resaltando la importancia de integrar el pensamiento de negocios en la práctica profesional.",
     speakers: [
       {
-        name: "Lic. Aaron Zavala Serrano", // [cite: 41]
-        image: "/assets/images/actividades/ponentes/Mtro.DavidCorrea.jpeg",
-        bio: "Profesional en gestión de negocios y optimización de procesos, con más de 11 años de experiencia integrando áreas operativas y de análisis para impulsar el control financiero.", // [cite: 43]
-        institution: "Playa Hotels & Resorts", // [cite: 46]
+        name: "Lic. Aaron Zavala Serrano",
+        image: "/assets/images/actividades/ponentes/Lic.AaronZavala.jpeg",
+        bio: "Profesional en gestión de negocios y optimización de procesos, con más de 11 años de experiencia integrando áreas operativas y de análisis para impulsar el control financiero.",
+        institution: "Playa Hotels & Resorts",
       },
     ],
     modal: {
-      title: "Del dato a la decisión: cómo pensar como un ingeniero y actuar como un financiero.", // [cite: 48]
+      title: "Del dato a la decisión: cómo pensar como un ingeniero y actuar como un financiero",
       paragraphs: [
-        "Se aborda la gestión de operaciones desde una perspectiva financiera, resaltando la importancia de integrar el pensamiento de negocios en la práctica profesional.", // [cite: 49]
-        "A lo largo de la charla, los asistentes comprenderán nociones clave sobre el retorno de inversión en la gestión de operaciones, el concepto de flujo financiero y la manera en que las decisiones cotidianas pueden traducirse en impactos directos en la rentabilidad y sostenibilidad de un negocio.", // [cite: 50]
-        "El objetivo es que los futuros profesionales adquieran una visión integral, donde la ingeniería y las finanzas se complementen para fortalecer la toma de decisiones estratégicas.", // [cite: 51]
+        "Se aborda la gestión de operaciones desde una perspectiva financiera, resaltando la importancia de integrar el pensamiento de negocios en la práctica profesional.",
+        "A lo largo de la charla, los asistentes comprenderán nociones clave sobre el retorno de inversión en la gestión de operaciones, el concepto de flujo financiero y la manera en que las decisiones cotidianas pueden traducirse en impactos directos en la rentabilidad y sostenibilidad de un negocio.",
+        "El objetivo es que los futuros profesionales adquieran una visión integral, donde la ingeniería y las finanzas se complementen para fortalecer la toma de decisiones estratégicas.",
       ],
     },
   },
@@ -55,22 +55,22 @@ const activitiesData: Activity[] = [
     id: "C2",
     kind: "conference",
     banner: "/assets/images/actividades/banners/C2.jpeg",
-    title: "Optimización en una línea de producción: un caso real.", // [cite: 11]
+    title: "Optimización en una línea de producción: un caso real",
     description:
-      "Un experto en modelación y optimización de sistemas complejos presenta un caso de estudio sobre los beneficios de la vinculación universidad-industria.", // [cite: 4, 5]
+      "Un experto en modelación y optimización de sistemas complejos presenta un caso de estudio sobre los beneficios de la vinculación universidad-industria.",
     speakers: [
       {
-        name: "Dr. Miguel Mata Pérez", // [cite: 1]
-        image: "/assets/images/actividades/ponentes/Dra.RuthReyes.jpeg",
-        bio: "Experto en modelación y optimización de sistemas complejos y de gran escala. Ha sido asesor en más de 20 proyectos de vinculación universidad-industria.", // [cite: 4, 5]
-        institution: "Universidad Autónoma de Nuevo León", // [cite: 9]
+        name: "Dr. Miguel Mata Pérez",
+        image: "/assets/images/actividades/ponentes/Dr.MiguelMata.jpeg",
+        bio: "Experto en modelación y optimización de sistemas complejos y de gran escala. Ha sido asesor en más de 20 proyectos de vinculación universidad-industria.",
+        institution: "Universidad Autónoma de Nuevo León",
       },
     ],
     modal: {
-      title: "Optimización en una línea de producción: un caso real.", // [cite: 11]
+      title: "Optimización en una línea de producción: un caso real",
       paragraphs: [
-        "El Dr. Miguel Mata, experto en modelación y optimización de sistemas complejos y de gran escala, compartirá su experiencia asesorando en más de 20 proyectos de vinculación universidad-industria.", // [cite: 4, 5]
-        "A través de un caso real, se mostrarán los importantes beneficios generados para el sector productivo regional, colaborando con empresas como Whirlpool, Volvo, Schneider Electric y Oxxo. Los intereses del Dr. Mata incluyen la optimización matemática aplicada y la creación de herramientas cuantitativas para la toma de decisiones en la cadena de suministro.", // [cite: 5, 7]
+        "El Dr. Miguel Mata Pérez, experto en modelación y optimización de sistemas complejos y de gran escala, compartirá su experiencia asesorando en más de 20 proyectos de vinculación universidad-industria.",
+        "A través de un caso real, se mostrarán los importantes beneficios generados para el sector productivo regional, colaborando con empresas como Whirlpool, Volvo, Schneider Electric y Oxxo. Los intereses del Dr. Mata incluyen la optimización matemática aplicada y la creación de herramientas cuantitativas para la toma de decisiones en la cadena de suministro.",
       ],
     },
   },
@@ -78,22 +78,22 @@ const activitiesData: Activity[] = [
     id: "C3",
     kind: "conference",
     banner: "/assets/images/actividades/banners/C3.jpg",
-    title: "Ingeniería en capas: como la manufactura aditiva construye el futuro.", // [cite: 30]
+    title: "Ingeniería en capas: como la manufactura aditiva construye el futuro",
     description:
-      "Descubre cómo la impresión 3D está revolucionando los procesos industriales mediante el diseño funcional, materiales sostenibles y prototipado inteligente.", // [cite: 31]
+      "Descubre cómo la impresión 3D está revolucionando los procesos industriales mediante el diseño funcional, materiales sostenibles y prototipado inteligente.",
     speakers: [
       {
-        name: "Dra. Cynthia Graciela Flores Hernández", // [cite: 20]
-        image: "/assets/images/actividades/ponentes/Lic.ArturoGuzman.jpeg",
-        bio: "Investigadora SNI nivel 1 con 15 años de experiencia. Sus intereses incluyen la síntesis de materiales compuestos y la fabricación de polímeros mediante impresión 3D.", // [cite: 24, 28]
-        institution: "ITESM / TecNM campus Querétaro", // [cite: 27]
+        name: "Dra. Cynthia Graciela Flores Hernández",
+        image: "/assets/images/actividades/ponentes/Dra.CynthiaFlores.jpg",
+        bio: "Investigadora SNI nivel 1 con 15 años de experiencia. Sus intereses incluyen la síntesis de materiales compuestos y la fabricación de polímeros mediante impresión 3D.",
+        institution: "ITESM / TecNM campus Querétaro",
       },
     ],
     modal: {
-      title: "Ingeniería en capas: como la manufactura aditiva construye el futuro.", // [cite: 30]
+      title: "Ingeniería en capas: como la manufactura aditiva construye el futuro",
       paragraphs: [
-        "Descubre cómo la impresión 3D está revolucionando los procesos industriales mediante el diseño funcional, materiales sostenibles y prototipado inteligente.", // [cite: 31]
-        "Una mirada práctica a la manufactura aditiva como aliada de la innovación en ingeniería industrial.", // [cite: 32]
+        "Descubre cómo la impresión 3D está revolucionando los procesos industriales mediante el diseño funcional, materiales sostenibles y prototipado inteligente.",
+        "Una mirada práctica a la manufactura aditiva como aliada de la innovación en ingeniería industrial.",
       ],
     },
   },
@@ -101,46 +101,73 @@ const activitiesData: Activity[] = [
     id: "C4",
     kind: "conference",
     banner: "/assets/images/actividades/banners/C4.jpg",
-    title: "3 Herramientas para un proyecto de vida.", // [cite: 67]
+    title: "Mis obligaciones con el SAT en mi vida laboral - \"Hasta que la muerte nos separe\"",
     description:
-      "Una charla sobre liderazgo, propósito en el trabajo y desarrollo personal para impactar positivamente en tu vida y tu carrera profesional.", // [cite: 62, 65]
+      "Dar a conocer los procedimientos y documentación para el cumplimiento de obligaciones fiscales, con la finalidad que los egresados de la Universidad se integren a la vida laboral.",
     speakers: [
       {
-        name: "Lic. Arturo Guzmán Contreras", // [cite: 55]
-        image: "/assets/images/actividades/ponentes/Dra.LidiliaCruz.jpg",
-        bio: "Conferencista nacional, fundador de Giro 180 A.C., organización enfocada en el desarrollo integral y emocional de las personas.", // [cite: 61, 62]
-        institution: "Giro 180 A.C.", // [cite: 61]
+        name: "Mtro. Fernando Pérez Castillo",
+        image: "/assets/images/actividades/ponentes/Mtro.FernandoPerez.png",
+        bio: "Licenciado en Contaduría por la Universidad Autónoma de Guerrero, Maestro en Derecho Fiscal y Licenciado en Derecho por la Universidad del Sur Campus Cancún. Ha desarrollado su trayectoria como Contador General en el sector turístico y actualmente es docente en la Universidad del Caribe.",
+        institution: "Universidad del Caribe",
       },
     ],
     modal: {
-      title: "3 Herramientas para un proyecto de vida.", // [cite: 67]
+      title: "Mis obligaciones con el SAT en mi vida laboral - \"Hasta que la muerte nos separe\"",
       paragraphs: [
-        "El Lic. Arturo Guzmán Contreras es un profesional comprometido con el desarrollo humano, combinando su creatividad, conocimiento teológico y experiencia en el área social para impactar positivamente en la vida de los demás.", // [cite: 65]
-        "Como conferencista, ha impartido charlas a nivel nacional, abordando temas de liderazgo, propósito en el trabajo y propósitos de vida en empresas, dependencias gubernamentales e instituciones educativas.", // [cite: 62]
+        "Fernando Pérez Castillo es Licenciado en Contaduría por la Universidad Autónoma de Guerrero, donde obtuvo su título con los mejores promedios de su generación. Posteriormente, continuó su formación académica en la Universidad del Sur Campus Cancún, donde alcanzó los grados de Maestro en Derecho Fiscal y Licenciado en Derecho.",
+        "Ha desarrollado su trayectoria profesional como Contador General en el sector turístico y en la iniciativa privada, contribuyendo al crecimiento de empresas como IN GEAR México y Grupo Payless. Desde 2015, incursionó en la docencia en la Universidad del Sur Campus Cancún, y a partir de 2018 se integró como profesor en la Universidad del Caribe.",
+        "Su experiencia lo ha llevado a participar como ponente en diversos cursos y talleres, destacando Nómina y Seguridad Social, Declaración Anual del ISR para Personas Físicas y Morales, y Discrepancia Fiscal en Tarjetas de Crédito.",
       ],
     },
   },
+
+  {
+    id: "C5",
+    kind: "conference",
+    banner: "/assets/images/actividades/banners/C4.jpg",
+    title: "3 Herramientas para un proyecto de vida",
+    description:
+      "Ofrece a los participantes una visión práctica sobre cómo planear su futuro personal y profesional. Se presentarán tres recursos clave que permiten alinear metas con los retos de la Ingeniería Industrial.",
+    speakers: [
+      {
+        name: "Lic. Arturo Guzmán Contreras",
+        image: "/assets/images/actividades/ponentes/Lic.ArturoGuzman.jpeg",
+        bio: "Profesional con formación en Diseño Gráfico y Teología. Fundador de Giro 180 A.C., conferencista nacional que aborda temas de liderazgo, propósito en el trabajo y desarrollo personal.",
+        institution: "Giro 180 A.C.",
+      },
+    ],
+    modal: {
+      title: "3 Herramientas para un proyecto de vida",
+      paragraphs: [
+        "El Lic. Arturo Guzmán Contreras es un profesional con una formación académica diversa, destacándose en el Diseño Gráfico por la Escuela Superior de Diseño y Arte Publicitario, y en Teología por el Seminario Teológico Bautista de México. Su carrera profesional combina el diseño creativo con un enfoque humanista y social.",
+        "Como emprendedor, fundó Krash Arte y Diseño en Cristal y Giro 180 A.C., una organización enfocada en el desarrollo integral y emocional de las personas. En su faceta de conferencista, ha impartido charlas a nivel nacional, abordando temas de liderazgo, propósito en el trabajo y propósitos de vida en empresas del sector hotelero, dependencias gubernamentales e instituciones educativas.",
+        "Es un profesional comprometido con el desarrollo humano, combinando su creatividad, conocimiento teológico y experiencia en el área social para impactar positivamente en la vida de los demás.",
+      ],
+    },
+  },
+
   // Workshops
   {
     id: "W1",
     kind: "workshop",
     banner: "/assets/images/actividades/banners/W1.jpg",
-    title: "Teoría de inventarios: de la teoría básica a la complejidad de la aplicación.", // [cite: 15]
+    title: "Introducción a la teoría de inventarios: de la teoría básica a la complejidad de la aplicación.",
     description:
-      "Taller práctico sobre la creación de herramientas cuantitativas para la toma de decisiones en la cadena de suministro y la gestión de inventarios.", // [cite: 7]
+      "Taller práctico sobre la creación de herramientas cuantitativas para la toma de decisiones en la cadena de suministro y la gestión de inventarios.",
     speakers: [
       {
-        name: "Dr. Miguel Mata Pérez", // [cite: 1]
-        image: "/assets/images/actividades/ponentes/Mtro.DavidCorrea.jpeg",
-        bio: "Experto en modelación y optimización de sistemas complejos y de gran escala. Ha sido asesor en más de 20 proyectos de vinculación universidad-industria.", // [cite: 4, 5]
-        institution: "Universidad Autónoma de Nuevo León", // [cite: 9]
+        name: "Dr. Miguel Mata Pérez",
+        image: "/assets/images/actividades/ponentes/Dr.MiguelMata.jpeg",
+        bio: "Experto en modelación y optimización de sistemas complejos y de gran escala. Ha sido asesor en más de 20 proyectos de vinculación universidad-industria.",
+        institution: "Universidad Autónoma de Nuevo León",
       },
     ],
     modal: {
-      title: "Introducción a la teoría de inventarios: de la teoría básica a la complejidad de la aplicación.", // [cite: 15]
+      title: "Introducción a la teoría de inventarios: de la teoría básica a la complejidad de la aplicación.",
       paragraphs: [
-        "Este workshop, dirigido por el Dr. Miguel Mata, se enfoca en sus principales intereses: la optimización matemática aplicada y la creación de herramientas cuantitativas para la toma de decisiones en la cadena de suministro.", // [cite: 7]
-        "Los participantes obtendrán una base sólida para modelar y optimizar sistemas logísticos complejos, basados en la amplia experiencia del Dr. Mata como asesor de la industria y miembro fundador de la Sociedad Mexicana de Investigación de Operaciones.", // [cite: 5, 8]
+        "Este workshop, dirigido por el Dr. Miguel Mata Pérez, se enfoca en sus principales intereses: la optimización matemática aplicada y la creación de herramientas cuantitativas para la toma de decisiones en la cadena de suministro.",
+        "Los participantes obtendrán una base sólida para modelar y optimizar sistemas logísticos complejos, basados en la amplia experiencia del Dr. Mata Pérez como asesor de la industria y miembro fundador de la Sociedad Mexicana de Investigación de Operaciones.",
       ],
     },
   },
@@ -148,51 +175,124 @@ const activitiesData: Activity[] = [
     id: "W2",
     kind: "workshop",
     banner: "/assets/images/actividades/banners/W2.jpg",
-    title: "Ingeniería de empaque y embalaje.", // [cite: 83]
+    title: "Introducción a la Ingeniería de empaque y embalaje",
     description:
-      "Taller intensivo que ofrece una mirada práctica y conceptual al mundo del empaque y embalaje desde una perspectiva de ingeniería.", // [cite: 84]
+      "Taller intensivo que ofrece una mirada práctica y conceptual al mundo del empaque y embalaje desde una perspectiva de ingeniería.",
     speakers: [
       {
-        name: "Dr. Juan Hurtado", // [cite: 80]
-        image: "/assets/images/actividades/ponentes/Dra.LidiliaCruz.jpg",
+        name: "Dr. Juan José Hurtado Moreno",
+        image: "/assets/images/actividades/ponentes/Dr.JuanHurtado.jpg",
         bio: "Especialista nacional en el diseño, materiales y logística que influyen en la protección, presentación y sostenibilidad de los productos.",
-        institution: "Nacional", // [cite: 80]
+        institution: "Nacional",
       },
     ],
     modal: {
-      title: "Ingeniería de empaque y embalaje", // [cite: 83]
+      title: "Introducción a la Ingeniería de empaque y embalaje",
       paragraphs: [
-        "Este taller intensivo ofrece una mirada práctica y conceptual al mundo del empaque y embalaje desde una perspectiva ingenieril.", // [cite: 84]
-        "A lo largo de tres horas, los participantes conocerán los fundamentos técnicos, materiales utilizados, criterios de diseño y consideraciones logísticas que influyen en la protección, presentación y sostenibilidad de los productos.", // [cite: 85]
-        "Ideal para quienes buscan ampliar su perfil profesional, explorar nuevas oportunidades laborales o fortalecer sus conocimientos en esta área clave de la cadena de suministro.", // [cite: 86]
+        "Este taller intensivo ofrece una mirada práctica y conceptual al mundo del empaque y embalaje desde una perspectiva ingenieril.",
+        "A lo largo de tres horas, los participantes conocerán los fundamentos técnicos, materiales utilizados, criterios de diseño y consideraciones logísticas que influyen en la protección, presentación y sostenibilidad de los productos.",
+        "Ideal para quienes buscan ampliar su perfil profesional, explorar nuevas oportunidades laborales o fortalecer sus conocimientos en esta área clave de la cadena de suministro.",
       ],
     },
   },
   {
     id: "W3",
     kind: "workshop",
-    banner: "/assets/images/actividades/banners/W3.jpg",
-    title: "Diseña, imprime, impacta - La manufactura aditiva transforma la ingeniería.", // [cite: 35]
+    banner: "/assets/images/actividades/banners/W2.jpg",
+    title: "Diseña, imprime, impacta - La manufactura aditiva transforma la ingeniería",
     description:
-      "En este taller práctico descubrirás cómo preparar y fabricar tus propias piezas, conociendo el funcionamiento de una impresora 3D FDM desde cero.", // [cite: 36, 37]
+      "Taller práctico donde descubrirás cómo preparar y fabricar tus propias piezas. Conocerás el funcionamiento de una impresora 3D FDM, el uso de filamentos y el proceso de laminado.",
     speakers: [
       {
-        name: "Dra. Cynthia Graciela Flores Hernández", // [cite: 20]
-        image: "/assets/images/actividades/ponentes/Mtra.LeslyeRamirez.jpg",
-        bio: "Investigadora SNI nivel 1 con 15 años de experiencia. Sus intereses incluyen la síntesis de materiales compuestos y la fabricación de polímeros mediante impresión 3D.", // [cite: 24, 28]
-        institution: "ITESM / TecNM campus Querétaro", // [cite: 27]
+        name: "Dra. Cynthia Graciela Flores Hernández",
+        image: "/assets/images/actividades/ponentes/Dra.CynthiaFlores.jpg",
+        bio: "Investigadora SNI nivel 1 con 15 años de experiencia. Sus intereses incluyen la síntesis de materiales compuestos y la fabricación de polímeros mediante impresión 3D.",
+        institution: "ITESM / TecNM campus Querétaro",
       },
     ],
     modal: {
-      title: "Diseña, imprime, impacta - La manufactura aditiva transforma la ingeniería", // [cite: 35]
+      title: "Diseña, imprime, impacta - La manufactura aditiva transforma la ingeniería",
       paragraphs: [
-        "En este taller práctico descubrirás cómo preparar y fabricar tus propias piezas.", // [cite: 36]
-        "Conocerás el funcionamiento de una impresora 3D FDM, el uso de filamentos, el proceso de laminado y los aspectos clave para lograr impresiones exitosas desde cero.", // [cite: 37]
+        "En este taller práctico descubrirás cómo preparar y fabricar tus propias piezas.",
+        "Conocerás el funcionamiento de una impresora 3D FDM, el uso de filamentos, el proceso de laminado y los aspectos clave para lograr impresiones exitosas desde cero.",
+      ],
+    },
+  },
+  {
+    id: "W4",
+    kind: "workshop",
+    banner: "/assets/images/actividades/banners/W3.jpg",
+    title: "Propiedades de las arenas de moldeo",
+    description:
+      "La fundición es un proceso fundamental en la industria metalúrgica. Conocer las propiedades de las arenas de moldeo es indispensable para asegurar la calidad del producto final.",
+    speakers: [
+      {
+        name: "Dra. Martha Elva Pérez Ramos",
+        image: "/assets/images/actividades/ponentes/Dra.MarthaPerez.jpg",
+        bio: "Egresada de la Universidad Autónoma de Querétaro en Metalurgia, con estudios de Maestría y Doctorado en Ciencias con especialidad en Materiales por el Cinvestav-IPN. Actualmente docente de tiempo completo en el TecNM campus Querétaro.",
+        institution: "Tecnológico Nacional de México, campus Querétaro",
+      },
+    ],
+    modal: {
+      title: "Propiedades de las arenas de moldeo",
+      paragraphs: [
+        "La fundición es un proceso fundamental en la industria metalúrgica que permite la obtención de piezas con formas complejas y propiedades específicas. Uno de los elementos clave en este proceso es la arena de moldeo, cuya calidad y características determinan en gran medida el éxito del molde y, por ende, la calidad del producto final.",
+        "Conocer las propiedades de las arenas de moldeo es indispensable para asegurar que los moldes tengan la resistencia, permeabilidad y estabilidad necesarias durante el vertido del metal fundido. Estas propiedades afectan directamente la precisión dimensional, el acabado y la ausencia de defectos en las piezas fundidas.",
+        "Las pruebas específicas a la arena de moldeo y sus componentes permiten identificar su composición, granulometría, contenido de humedad, plasticidad y compactación, entre otros. Estas pruebas aseguran que la arena pueda soportar las condiciones térmicas y mecánicas del proceso.",
       ],
     },
   },
 
-  // NEW FORUMS DATA
+  {
+    id: "W5",
+    kind: "workshop",
+    banner: "/assets/images/actividades/banners/W3.jpg",
+    title: "Modelado 3D y manuales interactivos de mantenimiento con iPhone Pro y JigSpace",
+    description:
+      "Taller sobre el uso de tecnologías móviles de modelado 3D y realidad aumentada aplicadas al mantenimiento industrial. Los participantes aprenderán a generar modelos tridimensionales y crear manuales interactivos.",
+    speakers: [
+      {
+        name: "Dr. Alejandro Charbel Cárdenas León",
+        image: "/assets/images/actividades/ponentes/Dr.AlejandroCardenas.jpeg",
+        bio: "Ingeniero, administrador y economista con amplia trayectoria en industria y docencia. Profesor Investigador de Tiempo Completo en la Universidad del Caribe, especializado en ingeniería industrial y gestión financiera.",
+        institution: "Universidad del Caribe",
+      },
+    ],
+    modal: {
+      title: "Modelado 3D y manuales interactivos de mantenimiento con iPhone Pro y JigSpace",
+      paragraphs: [
+        "El taller tiene como objetivo introducir a los participantes en el uso de tecnologías móviles de modelado 3D y realidad aumentada aplicadas al mantenimiento industrial. A través de la utilización de un iPhone Pro con sensor LiDAR y la app Reality Composer, los asistentes aprenderán a generar modelos tridimensionales de piezas o componentes.",
+        "Posteriormente, mediante la plataforma JigSpace, transformarán estos modelos en manuales interactivos que podrán visualizarse en realidad aumentada, facilitando procesos de capacitación, diagnóstico y documentación en entornos industriales.",
+        "Este enfoque busca mostrar cómo la integración de herramientas digitales puede innovar los procesos de mantenimiento, haciendo más accesible la información técnica y mejorando la comprensión visual de procedimientos.",
+      ],
+    },
+  },
+
+  {
+    id: "W6",
+    kind: "workshop",
+    banner: "/assets/images/actividades/banners/W3.jpg",
+    title: "Fundamentos prácticos de circuitos eléctricos en Corriente Alterna",
+    description:
+      "Taller práctico diseñado para estudiantes sin experiencia previa en electricidad, con el objetivo de desarrollar competencias básicas en el análisis y montaje de circuitos eléctricos de uso común en entornos industriales.",
+    speakers: [
+      {
+        name: "M.E.R. Leslye Johanna Ramírez Carmona",
+        image: "/assets/images/actividades/ponentes/Mtra.LeslyeRamirez.jpg",
+        bio: "Ingeniera Mecánica Electricista por la Universidad Veracruzana y Maestra en Administración de la Energía y sus Fuentes Renovables por el ITESM. Actualmente Profesora de Asignatura en el Departamento de Ciencias Básicas e Ingeniería de la Universidad del Caribe.",
+        institution: "Universidad del Caribe",
+      },
+    ],
+    modal: {
+      title: "Fundamentos prácticos de circuitos eléctricos en Corriente Alterna",
+      paragraphs: [
+        "En el contexto de la ingeniería industrial, comprender los fundamentos eléctricos es esencial para la gestión de sistemas productivos, automatización, mantenimiento de equipos y diseño de instalaciones. Este taller práctico está diseñado para estudiantes sin experiencia previa en electricidad.",
+        "A través de actividades guiadas, los participantes construirán y analizarán tres configuraciones fundamentales: circuitos en serie, en paralelo y el sistema de interruptor de escalera (tres vías), ampliamente utilizado en instalaciones eléctricas de edificios, plantas industriales y espacios públicos.",
+        "Este taller busca transmitir conocimientos técnicos, fomentar el pensamiento lógico, la resolución de problemas y la capacidad de interpretar esquemas eléctricos básicos; habilidades clave para el desempeño profesional del ingeniero industrial.",
+      ],
+    },
+  },
+
   {
     id: "F1",
     kind: "forum",
@@ -442,7 +542,7 @@ function ActivityCard({
       case "workshop":
         return { label: "Workshop", className: "activity-badge-workshop" };
       case "forum":
-        return { label: "Foro", className: "activity-badge-forum" };
+        return { label: "Foro", className: "activity-badge-workshop" };
       default:
         return { label: "", className: "" };
     }

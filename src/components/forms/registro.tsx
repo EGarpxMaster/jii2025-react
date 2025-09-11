@@ -20,6 +20,7 @@ type FormData = {
   telefono: string;
   categoria: Categoria | "";
   programa?: Programa | "";
+  brazalete: string; // NEW: Brazalete field
 };
 
 type Errors = Partial<Record<keyof FormData, string>>;
@@ -53,6 +54,7 @@ const RegistroComponent: React.FC<RegistroComponentProps> = ({
     telefono: "",
     categoria: "",
     programa: "",
+    brazalete: "", // NEW: Initialize brazalete field
   });
 
   const [errors, setErrors] = useState<Errors>({});
@@ -61,6 +63,9 @@ const RegistroComponent: React.FC<RegistroComponentProps> = ({
   const [emailStatus, setEmailStatus] = useState<
     "idle" | "checking" | "ok" | "taken" | "invalid"
   >("idle");
+  const [brazaleteStatus, setBrazaleteStatus] = useState<
+    "idle" | "checking" | "ok" | "taken" | "invalid"
+  >("idle"); // NEW: Brazalete status
   const [submitted, setSubmitted] = useState(false);
 
   const isEstudiante = data.categoria === "Estudiante";
@@ -73,6 +78,7 @@ const RegistroComponent: React.FC<RegistroComponentProps> = ({
       segundoNombre: "Ingresa tu segundo nombre",
       email: "Correo electrónico",
       telefono: "Teléfono (10 dígitos)",
+      brazalete: "Ingresa tu número de brazalete",
     }),
     []
   );
@@ -93,6 +99,11 @@ const RegistroComponent: React.FC<RegistroComponentProps> = ({
         const digits = String(value).replace(/\D/g, "").slice(0, 10);
         (next.telefono as string) = digits;
       }
+      // NEW: Sanitizar brazalete: solo números y letras, máx. 20 caracteres
+      if (field === "brazalete") {
+        const clean = String(value).replace(/[^a-zA-Z0-9]/g, "").slice(0, 20).toUpperCase();
+        (next.brazalete as string) = clean;
+      }
       return next;
     });
   }
@@ -107,12 +118,37 @@ const RegistroComponent: React.FC<RegistroComponentProps> = ({
     if (field === "email") {
       void verifyEmailUnique();
     }
+    
+    // NEW: Checar brazalete único al salir del campo
+    if (field === "brazalete") {
+      void verifyBrazaleteUnique();
+    }
   }
 
   async function checkEmailUnique(email: string): Promise<boolean> {
     try {
       const url = `${API_URL}?action=check-email&email=${encodeURIComponent(
         email
+      )}`;
+      
+      const res = await fetch(url, { credentials: "include" });
+      
+      if (!res.ok) {
+        return true; // No bloquear si backend no responde correctamente
+      }
+      
+      const json = await res.json();
+      return !!json.unique;
+    } catch (error) {
+      return true; // Evitar bloquear por fallas de red
+    }
+  }
+
+  // NEW: Function to check brazalete uniqueness
+  async function checkBrazaleteUnique(brazalete: string): Promise<boolean> {
+    try {
+      const url = `${API_URL}?action=check-brazalete&brazalete=${encodeURIComponent(
+        brazalete
       )}`;
       
       const res = await fetch(url, { credentials: "include" });
@@ -139,6 +175,18 @@ const RegistroComponent: React.FC<RegistroComponentProps> = ({
     setEmailStatus(unique ? "ok" : "taken");
   }
 
+  // NEW: Function to verify brazalete uniqueness
+  async function verifyBrazaleteUnique() {
+    const brazalete = data.brazalete.trim();
+    if (!brazalete || brazalete.length < 3) {
+      setBrazaleteStatus("invalid");
+      return;
+    }
+    setBrazaleteStatus("checking");
+    const unique = await checkBrazaleteUnique(brazalete);
+    setBrazaleteStatus(unique ? "ok" : "taken");
+  }
+
   function validate(values: FormData): Errors {
     const e: Errors = {};
     if (!values.apellidoPaterno.trim()) e.apellidoPaterno = "Campo obligatorio";
@@ -153,6 +201,13 @@ const RegistroComponent: React.FC<RegistroComponentProps> = ({
     if (!tel) e.telefono = "Campo obligatorio";
     else if (!/^\d{10}$/.test(tel))
       e.telefono = "Deben ser exactamente 10 dígitos";
+
+    // NEW: Brazalete validation
+    const brazalete = values.brazalete.trim();
+    if (!brazalete) e.brazalete = "Campo obligatorio";
+    else if (brazalete.length < 3) e.brazalete = "Mínimo 3 caracteres";
+    else if (brazalete.length > 20) e.brazalete = "Máximo 20 caracteres";
+    else if (!/^[A-Z0-9]+$/.test(brazalete)) e.brazalete = "Solo números y letras";
 
     if (!values.categoria) e.categoria = "Selecciona una categoría";
 
@@ -174,6 +229,7 @@ const RegistroComponent: React.FC<RegistroComponentProps> = ({
       email: true,
       telefono: true,
       categoria: true,
+      brazalete: true, // NEW: Always mark brazalete as touched
     };
 
     // Solo incluir programa si es estudiante
@@ -191,12 +247,23 @@ const RegistroComponent: React.FC<RegistroComponentProps> = ({
     }
 
     // Verificar unicidad de email en backend
-    const unique = await checkEmailUnique(data.email);
-    if (!unique) {
+    const emailUnique = await checkEmailUnique(data.email);
+    if (!emailUnique) {
       setEmailStatus("taken");
       setErrors((e) => ({
         ...e,
         email: "Este correo ya fue registrado",
+      }));
+      return;
+    }
+
+    // NEW: Verificar unicidad de brazalete en backend
+    const brazaleteUnique = await checkBrazaleteUnique(data.brazalete);
+    if (!brazaleteUnique) {
+      setBrazaleteStatus("taken");
+      setErrors((e) => ({
+        ...e,
+        brazalete: "Este número de brazalete ya fue registrado",
       }));
       return;
     }
@@ -219,8 +286,18 @@ const RegistroComponent: React.FC<RegistroComponentProps> = ({
       });
 
       if (res.status === 409) {
-        setEmailStatus("taken");
-        setErrors((e) => ({ ...e, email: "Este correo ya fue registrado" }));
+        const errorData = await res.json();
+        // Handle different types of conflicts
+        if (errorData.field === 'email') {
+          setEmailStatus("taken");
+          setErrors((e) => ({ ...e, email: "Este correo ya fue registrado" }));
+        } else if (errorData.field === 'brazalete') {
+          setBrazaleteStatus("taken");
+          setErrors((e) => ({ ...e, brazalete: "Este número de brazalete ya fue registrado" }));
+        } else {
+          // Generic conflict error
+          alert(errorData.error || "Ya existe un registro con estos datos");
+        }
         return;
       }
 
@@ -372,6 +449,48 @@ const RegistroComponent: React.FC<RegistroComponentProps> = ({
                       className="form-input"
                     />
                   </div>
+
+                  {/* NEW: Brazalete field */}
+                  <div className="form-group">
+                    <label htmlFor="brazalete" className="form-label">
+                      Número de Brazalete *
+                    </label>
+                    <input
+                      id="brazalete"
+                      name="brazalete"
+                      type="text"
+                      placeholder={placeholders.brazalete}
+                      value={data.brazalete}
+                      onChange={(e) => handleChange("brazalete", e.target.value)}
+                      onBlur={() => handleBlur("brazalete")}
+                      aria-invalid={!!errors.brazalete || brazaleteStatus === "taken"}
+                      className={`form-input ${errors.brazalete || brazaleteStatus === "taken" ? "input-error" : ""}`}
+                      required
+                    />
+                    <div className="brazalete-status">
+                      {brazaleteStatus === "checking" && (
+                        <small className="checking">Verificando disponibilidad…</small>
+                      )}
+                      {brazaleteStatus === "ok" && data.brazalete && (
+                        <small className="success">✓ Número disponible</small>
+                      )}
+                      {brazaleteStatus === "invalid" && (
+                        <small role="alert" className="error">
+                          Formato de brazalete inválido
+                        </small>
+                      )}
+                      {brazaleteStatus === "taken" && (
+                        <small role="alert" className="error">
+                          Este número ya fue registrado
+                        </small>
+                      )}
+                    </div>
+                    {touched.brazalete && errors.brazalete && (
+                      <small role="alert" className="error-message">
+                        {errors.brazalete}
+                      </small>
+                    )}
+                  </div>
                 </div>
               </fieldset>
 
@@ -521,7 +640,7 @@ const RegistroComponent: React.FC<RegistroComponentProps> = ({
                 <button
                   type="submit"
                   className={`submit-button ${isSubmitting ? "submitting" : ""}`}
-                  disabled={isSubmitting || emailStatus === "checking"}
+                  disabled={isSubmitting || emailStatus === "checking" || brazaleteStatus === "checking"}
                 >
                   {isSubmitting ? (
                     <>
