@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import "./actividades.css"; 
+import "./actividades.css";
 
 // Tipos
 type Speaker = {
@@ -10,8 +10,8 @@ type Speaker = {
 };
 
 type Activity = {
-  id: string; // C1, C2, W1, etc.
-  kind: "conference" | "workshop";
+  id: string; // C1, C2, W1, F1 etc.
+  kind: "conference" | "workshop" | "forum"; // kind "forum" was added
   banner: string;
   title: string;
   description: string;
@@ -26,27 +26,28 @@ type Activity = {
 
 // Datos (conserva las rutas y textos que enviaste)
 const activitiesData: Activity[] = [
+  // Conferences
   {
     id: "C1",
     kind: "conference",
     banner: "/assets/images/actividades/banners/C1.jpg",
-    title:
-      "El Sistema General de Unidades de Medida y sus equivalencias NOM-008-SE-2021",
+    title: "Del dato a la decisión: cómo pensar como un ingeniero y actuar como un financiero.", // [cite: 48]
     description:
-      "Se dará a conocer el marco legal y normativo sobre el uso del SGUM en las Universidades y Escuelas a nivel Nacional.",
+      "Se aborda la gestión de operaciones desde una perspectiva financiera, resaltando la importancia de integrar el pensamiento de negocios en la práctica profesional.", // [cite: 49]
     speakers: [
       {
-        name: "Mtro. David Francisco Correa Jara",
+        name: "Lic. Aaron Zavala Serrano", // [cite: 41]
         image: "/assets/images/actividades/ponentes/Mtro.DavidCorrea.jpeg",
-        bio: "Especialista en metrología y sistemas de medición con amplia experiencia en el sector industrial.",
-        institution: "Universidad del Caribe",
+        bio: "Profesional en gestión de negocios y optimización de procesos, con más de 11 años de experiencia integrando áreas operativas y de análisis para impulsar el control financiero.", // [cite: 43]
+        institution: "Playa Hotels & Resorts", // [cite: 46]
       },
     ],
     modal: {
-      title:
-        "El Sistema General de Unidades de Medida y sus equivalencias NOM-008-SE-2021",
+      title: "Del dato a la decisión: cómo pensar como un ingeniero y actuar como un financiero.", // [cite: 48]
       paragraphs: [
-        "Se dará a conocer el marco legal y normativo sobre el uso del SGUM en las Universidades y Escuelas a nivel Nacional, así como equivalencias (conversiones) con otros sistemas.",
+        "Se aborda la gestión de operaciones desde una perspectiva financiera, resaltando la importancia de integrar el pensamiento de negocios en la práctica profesional.", // [cite: 49]
+        "A lo largo de la charla, los asistentes comprenderán nociones clave sobre el retorno de inversión en la gestión de operaciones, el concepto de flujo financiero y la manera en que las decisiones cotidianas pueden traducirse en impactos directos en la rentabilidad y sostenibilidad de un negocio.", // [cite: 50]
+        "El objetivo es que los futuros profesionales adquieran una visión integral, donde la ingeniería y las finanzas se complementen para fortalecer la toma de decisiones estratégicas.", // [cite: 51]
       ],
     },
   },
@@ -54,24 +55,22 @@ const activitiesData: Activity[] = [
     id: "C2",
     kind: "conference",
     banner: "/assets/images/actividades/banners/C2.jpeg",
-    title:
-      "Desempeño innovador de los sistemas productivos de empresas manufactureras",
+    title: "Optimización en una línea de producción: un caso real.", // [cite: 11]
     description:
-      "Innovación en los procesos productivos del sector calzado en Colombia y su impacto en la competitividad.",
+      "Un experto en modelación y optimización de sistemas complejos presenta un caso de estudio sobre los beneficios de la vinculación universidad-industria.", // [cite: 4, 5]
     speakers: [
       {
-        name: "Dra. Ruth Leonor Reyes Villalba",
+        name: "Dr. Miguel Mata Pérez", // [cite: 1]
         image: "/assets/images/actividades/ponentes/Dra.RuthReyes.jpeg",
-        bio: "Investigador especializado en innovación de sistemas productivos para el sector manufacturero.",
-        institution: "Universidad del Caribe",
+        bio: "Experto en modelación y optimización de sistemas complejos y de gran escala. Ha sido asesor en más de 20 proyectos de vinculación universidad-industria.", // [cite: 4, 5]
+        institution: "Universidad Autónoma de Nuevo León", // [cite: 9]
       },
     ],
     modal: {
-      title: "Desempeño innovador de los sistemas productivos",
+      title: "Optimización en una línea de producción: un caso real.", // [cite: 11]
       paragraphs: [
-        "En un mundo cada vez más competitivo, la innovación se ha convertido en un pilar fundamental para la sostenibilidad y el crecimiento de las empresas. En Colombia, el sector calzado enfrenta desafíos significativos, desde la competencia internacional hasta las fluctuaciones del mercado.",
-        "Muchas empresas han comenzado a adoptar prácticas innovadoras en sus procesos productivos, integrando tecnologías avanzadas y estrategias de sostenibilidad que no solo mejoran la eficiencia, sino que también contribuyen a la calidad del producto final.",
-        "El sector calzado en Colombia, ahora se encuentra ante la necesidad de evolucionar. La innovación no solo se trata de incorporar nuevas tecnologías, sino también de transformar la cultura empresarial y los procesos internos para mejorar la eficiencia, reducir costos y aumentar la calidad del producto.",
+        "El Dr. Miguel Mata, experto en modelación y optimización de sistemas complejos y de gran escala, compartirá su experiencia asesorando en más de 20 proyectos de vinculación universidad-industria.", // [cite: 4, 5]
+        "A través de un caso real, se mostrarán los importantes beneficios generados para el sector productivo regional, colaborando con empresas como Whirlpool, Volvo, Schneider Electric y Oxxo. Los intereses del Dr. Mata incluyen la optimización matemática aplicada y la creación de herramientas cuantitativas para la toma de decisiones en la cadena de suministro.", // [cite: 5, 7]
       ],
     },
   },
@@ -79,22 +78,22 @@ const activitiesData: Activity[] = [
     id: "C3",
     kind: "conference",
     banner: "/assets/images/actividades/banners/C3.jpg",
-    title: "Liderazgo sostenible y ética profesional",
+    title: "Ingeniería en capas: como la manufactura aditiva construye el futuro.", // [cite: 30]
     description:
-      "Enfoque en el liderazgo consciente y la toma de decisiones éticas en el entorno profesional.",
+      "Descubre cómo la impresión 3D está revolucionando los procesos industriales mediante el diseño funcional, materiales sostenibles y prototipado inteligente.", // [cite: 31]
     speakers: [
       {
-        name: "Lic. Arturo Guzmán Contreras",
+        name: "Dra. Cynthia Graciela Flores Hernández", // [cite: 20]
         image: "/assets/images/actividades/ponentes/Lic.ArturoGuzman.jpeg",
-        bio: "Especialista en ética empresarial y sostenibilidad organizacional.",
-        institution: "Universidad del Caribe",
+        bio: "Investigadora SNI nivel 1 con 15 años de experiencia. Sus intereses incluyen la síntesis de materiales compuestos y la fabricación de polímeros mediante impresión 3D.", // [cite: 24, 28]
+        institution: "ITESM / TecNM campus Querétaro", // [cite: 27]
       },
     ],
     modal: {
-      title: "Liderazgo sostenible y ética profesional",
+      title: "Ingeniería en capas: como la manufactura aditiva construye el futuro.", // [cite: 30]
       paragraphs: [
-        "La conferencia examina cómo los líderes pueden adoptar un enfoque que combine la sostenibilidad y la ética en su ejercicio profesional. Durante este evento, se abordarán los principios del liderazgo consciente, promoviendo la toma de decisiones responsables que generen un impacto positivo a largo plazo en las organizaciones, las personas y el entorno.",
-        "Se destacará la relevancia de la ética profesional como fundamento en la toma de decisiones en un entorno laboral dinámico. Además, subrayará la importancia de alinear los objetivos empresariales con la sostenibilidad ambiental y el desarrollo humano.",
+        "Descubre cómo la impresión 3D está revolucionando los procesos industriales mediante el diseño funcional, materiales sostenibles y prototipado inteligente.", // [cite: 31]
+        "Una mirada práctica a la manufactura aditiva como aliada de la innovación en ingeniería industrial.", // [cite: 32]
       ],
     },
   },
@@ -102,22 +101,22 @@ const activitiesData: Activity[] = [
     id: "C4",
     kind: "conference",
     banner: "/assets/images/actividades/banners/C4.jpg",
-    title:
-      "De la idea al patentamiento para la solución de problemas en el sector artesanal",
+    title: "3 Herramientas para un proyecto de vida.", // [cite: 67]
     description:
-      "Importancia de la ingeniería y la optimización en el desarrollo de prototipos para el sector artesanal.",
+      "Una charla sobre liderazgo, propósito en el trabajo y desarrollo personal para impactar positivamente en tu vida y tu carrera profesional.", // [cite: 62, 65]
     speakers: [
       {
-        name: "Dra. Lidilia Cruz Rivero",
+        name: "Lic. Arturo Guzmán Contreras", // [cite: 55]
         image: "/assets/images/actividades/ponentes/Dra.LidiliaCruz.jpg",
-        bio: "Experto en propiedad industrial y desarrollo de prototipos para sectores artesanales.",
-        institution: "Universidad del Caribe",
+        bio: "Conferencista nacional, fundador de Giro 180 A.C., organización enfocada en el desarrollo integral y emocional de las personas.", // [cite: 61, 62]
+        institution: "Giro 180 A.C.", // [cite: 61]
       },
     ],
     modal: {
-      title: "De la idea al patentamiento",
+      title: "3 Herramientas para un proyecto de vida.", // [cite: 67]
       paragraphs: [
-        "El objetivo de esta conferencia es mostrar la importancia de la ingeniería y la optimización de procesos, la innovación, manufactura y propiedad industrial, en el desarrollo de prototipos que mejoren las actividades tipo artesanal logrando modelos de utilidad y registros de software ante e IMPI e INDAUTOR.",
+        "El Lic. Arturo Guzmán Contreras es un profesional comprometido con el desarrollo humano, combinando su creatividad, conocimiento teológico y experiencia en el área social para impactar positivamente en la vida de los demás.", // [cite: 65]
+        "Como conferencista, ha impartido charlas a nivel nacional, abordando temas de liderazgo, propósito en el trabajo y propósitos de vida en empresas, dependencias gubernamentales e instituciones educativas.", // [cite: 62]
       ],
     },
   },
@@ -126,21 +125,22 @@ const activitiesData: Activity[] = [
     id: "W1",
     kind: "workshop",
     banner: "/assets/images/actividades/banners/W1.jpg",
-    title: "Aplicación de la metrología en procesos industriales",
+    title: "Teoría de inventarios: de la teoría básica a la complejidad de la aplicación.", // [cite: 15]
     description:
-      "Importancia de la metrología en los procesos industriales y posibilidades de especialización.",
+      "Taller práctico sobre la creación de herramientas cuantitativas para la toma de decisiones en la cadena de suministro y la gestión de inventarios.", // [cite: 7]
     speakers: [
       {
-        name: "Mtro. David Francisco Correa Jara",
+        name: "Dr. Miguel Mata Pérez", // [cite: 1]
         image: "/assets/images/actividades/ponentes/Mtro.DavidCorrea.jpeg",
-        bio: "Especialista en metrología industrial con experiencia en implementación de sistemas de medición.",
-        institution: "Universidad del Caribe",
+        bio: "Experto en modelación y optimización de sistemas complejos y de gran escala. Ha sido asesor en más de 20 proyectos de vinculación universidad-industria.", // [cite: 4, 5]
+        institution: "Universidad Autónoma de Nuevo León", // [cite: 9]
       },
     ],
     modal: {
-      title: "Aplicación de la metrología en procesos industriales",
+      title: "Introducción a la teoría de inventarios: de la teoría básica a la complejidad de la aplicación.", // [cite: 15]
       paragraphs: [
-        "Dar a conocer la importancia de la metrología en los procesos industriales y mostrar un tipo de especialidad que puede tener un ingeniero industrial en materia de metrología.",
+        "Este workshop, dirigido por el Dr. Miguel Mata, se enfoca en sus principales intereses: la optimización matemática aplicada y la creación de herramientas cuantitativas para la toma de decisiones en la cadena de suministro.", // [cite: 7]
+        "Los participantes obtendrán una base sólida para modelar y optimizar sistemas logísticos complejos, basados en la amplia experiencia del Dr. Mata como asesor de la industria y miembro fundador de la Sociedad Mexicana de Investigación de Operaciones.", // [cite: 5, 8]
       ],
     },
   },
@@ -148,26 +148,23 @@ const activitiesData: Activity[] = [
     id: "W2",
     kind: "workshop",
     banner: "/assets/images/actividades/banners/W2.jpg",
-    title: "Herramientas de innovación y desarrollo para productos y procesos",
+    title: "Ingeniería de empaque y embalaje.", // [cite: 83]
     description:
-      "Bases de herramientas de innovación y diseño conceptual para desarrollo y mejora de productos.",
+      "Taller intensivo que ofrece una mirada práctica y conceptual al mundo del empaque y embalaje desde una perspectiva de ingeniería.", // [cite: 84]
     speakers: [
       {
-        name: "Dra. Lidilia Cruz Rivero",
+        name: "Dr. Juan Hurtado", // [cite: 80]
         image: "/assets/images/actividades/ponentes/Dra.LidiliaCruz.jpg",
-        bio: "Consultor en innovación y desarrollo de productos con enfoque en metodologías de diseño creativo.",
-        institution: "Universidad del Caribe",
+        bio: "Especialista nacional en el diseño, materiales y logística que influyen en la protección, presentación y sostenibilidad de los productos.",
+        institution: "Nacional", // [cite: 80]
       },
     ],
     modal: {
-      title: "Herramientas de innovación",
+      title: "Ingeniería de empaque y embalaje", // [cite: 83]
       paragraphs: [
-        "Aprender las bases de Herramientas de innovación y diseño conceptual para el desarrollo y mejora de productos y procesos.",
-        "Objetivos específicos:",
-      ],
-      bullets: [
-        "Desarrollar habilidades para enfrentar problemas de inventiva e innovación de alto reto.",
-        "Incrementar su eficacia para solucionar problemas de innovación.",
+        "Este taller intensivo ofrece una mirada práctica y conceptual al mundo del empaque y embalaje desde una perspectiva ingenieril.", // [cite: 84]
+        "A lo largo de tres horas, los participantes conocerán los fundamentos técnicos, materiales utilizados, criterios de diseño y consideraciones logísticas que influyen en la protección, presentación y sostenibilidad de los productos.", // [cite: 85]
+        "Ideal para quienes buscan ampliar su perfil profesional, explorar nuevas oportunidades laborales o fortalecer sus conocimientos en esta área clave de la cadena de suministro.", // [cite: 86]
       ],
     },
   },
@@ -175,159 +172,95 @@ const activitiesData: Activity[] = [
     id: "W3",
     kind: "workshop",
     banner: "/assets/images/actividades/banners/W3.jpg",
-    title: "Ética y valores en la toma de decisiones",
+    title: "Diseña, imprime, impacta - La manufactura aditiva transforma la ingeniería.", // [cite: 35]
     description:
-      "Exploración de principios éticos aplicados a la toma de decisiones en ingeniería.",
+      "En este taller práctico descubrirás cómo preparar y fabricar tus propias piezas, conociendo el funcionamiento de una impresora 3D FDM desde cero.", // [cite: 36, 37]
     speakers: [
       {
-        name: "Mtra. Leslye Johanna Ramírez",
+        name: "Dra. Cynthia Graciela Flores Hernández", // [cite: 20]
         image: "/assets/images/actividades/ponentes/Mtra.LeslyeRamirez.jpg",
-        bio: "Especialista en ética profesional y responsabilidad corporativa con experiencia en consultoría para empresas de ingeniería.",
-        institution: "Universidad del Caribe",
+        bio: "Investigadora SNI nivel 1 con 15 años de experiencia. Sus intereses incluyen la síntesis de materiales compuestos y la fabricación de polímeros mediante impresión 3D.", // [cite: 24, 28]
+        institution: "ITESM / TecNM campus Querétaro", // [cite: 27]
       },
     ],
     modal: {
-      title: "Ética y valores en la toma de decisiones",
+      title: "Diseña, imprime, impacta - La manufactura aditiva transforma la ingeniería", // [cite: 35]
       paragraphs: [
-        "Taller enfocado en la aplicación de principios éticos en la toma de decisiones ingenieriles y corporativas.",
+        "En este taller práctico descubrirás cómo preparar y fabricar tus propias piezas.", // [cite: 36]
+        "Conocerás el funcionamiento de una impresora 3D FDM, el uso de filamentos, el proceso de laminado y los aspectos clave para lograr impresiones exitosas desde cero.", // [cite: 37]
+      ],
+    },
+  },
+
+  // NEW FORUMS DATA
+  {
+    id: "F1",
+    kind: "forum",
+    banner: "/assets/images/actividades/banners/W1.jpg",
+    title: "Panel de egresados: “de Industrial a Industrial”",
+    description:
+      "Egresados exitosos comparten sus trayectorias profesionales y ofrecen valiosos consejos a las nuevas generaciones.",
+    speakers: [
+      {
+        name: "Ing. Sofía Reyes",
+        image: "/assets/images/actividades/ponentes/ponente_placeholder_1.png",
+        bio: "Gerente de Proyectos en Tech Solutions, egresada de la generación 2015.",
+      },
+      {
+        name: "Ing. Carlos Vega",
+        image: "/assets/images/actividades/ponentes/ponente_placeholder_2.png",
+        bio: "Especialista en Cadena de Suministro en Global Logistics, egresado de la generación 2017.",
+      },
+    ],
+    modal: {
+      title: "Panel de egresados: “de Industrial a Industrial”",
+      paragraphs: [
+        "Un encuentro inspirador donde egresados destacados de nuestra carrera de Ingeniería Industrial dialogan sobre los desafíos y oportunidades que encontraron en el mundo laboral. Compartirán cómo aplicaron los conocimientos adquiridos y qué habilidades fueron clave para su desarrollo profesional.",
       ],
     },
   },
   {
-    id: "W4",
-    kind: "workshop",
-    banner: "/assets/images/actividades/banners/W4.png",
-    title: "Introducción a Rmarkdown",
+    id: "F2",
+    kind: "forum",
+    banner: "/assets/images/actividades/banners/W2.jpg",
+    title: "Conversatorio: “Movilidad Nacional e Internacional: Casos de éxito”",
     description:
-      "Generación de reportes científicos reproducibles utilizando R và Markdown.",
+      "Descubre las oportunidades de intercambio y desarrollo profesional más allá de las fronteras locales.",
     speakers: [
       {
-        name: "Dr. Julio César Ramírez Pacheco",
-        image: "/assets/images/actividades/ponentes/Dr.JulioRamirez.jpg",
-        bio: "Especialista en ciencia de datos y documentación reproducible con amplia experiencia en R y RMarkdown.",
-        institution: "Universidad del Caribe",
-      },
-    ],
-    modal: {
-      title: "Introducción a Rmarkdown",
-      paragraphs: [
-        "El presente taller versa sobre el paquete de R llamado RMarkdown, el cual permite, entre muchas otras cosas más, generar reportes científicos reproducibles que posteriormente pueden alojarse en páginas web, como documentos PDF, EPUB, Word, etc.",
-        "Es bastante intuitivo y se pueden generar tesis, presentaciones, reportes, CVs, etc. En la charla se muestra cómo generar un reporte científico que contiene texto, código y fórmulas matemáticas, elementos típicos en un reporte de ingeniería.",
-        "La charla está organizada de la siguiente manera:",
-      ],
-      bullets: [
-        "Introducción a R.",
-        "El paquete RMarkdown.",
-        "Fórmulas con LATEX.",
-        "Gráficos con highcharter.",
-        "Generación de documentos en HTML.",
-        "Alojamiento en GitHub.",
-      ],
-    },
-  },
-  {
-    id: "W5",
-    kind: "workshop",
-    banner: "/assets/images/actividades/banners/W5.avif",
-    title:
-      "Uso de la RPA para la transformación de procesos manuales en aplicaciones automáticas",
-    description:
-      "Introducción a la automatización robótica de procesos utilizando Robocorp de Python.",
-    speakers: [
-      {
-        name: "Dr. Héctor Fernando Gómez García",
-        image: "/assets/images/actividades/ponentes/Dr.HectorGomez.jpg",
-        bio: "Especialista en automatización de procesos y desarrollo RPA con enfoque en aplicaciones industriales.",
-        institution: "Universidad del Caribe",
-      },
-    ],
-    modal: {
-      title:
-        "Uso de la RPA para la transformación de procesos manuales en aplicaciones automáticas",
-      paragraphs: [
-        "El taller tiene como objetivo introducir a las y los estudiantes de Ingeniería Industrial a la automatización robótica de procesos (RPA) utilizando la librería Robocorp de Python.",
-        "Durante el taller, los participantes aprenderán cómo implementar soluciones de RPA que transformen procesos manuales y repetitivos en flujos automatizados, con énfasis en mejorar la eficiencia operativa y reducir errores.",
-        "A lo largo de las sesiones, se explorarán aplicaciones concretas de RPA en diversas áreas clave de la Ingeniería Industrial. Las y los asistentes desarrollarán sus propios bots de software utilizando Robocorp, abordando casos de uso prácticos y simulando soluciones en tiempo real.",
-      ],
-    },
-  },
-  {
-    id: "W6",
-    kind: "workshop",
-    banner: "/assets/images/actividades/banners/W6.jpg",
-    title:
-      "Creación de modelos 3D para realidad aumentada usando tu smartphone",
-    description:
-      "Modelado 3D utilizando tecnología LiDAR para crear experiencias de realidad aumentada.",
-    speakers: [
-      {
-        name: "Dr. Alejandro Charbel Cárdenas León",
-        image: "/assets/images/actividades/ponentes/Dr.AlejandroCardenas.jpeg",
-        bio: "Especialista en modelado 3D y tecnologías de realidad aumentada con experiencia en desarrollo de aplicaciones para ingeniería.",
+        name: "M.C. Laura Méndez",
+        image: "/assets/images/actividades/ponentes/ponente_placeholder_3.png",
+        bio: "Coordinadora de Programas Internacionales con experiencia en convenios universitarios en Europa y América del Norte.",
         institution: "Universidad del Caribe",
       },
     ],
     modal: {
       title:
-        "Creación de modelos 3D para realidad aumentada usando tu smartphone",
+        "Conversatorio sobre Movilidad Nacional e Internacional: Casos de éxito",
       paragraphs: [
-        "Este taller está diseñado para introducir a los participantes en el mundo del modelado 3D utilizando la tecnología LiDAR disponible en los iPhones Pro.",
-        "A lo largo de este taller, se guiará a los asistentes en la captura de un objeto real utilizando un iPhone, la creación de un modelo 3D en Reality Composer, y la edición avanzada de vectores y texturas en Blender.",
-        "Finalmente, los modelos serán exportados para ser utilizados en JigSpace, donde se creará un video interactivo en Realidad Aumentada (AR).",
-      ],
-      numbered: [
-        "Introducción a la Realidad Aumentada (RA): usos y tecnologías avanzadas.",
-        "Modelado de un objeto utilizando Reality Composer.",
-        "Edición en Blender: optimización de vectores y texturas.",
-        "Exportación para JigSpace y creación de video interactivo.",
+        "Este conversatorio está diseñado para explorar las vías y beneficios de la movilidad estudiantil y profesional. Se presentarán casos de éxito de estudiantes que han participado en programas de intercambio y profesionales que han expandido su carrera a nivel nacional e internacional, ofreciendo una guía práctica para quienes deseen seguir sus pasos.",
       ],
     },
   },
   {
-    id: "W7",
-    kind: "workshop",
-    banner: "/assets/images/actividades/banners/W7.jpg",
-    title: "Industria 4.0",
+    id: "F3",
+    kind: "forum",
+    banner: "/assets/images/actividades/banners/W3.jpg",
+    title: "Espacio académico: Movilidad de posgrado",
     description:
-      "Principios de la Industria 4.0 y transformación tecnológica del sector industrial.",
+      "Explora las opciones de maestrías y doctorados para especializarte y potenciar tu carrera profesional.",
     speakers: [
       {
-        name: "Ing. Neftali Abisai Tamayo Estrella",
-        image: "/assets/images/actividades/ponentes/Ing.NeftaliTamayo.png",
-      },
-      {
-        name: "Ing. Jose Luis Chan Verde",
-        image: "/assets/images/actividades/ponentes/Ing.JoseChan.png",
+        name: "Dr. Ricardo Morales",
+        image: "/assets/images/actividades/ponentes/ponente_placeholder_4.png",
+        bio: "Director del Departamento de Posgrados en Ingeniería, enfocado en la investigación y desarrollo tecnológico.",
+        institution: "Universidad del Caribe",
       },
     ],
     modal: {
-      title: "Industria 4.0",
+      title: "Espacio académico: Movilidad de posgrado",
       paragraphs: [
-        "Comprender los principios de la Industria 4.0 y analizar cómo los avances tecnológicos están transformando el sector industrial y los modelos de negocio.",
-      ],
-    },
-  },
-  {
-    id: "W8",
-    kind: "workshop",
-    banner: "/assets/images/actividades/banners/W8.jpg",
-    title: "PractiK: Explora, diviértete, aprende",
-    description:
-      "Soluciones para confort, energía y automatización mediante demos prácticas.",
-    speakers: [
-      {
-        name: "Ing. Alberto Barbosa Vázquez",
-        image: "/assets/images/actividades/ponentes/Ing.AlbertoBarbosa.jpeg",
-      },
-      {
-        name: "Ing. Ely Jovany Franco Martínez",
-        image: "/assets/images/actividades/ponentes/Ing.ElyFranco.jpeg",
-      },
-    ],
-    modal: {
-      title: "PractiK: Explora, diviértete, aprende",
-      paragraphs: [
-        "Uso de demos para conocer, conectar y programar componentes que permitan el control de líquidos por electroniveles, la alternancia de bombas y control de alumbrado residencial.",
+        "Una sesión informativa dedicada a resolver todas tus dudas sobre los programas de posgrado. Se discutirán las líneas de investigación, los requisitos de admisión, las oportunidades de becas y el impacto de un título de posgrado en el campo de la Ingeniería Industrial. Ideal para estudiantes que planean su futuro académico y profesional.",
       ],
     },
   },
@@ -491,8 +424,32 @@ function SpeakersRow({ speakers }: { speakers: Speaker[] }) {
   );
 }
 
-// Card reutilizable mejorada - CORREGIDA
-function ActivityCard({ activity, onOpen }: { activity: Activity; onOpen: () => void }) {
+// Card reutilizable mejorada - CORREGIDA Y ACTUALIZADA
+function ActivityCard({
+  activity,
+  onOpen,
+}: {
+  activity: Activity;
+  onOpen: () => void;
+}) {
+  const getBadgeInfo = () => {
+    switch (activity.kind) {
+      case "conference":
+        return {
+          label: "Conferencia",
+          className: "activity-badge-conference",
+        };
+      case "workshop":
+        return { label: "Workshop", className: "activity-badge-workshop" };
+      case "forum":
+        return { label: "Foro", className: "activity-badge-forum" };
+      default:
+        return { label: "", className: "" };
+    }
+  };
+
+  const badge = getBadgeInfo();
+
   return (
     <div
       className="activity-card"
@@ -509,66 +466,23 @@ function ActivityCard({ activity, onOpen }: { activity: Activity; onOpen: () => 
           className="activity-logo"
           loading="lazy"
         />
-        <span className={`activity-badge ${
-          activity.kind === "conference" 
-            ? "activity-badge-conference" 
-            : "activity-badge-workshop"
-        }`}>
-          {activity.kind === "conference" ? "Conferencia" : "Workshop"}
+        <span className={`activity-badge ${badge.className}`}>
+          {badge.label}
         </span>
       </div>
-      
+
       <h3>{activity.title}</h3>
-      
+
       <div className="activity-description">
         <p>{activity.description}</p>
       </div>
-      
+
       <SpeakersRow speakers={activity.speakers} />
     </div>
   );
 }
 
-// Sección genérica (conferencias o workshops) - CORREGIDA
-function ActivitiesSection({
-  title,
-  id,
-  items,
-  onOpen,
-}: {
-  title: string;
-  id: string;
-  items: Activity[];
-  onOpen: (id: string) => void;
-}) {
-  return (
-    <section id={id} className="actividades-section">
-      <div className="container">
-        <div className="actividades-section-header">
-          <h2 className="actividades-section-title">{title}</h2>
-          <p className="actividades-section-description">
-            {title.includes("Conferencias") 
-              ? "Sesiones magistrales con expertos en diferentes áreas de la ingeniería industrial"
-              : "Talleres prácticos para desarrollar habilidades específicas en el ámbito industrial"}
-          </p>
-        </div>
-        
-        <div className="activities-container">
-          {items.map((activity) => (
-            <ActivityCard 
-              key={activity.id} 
-              activity={activity} 
-              onOpen={() => onOpen(activity.id)} 
-            />
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// Componente principal - CORREGIDO
-// actividades.tsx - Componente principal actualizado
+// Componente principal - CORREGIDO Y ACTUALIZADO
 export default function Activities() {
   const [openId, setOpenId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -578,9 +492,14 @@ export default function Activities() {
     () => activitiesData.filter((a) => a.kind === "conference"),
     []
   );
-  
+
   const workshops = useMemo(
     () => activitiesData.filter((a) => a.kind === "workshop"),
+    []
+  );
+
+  const forums = useMemo(
+    () => activitiesData.filter((a) => a.kind === "forum"),
     []
   );
 
@@ -594,7 +513,7 @@ export default function Activities() {
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 1000);
-    
+
     return () => clearTimeout(timer);
   }, []);
 
@@ -602,13 +521,15 @@ export default function Activities() {
   useEffect(() => {
     const updateScrollProgress = () => {
       const scrollPx = document.documentElement.scrollTop;
-      const winHeightPx = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const winHeightPx =
+        document.documentElement.scrollHeight -
+        document.documentElement.clientHeight;
       const scrolled = (scrollPx / winHeightPx) * 100;
       setScrollProgress(scrolled);
     };
 
-    window.addEventListener('scroll', updateScrollProgress);
-    return () => window.removeEventListener('scroll', updateScrollProgress);
+    window.addEventListener("scroll", updateScrollProgress);
+    return () => window.removeEventListener("scroll", updateScrollProgress);
   }, []);
 
   // Componente Skeleton
@@ -618,15 +539,27 @@ export default function Activities() {
         <div className="activity-logo skeleton"></div>
         <span className={`activity-badge skeleton`}></span>
       </div>
-      <div className="skeleton-text" style={{height: '24px', margin: '1rem'}}></div>
+      <div
+        className="skeleton-text"
+        style={{ height: "24px", margin: "1rem" }}
+      ></div>
       <div className="activity-description">
-        <div className="skeleton-text" style={{height: '16px', marginBottom: '0.5rem'}}></div>
-        <div className="skeleton-text" style={{height: '16px', width: '80%'}}></div>
+        <div
+          className="skeleton-text"
+          style={{ height: "16px", marginBottom: "0.5rem" }}
+        ></div>
+        <div
+          className="skeleton-text"
+          style={{ height: "16px", width: "80%" }}
+        ></div>
       </div>
       <div className="speaker-info">
         <div className="speaker-single">
           <div className="speaker-image skeleton"></div>
-          <span className="speaker-name skeleton-text" style={{width: '120px', height: '16px'}}></span>
+          <span
+            className="speaker-name skeleton-text"
+            style={{ width: "120px", height: "16px" }}
+          ></span>
         </div>
       </div>
     </div>
@@ -635,15 +568,16 @@ export default function Activities() {
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (!element) return;
-    
-    const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+
+    const elementPosition =
+      element.getBoundingClientRect().top + window.pageYOffset;
     const offsetPosition = elementPosition - 80; // Ajustar para el header fijo
-    
+
     const startPosition = window.pageYOffset;
     const distance = offsetPosition - startPosition;
-    const duration = 800;
+    const duration = 300;  //
     let startTime: number | null = null;
-    
+
     function animation(currentTime: number) {
       if (startTime === null) startTime = currentTime;
       const timeElapsed = currentTime - startTime;
@@ -651,120 +585,161 @@ export default function Activities() {
       window.scrollTo(0, run);
       if (timeElapsed < duration) requestAnimationFrame(animation);
     }
-    
+
     // Función de easing para animación suave
-    function easeInOutQuad(t: number, b: number, c: number, d: number): number {
-      t /= d/2;
-      if (t < 1) return c/2*t*t + b;
+    function easeInOutQuad(
+      t: number,
+      b: number,
+      c: number,
+      d: number
+    ): number {
+      t /= d / 2;
+      if (t < 1) return (c / 2) * t * t + b;
       t--;
-      return -c/2 * (t*(t-2) - 1) + b;
+      return (-c / 2) * (t * (t - 2) - 1) + b;
     }
-    
+
     requestAnimationFrame(animation);
   };
 
   return (
     <div className="actividades-container">
       {/* Barra de progreso de scroll */}
-      <div 
-        className="scroll-progress-bar" 
-        style={{ '--scroll-progress': `${scrollProgress}%` } as React.CSSProperties}
+      <div
+        className="scroll-progress-bar"
+        style={{ "--scroll-progress": `${scrollProgress}%` } as React.CSSProperties}
       />
       <main className="w-full mt-[-80px] md:mt-[-80px]">
-      {/* Hero Section */}
-      <section className="actividades-hero">
-        <div className="container">
-          <h1>Actividades Académicas</h1>
-          <p className="text-balance">
-            Descubre todas las conferencias magistrales y workshops especializados 
-            que tenemos preparados para ti en esta jornada de ingeniería industrial.
-          </p>
-          <div className="actividades-hero-buttons">
-            <button 
-              onClick={() => scrollToSection('conferencias')} 
-              className="actividades-hero-btn-primary"
-            >
-              Ver Conferencias
-            </button>
-            <button 
-              onClick={() => scrollToSection('workshops')} 
-              className="actividades-hero-btn-secondary"
-            >
-              Ver Workshops
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* Sección de Conferencias */}
-      <section id="conferencias" className="actividades-section">
-        <div className="container">
-          <div className="actividades-section-header">
-            <h2 className="actividades-section-title">Conferencias Magistrales</h2>
-            <p className="actividades-section-description">
-              Sesiones magistrales con expertos en diferentes áreas de la ingeniería industrial
+        {/* Hero Section */}
+        <section className="actividades-hero">
+          <div className="container">
+            <h1>Actividades Académicas</h1>
+            <p className="text-balance">
+              Descubre todas las conferencias magistrales, workshops y foros
+              especializados que tenemos preparados para ti.
             </p>
+            <div className="actividades-hero-buttons">
+              <button
+                onClick={() => scrollToSection("conferencias")}
+                className="actividades-hero-btn-primary"
+              >
+                Ver Conferencias
+              </button>
+              <button
+                onClick={() => scrollToSection("workshops")}
+                className="actividades-hero-btn-secondary"
+              >
+                Ver Workshops
+              </button>
+              {/* NEW BUTTON FOR FORUMS */}
+              <button
+                onClick={() => scrollToSection("forums")}
+                className="actividades-hero-btn-secondary"
+              >
+                Ver Foros
+              </button>
+            </div>
           </div>
-          
-          <div className="activities-container">
-            {isLoading ? (
-              Array.from({ length: 4 }).map((_, index) => (
-                <SkeletonCard key={index} />
-              ))
-            ) : (
-              conferences.map((activity) => (
-                <ActivityCard 
-                  key={activity.id} 
-                  activity={activity} 
-                  onOpen={() => setOpenId(activity.id)} 
-                />
-              ))
-            )}
-          </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Sección de Workshops */}
-      <section id="workshops" className="actividades-section">
-        <div className="container">
-          <div className="actividades-section-header">
-            <h2 className="actividades-section-title">Workshops Especializados</h2>
-            <p className="actividades-section-description">
-              Talleres prácticos para desarrollar habilidades específicas en el ámbito industrial
-            </p>
+        {/* Sección de Conferencias */}
+        <section id="conferencias" className="actividades-section">
+          <div className="container">
+            <div className="actividades-section-header">
+              <h2 className="actividades-section-title">
+                Conferencias Magistrales
+              </h2>
+              <p className="actividades-section-description">
+                Sesiones magistrales con expertos en diferentes áreas de la
+                ingeniería industrial
+              </p>
+            </div>
+
+            <div className="activities-container">
+              {isLoading
+                ? Array.from({ length: 4 }).map((_, index) => (
+                    <SkeletonCard key={index} />
+                  ))
+                : conferences.map((activity) => (
+                    <ActivityCard
+                      key={activity.id}
+                      activity={activity}
+                      onOpen={() => setOpenId(activity.id)}
+                    />
+                  ))}
+            </div>
           </div>
-          
-          <div className="activities-container">
-            {isLoading ? (
-              Array.from({ length: 4 }).map((_, index) => (
-                <SkeletonCard key={index} />
-              ))
-            ) : (
-              workshops.map((activity) => (
-                <ActivityCard 
-                  key={activity.id} 
-                  activity={activity} 
-                  onOpen={() => setOpenId(activity.id)} 
-                />
-              ))
-            )}
+        </section>
+
+        {/* Sección de Workshops */}
+        <section id="workshops" className="actividades-section">
+          <div className="container">
+            <div className="actividades-section-header">
+              <h2 className="actividades-section-title">
+                Workshops Especializados
+              </h2>
+              <p className="actividades-section-description">
+                Talleres prácticos para desarrollar habilidades específicas en
+                el ámbito industrial
+              </p>
+            </div>
+
+            <div className="activities-container">
+              {isLoading
+                ? Array.from({ length: 4 }).map((_, index) => (
+                    <SkeletonCard key={index} />
+                  ))
+                : workshops.map((activity) => (
+                    <ActivityCard
+                      key={activity.id}
+                      activity={activity}
+                      onOpen={() => setOpenId(activity.id)}
+                    />
+                  ))}
+            </div>
           </div>
-        </div>
-      </section>
-    </main>
+        </section>
+
+        {/* NEW FORUMS SECTION */}
+        <section id="forums" className="actividades-section">
+          <div className="container">
+            <div className="actividades-section-header">
+              <h2 className="actividades-section-title">Foros y Paneles</h2>
+              <p className="actividades-section-description">
+                Espacios de diálogo y debate sobre tendencias, desarrollo
+                profesional y futuro académico.
+              </p>
+            </div>
+
+            <div className="activities-container">
+              {isLoading
+                ? Array.from({ length: 3 }).map((_, index) => (
+                    <SkeletonCard key={index} />
+                  ))
+                : forums.map((activity) => (
+                    <ActivityCard
+                      key={activity.id}
+                      activity={activity}
+                      onOpen={() => setOpenId(activity.id)}
+                    />
+                  ))}
+            </div>
+          </div>
+        </section>
+      </main>
 
       {/* Modal */}
       {current && (
-        <Modal 
-          open={!!current} 
-          title={current.modal.title} 
+        <Modal
+          open={!!current}
+          title={current.modal.title}
           onClose={() => setOpenId(null)}
           speakers={current.speakers}
         >
           {current.modal.paragraphs?.map((paragraph, index) => (
             <p key={index}>{paragraph}</p>
           ))}
-          
+
           {current.modal.bullets && current.modal.bullets.length > 0 && (
             <>
               <h5>Puntos clave:</h5>
@@ -775,7 +750,7 @@ export default function Activities() {
               </ul>
             </>
           )}
-          
+
           {current.modal.numbered && current.modal.numbered.length > 0 && (
             <>
               <h5>Contenido del taller:</h5>
@@ -789,6 +764,5 @@ export default function Activities() {
         </Modal>
       )}
     </div>
-    
   );
 }

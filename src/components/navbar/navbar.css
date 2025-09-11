@@ -662,11 +662,11 @@ body {
 }
 @media(min-width:1200px){
   .navbar-container {
-    padding: 0 2rem;
+    padding: 0;
   }
 
   .navbar-logo, .navbar-logo2 {
-    padding: 0 2rem;
+    padding: 0 1rem;
     
   }
   
@@ -690,7 +690,7 @@ body {
 /* =============== MEDIA QUERIES - LARGE DESKTOP (1440px) =============== */
 @media (min-width: 1440px) {
   .navbar-logo, .navbar-logo2 {
-    padding: 0 3rem;
+    padding: 0 2rem;
   }
   
   .navbar-logo img, .navbar-logo2 img {

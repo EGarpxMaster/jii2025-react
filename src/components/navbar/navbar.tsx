@@ -7,7 +7,6 @@ import {
   faAward,
   faAddressCard,
   faPeopleGroup,
-  faHome,
 } from "@fortawesome/free-solid-svg-icons";
 import "./navbar.css";
 
@@ -16,9 +15,9 @@ const Navbar = () => {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [navbarHidden, setNavbarHidden] = useState(false);
 
-  // refs para scroll
-  const lastScrollY = useRef(0);
-  const ticking = useRef(false);
+  // refs para scroll y rAF
+  const lastScrollTopRef = useRef(0);
+  const tickingRef = useRef(false);
 
   const closeNavbar = useCallback(() => {
     setIsMenuOpen(false);
@@ -30,25 +29,18 @@ const Navbar = () => {
     setOpenDropdown((prev) => (prev === dropdownId ? null : dropdownId));
   };
 
-  // Scroll handling
+  // Scroll (optimizado con rAF)
   const handleScroll = useCallback(() => {
-    const currentScrollY = window.scrollY;
-
-    if (!ticking.current) {
-      ticking.current = true;
-      requestAnimationFrame(() => {
-        const scrollingDown = currentScrollY > lastScrollY.current;
-        const scrollingUp = currentScrollY < lastScrollY.current;
-
-        if (scrollingDown && currentScrollY > 100) {
-          setNavbarHidden(true);
-        } else if (scrollingUp) {
-          setNavbarHidden(false);
-        }
-
-        lastScrollY.current = currentScrollY;
-        ticking.current = false;
-      });
+    const work = () => {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const goingDown = scrollTop > lastScrollTopRef.current;
+      setNavbarHidden(goingDown && scrollTop > 150);
+      lastScrollTopRef.current = Math.max(scrollTop, 0);
+      tickingRef.current = false;
+    };
+    if (!tickingRef.current) {
+      tickingRef.current = true;
+      requestAnimationFrame(work);
     }
   }, []);
 
@@ -57,63 +49,28 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [handleScroll]);
 
-  // Cerrar con Escape
+  // Cerrar con Escape + devolver foco al botón
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        closeNavbar();
+        setIsMenuOpen(false);
+        setOpenDropdown(null);
         (document.querySelector(".menu-toggle") as HTMLButtonElement | null)?.focus();
       }
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [closeNavbar]);
+  }, []);
 
   // Bloquear scroll del body cuando el menú móvil está abierto
   useEffect(() => {
-    if (isMenuOpen) {
-      document.body.style.overflow = "hidden";
-      document.body.style.position = "fixed";
-      document.body.style.width = "100%";
-    } else {
-      document.body.style.overflow = "";
-      document.body.style.position = "";
-      document.body.style.width = "";
-    }
-    
+    document.body.style.overflow = isMenuOpen ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
-      document.body.style.position = "";
-      document.body.style.width = "";
     };
   }, [isMenuOpen]);
 
-  // Cerrar dropdown al hacer click fuera - RESTAURADO
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (openDropdown === "nuestraJornada") {
-        const dropdown = document.getElementById('submenu-nuestra-jornada');
-        const button = document.querySelector('.dropdown-header');
-        
-        if (dropdown && 
-            button && 
-            !dropdown.contains(event.target as Node) &&
-            !button.contains(event.target as Node)) {
-          setOpenDropdown(null);
-        }
-      }
-    };
-
-    if (openDropdown) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-    
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [openDropdown]);
-
-  // resaltar link activo
+  // resaltar link activo sin React Router (simple por pathname)
   const isActive = (href: string) =>
     typeof window !== "undefined" && window.location?.pathname === href;
 
@@ -129,6 +86,8 @@ const Navbar = () => {
             />
           </a>
         </div>
+
+        {/* Contenedor central para los enlaces */}
         <div className="nav-links-container">
           {/* Toggle móvil */}
           <button
@@ -145,25 +104,7 @@ const Navbar = () => {
           </button>
 
           {/* Menú */}
-          <div 
-            className={`menu ${isMenuOpen ? "show" : ""}`} 
-            id="mainMenu"
-            onScroll={(e) => {
-              e.stopPropagation();
-            }}
-          >
-            <div className="mobile-home-btn" id="init">
-              <a
-                href="/"
-                className="nav-link"
-                onClick={closeNavbar}
-                aria-label="Ir a inicio"
-              >
-                <FontAwesomeIcon icon={faHome} className="home-icon" />
-                Inicio
-              </a>
-            </div>
-            
+          <div className={`menu ${isMenuOpen ? "show" : ""}`} id="mainMenu">
             {/* Dropdown: Nuestra Jornada */}
             <div className="nav-item dropdown">
               <button
@@ -173,16 +114,20 @@ const Navbar = () => {
                 onClick={() => toggleDropdown("nuestraJornada")}
               >
                 <span>Nuestra Jornada</span>
-                <FontAwesomeIcon 
-                  icon={faChevronDown} 
-                  className={`dropdown-icon ${openDropdown === "nuestraJornada" ? "rotated" : ""}`}
-                />
+                <FontAwesomeIcon icon={faChevronDown} className="dropdown-icon" />
               </button>
+
               <div
                 id="submenu-nuestra-jornada"
                 className={`dropdown-content ${openDropdown === "nuestraJornada" ? "show" : ""}`}
                 role="menu"
                 tabIndex={-1}
+                onBlur={(e) => {
+                  // cierra si el foco sale del contenedor
+                  if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+                    setOpenDropdown(null);
+                  }
+                }}
               >
                 <a href="#acerca" className="dropdown-item" onClick={closeNavbar} role="menuitem">
                   Acerca de
@@ -226,23 +171,23 @@ const Navbar = () => {
 
             <div className="nav-item">
               <a
+                href="/staff"
+                className={`nav-link ${isActive("/staff") ? "is-active" : ""}`}
+                onClick={closeNavbar}
+              >
+                <FontAwesomeIcon icon={faClock} className="home-icon" />
+                Staff
+              </a>
+            </div>
+
+            <div className="nav-item">
+              <a
                 href="/concurso"
                 className={`nav-link ${isActive("/concurso") ? "is-active" : ""}`}
                 onClick={closeNavbar}
               >
                 <FontAwesomeIcon icon={faAward} className="home-icon" />
                 Concurso
-              </a>
-            </div>
-
-            <div className="nav-item">
-              <a
-                href="/constancias"
-                className={`nav-link ${isActive("/constancias") ? "is-active" : ""}`}
-                onClick={closeNavbar}
-              >
-                <FontAwesomeIcon icon={faAddressCard} className="home-icon" />
-                Constancias
               </a>
             </div>
 
@@ -260,7 +205,7 @@ const Navbar = () => {
             <div className="nav-item">
               <a
                 href="/registro"
-                className="btn-registro"
+                className="nav-link btn-registro"
                 onClick={closeNavbar}
               >
                 Registro
