@@ -48,8 +48,8 @@ const Carousel = () => {
   };
 
   return (
-    <div className="carousel-container">
-      <div className="carousel">
+    <div className="carousel">
+      <div className="carousel-inner">
         {slides.map((slide, index) => (
           <div
             key={index}
@@ -72,10 +72,10 @@ const Carousel = () => {
         ))}
         
         <button onClick={prevSlide} className="carousel-control prev">
-          <span className="carousel-control-icon">&#8249;</span>
+          <span className="carousel-control-icon">‹</span>
         </button>
         <button onClick={nextSlide} className="carousel-control next">
-          <span className="carousel-control-icon">&#8250;</span>
+          <span className="carousel-control-icon">›</span>
         </button>
         
         <div className="carousel-indicators">
