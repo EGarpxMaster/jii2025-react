@@ -7,6 +7,7 @@ import {
   faAward,
   faAddressCard,
   faPeopleGroup,
+  faHome,
 } from "@fortawesome/free-solid-svg-icons";
 import "./navbar.css";
 
@@ -79,7 +80,7 @@ const Navbar = () => {
       <div className="navbar-container" role="navigation" aria-label="Principal">
         {/* Logo izquierdo */}
         <div className="navbar-logo">
-          <a href="/" aria-label="Ir a inicio">
+          <a href="/"  aria-label="Ir a inicio">
             <img
               src="/assets/images/LogoUnificado_Blanco.png"
               alt="Logotipo de la Jornada de Ingeniería Industrial"
@@ -105,6 +106,16 @@ const Navbar = () => {
 
           {/* Menú */}
           <div className={`menu ${isMenuOpen ? "show" : ""}`} id="mainMenu">
+            <div className="nav-item">
+              <a
+                href="/" id="homebtn"
+                className={`nav-link ${isActive("/#") ? "is-active" : ""}`}
+                onClick={closeNavbar}
+              >
+                <FontAwesomeIcon icon={faHome} className="home-icon" />
+                Inicio
+              </a>
+            </div>
             {/* Dropdown: Nuestra Jornada */}
             <div className="nav-item dropdown">
               <button

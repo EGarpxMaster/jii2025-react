@@ -633,7 +633,9 @@ body {
   .nav-link .btn-registro{
     padding: auto 1.1rem;
   }
-
+  #homebtn{
+    display: none;
+  }
   
 }
 

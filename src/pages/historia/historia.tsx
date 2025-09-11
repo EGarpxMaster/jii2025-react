@@ -256,21 +256,23 @@ export default function Historia() {
           <div className="container px-5 py-12 mx-auto flex flex-col">
             <div className="lg:w-4/6 mx-auto">
               <div className="flex flex-col sm:flex-row mt-10">
-                <div className="sm:w-1/3 text-center sm:pr-8 sm:py-8">
-                  <div className="w-20 h-20 rounded-full inline-flex items-center justify-center bg-gray-200 text-gray-400 mb-4">
-                    <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-10 h-10" viewBox="0 0 24 24">
-                      <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path>
-                      <circle cx="12" cy="7" r="4"></circle>
-                    </svg>
+                <div className="sm:w-1/3 text-center sm:pr-8">
+                  <div className="w-28 h-28 rounded-full inline-flex items-center justify-center bg-sky-500 text-gray-400 mb-4"> 
+                    <a href="/"  aria-label="Ir a inicio">
+                      <img
+                        src="/assets/images/LogoUnificado_Blanco.png"
+                        alt="Logotipo de la Jornada de Ingeniería Industrial"
+                      />
+                    </a>
                   </div>
                   <div className="flex flex-col items-center text-center justify-center">
                     <h2 className="historia-h2 font-medium title-font mt-4 text-gray-900">Nuestra Trayectoria</h2>
-                    <div className="w-12 h-1 bg-[#00d4d4] rounded mt-2 mb-4"></div>
+                    <div className="w-12 h-1 bg-[#00d4d4] rounded mt-2 mb-4 sm:pb-4"></div>
                     <p className="historia-text-base">Cada año hemos crecido en participantes, actividades y alcance, consolidándonos como el evento de ingeniería industrial más importante de la región.</p>
                   </div>
                 </div>
-                <div className="sm:w-2/3 sm:pl-8 sm:py-8 sm:border-l border-gray-200 sm:border-t-0 border-t mt-4 pt-4 sm:mt-0 text-center sm:text-left">
-                  <p className="historia-text-base leading-relaxed mb-4">Desde nuestra primera edición en 2023, la Jornada de Ingeniería Industrial ha sido un espacio de encuentro para estudiantes, académicos y profesionales del sector. Un evento donde el conocimiento, la innovación y las oportunidades de networking se combinan para crear experiencias enriquecedoras.</p>
+                <div className="sm:w-2/3 sm:pl-20 lg:pt-12  sm:pt-4 sm:border-l border-g0ray-200 sm:border-t-0 border-t sm:mt-4 sm:text-left">
+                  <p className="historia-text-base leading-relaxed mb-4 mt-28">Desde nuestra primera edición en 2023, la Jornada de Ingeniería Industrial ha sido un espacio de encuentro para estudiantes, académicos y profesionales del sector. Un evento donde el conocimiento, la innovación y las oportunidades de networking se combinan para crear experiencias enriquecedoras.</p>
                   <p className="historia-text-base leading-relaxed mb-4">Cada año hemos superado expectativas, aumentando el número de participantes, actividades y aliados estratégicos que se suman a esta iniciativa.</p>
                 </div>
               </div>
@@ -318,7 +320,7 @@ export default function Historia() {
                       </ul>
                       
                       <div className="flex items-center flex-wrap">
-                        <a className="text-[#00d4d4] inline-flex items-center md:mb-2 lg:mb-0 hover:text-[#1b1c39] transition-colors cursor-pointer">
+                        <a className="text-[#00d4d4] inline-flex items-center md:mb-2 lg:mb-0 hover:text-[#1b1c39] transition-colors delay-150 duration-300 ease-in-out cursor-pointer ">
                           Ver galería
                           <svg className="w-4 h-4 ml-2" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round">
                             <path d="M5 12h14"></path>
