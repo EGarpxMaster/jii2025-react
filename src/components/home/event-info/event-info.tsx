@@ -115,7 +115,7 @@ const EventInfo: FC = () => {
               </div>
               <div className="map-info">
                 <h4>Fecha</h4>
-                <p>25-27 de Abril, 2025</p>
+                <p>25-26 de Septiembre, 2025</p>
               </div>
             </div>
           </div>

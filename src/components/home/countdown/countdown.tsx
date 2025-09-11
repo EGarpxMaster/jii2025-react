@@ -36,7 +36,7 @@ const Countdown = () => {
     <div className="countdown-container">
       <div className="countdown-header">
         <h2 className="countdown-title">Cuenta Regresiva JII 2025</h2>
-        <p className="countdown-subtitle">25-27 de Septiembre</p>
+        <p className="countdown-subtitle">25-26 de Septiembre</p>
         <div className="header-divider"></div>
       </div>
       
