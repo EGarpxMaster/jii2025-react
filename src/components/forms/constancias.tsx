@@ -248,7 +248,7 @@ const ConstanciaComponent: React.FC<ConstanciaComponentProps> = ({
                   <div className="no-asistencias-icon">📋</div>
                   <h4>Sin asistencias registradas</h4>
                   <p>Para obtener tu constancia, registra al menos una asistencia.</p>
-                  <a href="/asistencia" className="link-button">
+                  <a href="/registro" className="link-button">
                     Registrar asistencia →
                   </a>
                 </div>

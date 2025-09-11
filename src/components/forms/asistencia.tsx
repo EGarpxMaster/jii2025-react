@@ -14,6 +14,7 @@ type Participante = {
  segundoNombre?: string | null;
  email: string;
  telefono: string;
+ brazalete: number;
  categoria: "Estudiante" | "Ponente" | "Asistente externo";
  programa?: "Ingeniería Industrial" | "Ingeniería Ambiental" | "Ingeniería en Datos e Inteligencia Organizacional"
  | "Ingeniería en Logística y Cadena de Suministro"
@@ -217,6 +218,7 @@ const AsistenciaComponent: React.FC<AsistenciaComponentProps> = ({
                 <div><strong>Nombre:</strong> {`${participante.primerNombre} ${participante.segundoNombre || ""} ${participante.apellidoPaterno} ${participante.apellidoMaterno}`}</div>
                 <div><strong>Correo:</strong> {participante.email}</div>
                 <div><strong>Teléfono:</strong> {participante.telefono}</div>
+                <div><strong>Brazalete:</strong> {participante.brazalete}</div>
                 <div>
                   <strong>Categoría:</strong> {participante.categoria}
                   {participante.categoria === "Estudiante" && participante.programa && (
