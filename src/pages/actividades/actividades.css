@@ -42,7 +42,7 @@
 }
 
 .actividades-hero h1 {
-  font-size: 1.8rem;
+  font-size: clamp(1.95rem, 1.3929rem + 1.7857vw, 2.95rem);
   font-weight: 700;
   margin-bottom: 1.2rem;
   line-height: 1.3;
@@ -569,11 +569,7 @@
   .actividades-hero {
     padding: 3rem 1.5rem;
   }
-  
-  .actividades-hero h1 {
-    font-size: 2.2rem;
-  }
-  
+
   .actividades-hero p {
     font-size: 1.1rem;
     max-width: 80%;
@@ -632,7 +628,7 @@
   }
   
   .actividades-hero h1 {
-    font-size: 2.5rem;
+    font-size: clamp(1.95rem, 1.3929rem + 1.7857vw, 2.95rem);
   }
   
   .actividades-hero p {
