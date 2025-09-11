@@ -35,7 +35,7 @@ const Carousel = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 3000);
+    }, 4000);
     return () => clearInterval(interval);
   }, []);
 
@@ -48,59 +48,43 @@ const Carousel = () => {
   };
 
   return (
-    <div className="carousel relative w-full overflow-hidden">
-      <div className="carousel-inner relative w-full h-full">
+    <div className="carousel-container">
+      <div className="carousel">
         {slides.map((slide, index) => (
           <div
             key={index}
-            className={`carousel-item absolute w-full h-full ${
-              index === currentSlide ? 'active' : ''
-            }`}
+            className={`carousel-slide ${index === currentSlide ? 'active' : ''}`}
           >
             <img
               src={slide.image}
               alt={slide.title}
-              className="w-full h-full object-cover"
+              className="carousel-image"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.src = '/assets/images/placeholder.jpg';
+              }}
             />
-            <div className="carousel-caption">
-              <h5>{slide.title}</h5>
-              <p>{slide.description}</p>
+            <div className="carousel-content">
+              <h3 className="carousel-title">{slide.title}</h3>
+              <p className="carousel-description">{slide.description}</p>
             </div>
           </div>
         ))}
-
-        {/* Control buttons */}
-        <button
-          onClick={prevSlide}
-          className="carousel-control-prev"
-          type="button"
-        >
-          <span className="carousel-control-prev-icon" aria-hidden="true">
-          </span>
-          <span className="sr-only">Previous</span>
+        
+        <button onClick={prevSlide} className="carousel-control prev">
+          <span className="carousel-control-icon">&#8249;</span>
         </button>
-        <button
-          onClick={nextSlide}
-          className="carousel-control-next"
-          type="button"
-        >
-          <span className="carousel-control-next-icon" aria-hidden="true">
-          </span>
-          <span className="sr-only">Next</span>
+        <button onClick={nextSlide} className="carousel-control next">
+          <span className="carousel-control-icon">&#8250;</span>
         </button>
-
-        {/* Indicators */}
+        
         <div className="carousel-indicators">
           {slides.map((_, index) => (
             <button
               key={index}
-              type="button"
-              data-bs-target=""
-              className={index === currentSlide ? 'active' : ''}
+              className={`indicator ${index === currentSlide ? 'active' : ''}`}
               onClick={() => setCurrentSlide(index)}
-            >
-              <span className="sr-only">Slide {index + 1}</span>
-            </button>
+            />
           ))}
         </div>
       </div>
