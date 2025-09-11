@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import RegistroComponent from "../../components/registro/registro";
-import AsistenciaComponent from "../../components/asistencia/asistencia";
-import ConstanciaComponent from "../../components/constancias/constancias";
+import RegistroComponent from "../../components/forms/registro";
+import AsistenciaComponent from "../../components/forms/asistencia";
+import ConstanciaComponent from "../../components/forms/constancias";
+import RegistroConcursoComponent from '../../components/forms/registro_concurso';
 import "./registro.css";
 
-type ActiveTab = "registro" | "asistencia" | "constancia";
+
+type ActiveTab = "registro" | "asistencia" | "constancia" | "concurso";
 
 const RegistroPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<ActiveTab>("registro");
@@ -46,6 +48,15 @@ const RegistroPage: React.FC = () => {
               <span className="tab-icon">🏆</span>
               <span className="tab-text">Constancia</span>
             </button>
+
+            <button
+              className={`tab-button ${activeTab === "concurso" ? "active" : ""}`}
+              onClick={() => setActiveTab("concurso")}
+              type="button"
+            >
+              <span className="tab-icon">⚽</span>
+              <span className="tab-text">Concurso</span>
+            </button>
           </div>
         </div>
 
@@ -67,6 +78,11 @@ const RegistroPage: React.FC = () => {
             <ConstanciaComponent 
               className="tab-component"
               showHeader={false}
+            />
+          )}
+          {activeTab === "concurso" && (
+            <RegistroConcursoComponent
+              className="tab-component"
             />
           )}
         </div>
