@@ -8,6 +8,16 @@
   --transition-speed: 0.3s;
 }
 
+/* Contenedor principal del componente */
+.concurso-container {
+  position: relative; /* ¡Este es CRUCIAL! */
+  min-height: 100vh;
+  width: 100vw;
+  background-color: #1a1a1a;
+  color: white;
+  overflow: hidden;
+}
+
 .headercard {
     background-color: var(--primary-color);
     color: white;
@@ -30,7 +40,7 @@
 .animate-snake-vertical {
   stroke-dasharray: 1000;
   stroke-dashoffset: 1000;
-  animation: snakeMoveVertical 5s linear infinite;
+  animation: snakeMoveVertical 5s linear forwards;
 }
 
 /* Contenedor general */
@@ -73,4 +83,41 @@
   inset: 0; /* top, right, bottom, left = 0 */
   width: 100%;
   height: 100%;
+}
+
+.sparks-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1; /* Por debajo de todo el contenido */
+  pointer-events: none; /* Permite clics y otras interacciones a través de él */
+  overflow: hidden;
+}
+
+.spark {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background-color: #3d58cf; /* Color de la chispa (dorado) */
+  border-radius: 60%;
+  opacity: 0;
+  box-shadow: 0 0 7px 2px #15739e;
+  animation: fly-in-out linear forwards;
+}
+
+@keyframes fly-in-out {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  20% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.3) translate(var(--x-move), -200px);
+    opacity: 0;
+  }
 }
