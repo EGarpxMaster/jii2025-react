@@ -247,7 +247,7 @@ export default function Historia() {
             <div className="flex mt-6 justify-center">
               <div className="w-16 h-1 rounded-full bg-[#00d4d4] inline-flex"></div>
             </div>
-            <p className="max-w-2xl mx-auto mt-6 historia-text-lg">Revive los momentos más destacados de nuestras jornadas anuales de Ingeniería Industrial</p>
+            <p className="max-w-2xl mx-auto mt-6 historia-text-lg">Revive los momentos más destacados de ediciones anteriores de la Jornada de Ingeniería Industrial</p>
           </div>
         </section>
 
@@ -268,12 +268,15 @@ export default function Historia() {
                   <div className="flex flex-col items-center text-center justify-center">
                     <h2 className="historia-h2 font-medium title-font mt-4 text-gray-900">Nuestra Trayectoria</h2>
                     <div className="w-12 h-1 bg-[#00d4d4] rounded mt-2 mb-4 sm:pb-4"></div>
-                    <p className="historia-text-base">Cada año hemos crecido en participantes, actividades y alcance, consolidándonos como el evento de ingeniería industrial más importante de la región.</p>
+                    <p className="historia-text-base">Cada año hemos crecido en participantes, actividades y alcance, consolidándonos como el evento de Ingeniería Industrial más importante de la región.</p>
                   </div>
                 </div>
                 <div className="sm:w-2/3 sm:pl-20 lg:pt-12  sm:pt-4 sm:border-l border-g0ray-200 sm:border-t-0 border-t sm:mt-4 sm:text-left">
-                  <p className="historia-text-base leading-relaxed mb-4 mt-28">Desde nuestra primera edición en 2023, la Jornada de Ingeniería Industrial ha sido un espacio de encuentro para estudiantes, académicos y profesionales del sector. Un evento donde el conocimiento, la innovación y las oportunidades de networking se combinan para crear experiencias enriquecedoras.</p>
-                  <p className="historia-text-base leading-relaxed mb-4">Cada año hemos superado expectativas, aumentando el número de participantes, actividades y aliados estratégicos que se suman a esta iniciativa.</p>
+                  <p className="historia-text-base leading-relaxed mb-4 mt-28">La Jornada de Ingeniería Industrial (JII) nació como un espacio académico en la Universidad del Caribe con el propósito de vincular a estudiantes, docentes, egresados, empleadores y expertos del sector productivo, generando un punto de encuentro para compartir conocimientos, experiencias y tendencias actuales de la disciplina.
+
+</p>
+                  <p className="historia-text-base leading-relaxed mb-4">Desde sus primeras ediciones, la JII se distinguió por ofrecer conferencias magistrales, talleres prácticos, paneles de discusión y actividades académicas y recreativas que fortalecen la formación integral de los futuros ingenieros e ingenieras. Con el paso del tiempo, el evento ha evolucionado en su organización y alcance, consolidándose como una de las actividades más esperadas dentro del calendario académico de la carrera.
+</p>
                 </div>
               </div>
             </div>

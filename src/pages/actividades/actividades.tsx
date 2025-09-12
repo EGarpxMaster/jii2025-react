@@ -30,7 +30,7 @@ const activitiesData: Activity[] = [
   {
     id: "C1",
     kind: "conference",
-    banner: "/assets/images/actividades/banners/C1.jpg",
+    banner: "/assets/images/actividades/banners/C1.png",
     title: "Del dato a la decisión: cómo pensar como un ingeniero y actuar como un financiero",
     description:
       "Se aborda la gestión de operaciones desde una perspectiva financiera, resaltando la importancia de integrar el pensamiento de negocios en la práctica profesional.",
@@ -54,7 +54,7 @@ const activitiesData: Activity[] = [
   {
     id: "C2",
     kind: "conference",
-    banner: "/assets/images/actividades/banners/C2.jpeg",
+    banner: "/assets/images/actividades/banners/C2.png",
     title: "Optimización en una línea de producción: un caso real",
     description:
       "Un experto en modelación y optimización de sistemas complejos presenta un caso de estudio sobre los beneficios de la vinculación universidad-industria.",
@@ -77,7 +77,7 @@ const activitiesData: Activity[] = [
   {
     id: "C3",
     kind: "conference",
-    banner: "/assets/images/actividades/banners/C3.jpg",
+    banner: "/assets/images/actividades/banners/C3.png",
     title: "Ingeniería en capas: como la manufactura aditiva construye el futuro",
     description:
       "Descubre cómo la impresión 3D está revolucionando los procesos industriales mediante el diseño funcional, materiales sostenibles y prototipado inteligente.",
