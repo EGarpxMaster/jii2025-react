@@ -198,7 +198,7 @@ function Modal({
 
 const GameCard = ({ game, onClick, className }: { game: Seccion; onClick: () => void; className: string }) => {
   return (
-    <div className={`w-72 md:w-80 cursor-pointer rounded-3xl overflow-hidden border-4 border-amber-400 shadow-2xl z-10 
+    <div className={`w-72 md:w-80 cursor-pointer rounded-3xl overflow-hidden border-4 border-[#a9a9a9] shadow-2xl z-10 
               transform transition-all duration-500 hover:scale-105 hover:-translate-y-3 hover:shadow-3xl ${className}`}
       onClick={onClick}>
       <img
@@ -267,7 +267,7 @@ export default function Concurso() {
         <div className="absolute inset-0 bg-[#1b1c39]"></div>
         <div className="relative z-10 flex flex-col items-center justify-center min-h-[60vh] px-4 pb-10 text-center text-white">
           <div className="mb-8 transform hover:scale-110 transition-transform duration-500">
-            <div className="w-24 h-24 md:w-32 md:h-32 mx-auto rounded-full shadow-2xl border-4 border-white/30 bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center text-4xl">
+            <div className="w-24 h-24 md:w-32 md:h-32 mx-auto rounded-full shadow-2xl border-4 border-white/30 bg-gradient-to-br from-blue-500 to-gray-500 flex items-center justify-center text-4xl">
               <img src="assets/images/concurso/logorally.jpg " alt="Logo Mundialito Industrial" className="w-20 h-20 md:w-28 md:h-28 rounded-full object-cover" />
             </div>
           </div>
