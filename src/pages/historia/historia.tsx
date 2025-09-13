@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // Añade esta importación
 import "./historia.css";
 
 // Definición de tipos
 type Variant = "A" | "B";
 type MobileMode = "same" | "stack";
 
-// Componente GalleryMosaic separado
 function GalleryMosaic({
   variant = "A",
   mobileMode = "stack",
 }: { variant?: Variant; mobileMode?: MobileMode }) {
+  const navigate = useNavigate(); // Añade esto
   const [imagesLoaded, setImagesLoaded] = useState<boolean[]>([]);
-  
+  const [hoverPosition, setHoverPosition] = useState<{x: number, y: number}>({x: 0, y: 0});
   const spansA = [
     "lg:col-span-4 lg:row-span-2",
     "lg:col-span-2 lg:row-span-1",
@@ -65,7 +66,6 @@ function GalleryMosaic({
 
   const spans = variant === "A" ? spansA : spansB;
 
-  // Efecto para inicializar el estado de carga de imágenes
   useEffect(() => {
     setImagesLoaded(new Array(GALLERY_IMAGES.length).fill(false));
   }, []);
@@ -78,18 +78,22 @@ function GalleryMosaic({
     });
   };
 
-  // Grid base mejorada para móviles
-  const gridBase = mobileMode === "same"
-    ? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4"
-    : "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4";
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    setHoverPosition({x, y});
+  };
 
-  // Alturas responsivas
+  const gridBase = mobileMode === "same"
+    ? "gallery-grid grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4"
+    : "gallery-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4";
+
   const getHeightClass = (index: number) => {
     if (mobileMode === "same") {
       return "h-40 sm:h-48 md:h-40 lg:h-48 xl:h-56";
     }
     
-    // Para móviles: diseño más variado e interesante
     switch(index % 6) {
       case 0: return "h-56 sm:h-48 md:h-56 lg:h-64";
       case 1: return "h-48 sm:h-56 md:h-48 lg:h-52";
@@ -101,11 +105,9 @@ function GalleryMosaic({
     }
   };
 
-  // Span classes para móviles
   const getMobileSpan = (index: number) => {
     if (mobileMode === "same") return "";
     
-    // Diseño más interesante para móviles
     switch(index % 6) {
       case 0: return "sm:col-span-2 sm:row-span-2";
       case 4: return "sm:col-span-2";
@@ -127,14 +129,17 @@ function GalleryMosaic({
           </p>
         </div>
 
-        {/* GRID mejorado con diseño responsivo */}
-        <div className={`${gridBase} [grid-auto-flow:dense]`}>
+        <div className={`${gridBase}`}>
           {GALLERY_IMAGES.map((image, i) => (
             <div
               key={i}
-              className={`relative group overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-all duration-300 ${getHeightClass(i)} ${getMobileSpan(i)} ${spans[i]}`}
+              className={`gallery-item ${getHeightClass(i)} ${getMobileSpan(i)} ${spans[i]}`}
+              onMouseMove={handleMouseMove}
+              style={{ 
+                '--x': `${hoverPosition.x}%`,
+                '--y': `${hoverPosition.y}%`
+              } as React.CSSProperties}
             >
-              {/* Skeleton mientras carga */}
               {!imagesLoaded[i] && (
                 <div className="absolute inset-0 historia-skeleton historia-gallery-skeleton"></div>
               )}
@@ -142,43 +147,45 @@ function GalleryMosaic({
               <img
                 src={image.src}
                 alt={image.alt}
-                className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                className="gallery-image"
                 loading="lazy"
                 decoding="async"
                 onLoad={() => handleImageLoad(i)}
-                style={{ opacity: imagesLoaded[i] ? 1 : 0, transition: 'opacity 0.3s ease' }}
+                style={{ opacity: imagesLoaded[i] ? 1 : 0, transition: 'opacity 0.5s ease' }}
               />
               
-              {/* Overlay con título (solo cuando la imagen está cargada) */}
               {imagesLoaded[i] && (
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
-                  <div className="p-4 text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                    <h3 className="font-semibold text-sm sm:text-base">{image.title}</h3>
-                    <p className="text-xs sm:text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
-                      {image.alt}
-                    </p>
+                <>
+                  <div className="gallery-overlay">
+                    <div className="gallery-content">
+                      <h3 className="gallery-title">{image.title}</h3>
+                      <p className="gallery-description">
+                        {image.alt}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              )}
-              
-              {/* Badge móvil (solo cuando la imagen está cargada) */}
-              {imagesLoaded[i] && (
-                <div className="absolute top-3 left-3 bg-[#00d4d4] text-white px-2 py-1 rounded-full text-xs font-medium sm:hidden">
-                  {image.title}
-                </div>
+                  
+                  <div className="gallery-badge sm:hidden">
+                    {image.title}
+                  </div>
+                </>
               )}
             </div>
           ))}
         </div>
 
         <div className="flex justify-center pb-12 pt-12">
-          <a href="/galeria" id="btn_galery" className="inline-flex items-center bg-[#00d4d4] text-white px-6 py-3 rounded-full font-medium">
+          <button 
+            onClick={() => navigate("/galeria")} 
+            id="btn_galery" 
+            className="inline-flex items-center text-white px-8 py-4 rounded-full font-medium text-lg"
+          >
             Ver galería completa
-            <svg className="w-4 h-4 ml-2" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round">
+            <svg className="w-5 h-5 ml-3" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round">
               <path d="M5 12h14" />
               <path d="M12 5l7 7-7 7" />
             </svg>
-          </a>
+          </button>
         </div>
       </div>
     </section>
