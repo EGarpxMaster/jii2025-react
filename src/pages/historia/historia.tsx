@@ -207,26 +207,26 @@ export default function Historia() {
     }
   ];
 
-  const testimonios = [
-    {
-      nombre: "Dra. María González",
-      cargo: "Directora de Ingeniería Industrial",
-      texto: "Las jornadas han permitido a nuestros estudiantes conectarse con la industria real y aplicar sus conocimientos en proyectos tangibles.",
-      imagen: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=200&h=200"
-    },
-    {
-      nombre: "Ing. Carlos Mendoza",
-      cargo: "Gerente de Producción, Industria ABC",
-      texto: "Como empresa participante, hemos encontrado talento excepcional en estas jornadas. Los proyectos presentados muestran un gran potencial.",
-      imagen: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=200&h=200"
-    },
-    {
-      nombre: "Ana Sánchez",
-      cargo: "Estudiante participante",
-      texto: "Participar en la jornada fue una experiencia transformadora. Pude aplicar lo aprendido en clase y hacer contactos profesionales valiosos.",
-      imagen: "https://images.unsplash.com/photo-1551836026-d5c8c5ab235e?auto=format&fit=crop&q=80&w=200&h=200"
-    }
-  ];
+  // const testimonios = [
+  //   {
+  //     nombre: "Dra. María González",
+  //     cargo: "Directora de Ingeniería Industrial",
+  //     texto: "Las jornadas han permitido a nuestros estudiantes conectarse con la industria real y aplicar sus conocimientos en proyectos tangibles.",
+  //     imagen: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=200&h=200"
+  //   },
+  //   {
+  //     nombre: "Ing. Carlos Mendoza",
+  //     cargo: "Gerente de Producción, Industria ABC",
+  //     texto: "Como empresa participante, hemos encontrado talento excepcional en estas jornadas. Los proyectos presentados muestran un gran potencial.",
+  //     imagen: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=200&h=200"
+  //   },
+  //   {
+  //     nombre: "Ana Sánchez",
+  //     cargo: "Estudiante participante",
+  //     texto: "Participar en la jornada fue una experiencia transformadora. Pude aplicar lo aprendido en clase y hacer contactos profesionales valiosos.",
+  //     imagen: "https://images.unsplash.com/photo-1551836026-d5c8c5ab235e?auto=format&fit=crop&q=80&w=200&h=200"
+  //   }
+  // ];
 
   return (
     <div className="w-full historia-container">
@@ -339,7 +339,7 @@ export default function Historia() {
           </div>
         </section>
 
-        {/* Testimonials Section */}
+        {/* Testimonials Section
         <section className="text-gray-700 body-font py-16 bg-gray-50">
           <div className="container px-5 py-12 mx-auto">
             <div className="text-center mb-12">
@@ -370,12 +370,12 @@ export default function Historia() {
               ))}
             </div>
           </div>
-        </section>
+        </section> */}
 
         {/* Gallery Section usando el componente GalleryMosaic */}
         <GalleryMosaic variant="A" mobileMode="stack" />
 
-        {/* Evolution Section */}
+        {/* Evolution Section
         <section className="text-gray-700 body-font py-16 bg-gradient-to-r from-[#1b1c39] to-[#2a2b4a]">
           <div className="container px-5 py-12 mx-auto">
             <div className="text-center mb-12">
@@ -415,7 +415,7 @@ export default function Historia() {
               </div>
             </div>
           </div>
-        </section>
+        </section> */}
 
         {/* Call to Action */}
         <section className="text-gray-700 body-font bg-gray-100 py-16">

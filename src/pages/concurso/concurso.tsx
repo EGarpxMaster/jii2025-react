@@ -20,7 +20,7 @@ type Seccion = {
 const rallySteps: Seccion[] = [
   {
     id: 1,
-    banner: "/assets/images/concurso/juego1.jpg",
+    banner: "/assets/images/concurso/J1.png",
     title: "Juego 1: Pañuelo",
     modal: {
       title: "Juego 1: Pañuelo",
@@ -43,7 +43,7 @@ const rallySteps: Seccion[] = [
   },
   {
     id: 2,
-    banner: "/assets/images/concurso/juego2.jpg",
+    banner: "/assets/images/concurso/J2.png",
     title: "Juego 2: Zoteball",
     modal: {
       title: "Juego 2: Zoteball",
@@ -67,7 +67,7 @@ const rallySteps: Seccion[] = [
   },
   {
     id: 3,
-    banner: "/assets/images/actividades/banners/C1.jpg",
+    banner: "/assets/images/concurso/J3.png",
     title: "Juego 3: Rally del tesoro",
     modal: {
       title: "Juego 3: Rally del tesoro",
@@ -91,7 +91,7 @@ const rallySteps: Seccion[] = [
   },
   {
     id: 4,
-    banner: "/assets/images/actividades/banners/C1.jpg",
+    banner: "/assets/images/concurso/J4.png",
     title: "Juego 4: Fútbol en parejas",
     modal: {
       title: "Juego 4: Fútbol en parejas",

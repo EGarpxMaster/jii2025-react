@@ -10,12 +10,12 @@
 
 /* Contenedor principal del componente */
 .concurso-container {
-  position: relative; /* ¡Este es CRUCIAL! */
+  position: relative;
   min-height: 100vh;
   width: 100vw;
   background-color: #1a1a1a;
   color: white;
-  overflow: hidden;
+  overflow-x: hidden; /* Solo oculta el scroll horizontal */
 }
 
 .headercard {
@@ -46,65 +46,102 @@
 /* Contenedor general */
 .game-board {
   position: relative;
-  height: 1050px; /* mantienes la altura del SVG */
+  width: 100%;
+  max-width: 100%;
 }
 
-/* Posiciones desktop */
-.game-card-1 { top: 45px; left: 65px; position: absolute; }
-.game-card-2 { top: 330px; right: 180px; position: absolute; }
-.game-card-3 { top: 570px; left: 100px; position: absolute; }
-.game-card-4 { top: 750px; right: 50px; position: absolute; }
+/* Desktop - Mantener posiciones absolutas */
+@media (min-width: 768px) {
+  .game-board {
+    height: 1100px; /* Reducido de 1050px */
+    min-height: 800px;
+  }
+  
+  /* Posiciones desktop ajustadas */
+  .md\:top-\[45px\].md\:left-\[65px\] { 
+    top: 40px; 
+    left: 50px; 
+  }
+  .md\:top-\[330px\].md\:right-\[180px\] { 
+    top: 250px; 
+    right: 120px; 
+  }
+  .md\:top-\[570px\].md\:left-\[100px\] { 
+    top: 450px; 
+    left: 80px; 
+  }
+  .md\:top-\[750px\].md\:right-\[50px\] { 
+    top: 650px; 
+    right: 40px; 
+  }
+}
 
-/* Estilos móviles */
-@media (max-width: 768px) {
+/* Mobile - Layout vertical centrado */
+@media (max-width: 767px) {
   .game-board {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start; /* asegura que inicie desde arriba */
+    justify-content: flex-start;
     height: auto;
-    padding: 3rem 1rem 2rem; /* 👈 más padding arriba (antes estaba 2rem) */
-    gap: 2rem; /* 👈 espacio consistente entre tarjetas */
+    min-height: auto;
+    padding: 1.5rem 1rem; /* Reducido padding */
+    gap: 1.5rem; /* Reducido gap */
   }
 
-  .game-card-1,
-  .game-card-2,
-  .game-card-3,
-  .game-card-4 {
-    position: static;
-    margin: 0 auto;        /* centra horizontalmente */
-    width: 90%;            /* ancho adaptativo */
-    max-width: 320px;      /* no muy grandes */
+  /* Todas las tarjetas en mobile */
+  .game-card {
+    position: static !important;
+    margin: 0 auto;
+    width: 85%; /* Ligeramente más pequeñas */
+    max-width: 280px; /* Más compactas */
+    transform: none !important; /* Evita transformaciones que puedan causar overflow */
+  }
+
+  /* Línea vertical para móvil más delgada */
+  .md\:hidden {
+    width: 2px !important; /* Más delgada */
   }
 }
 
 .snake-line {
   position: absolute;
-  inset: 0; /* top, right, bottom, left = 0 */
+  inset: 0;
   width: 100%;
   height: 100%;
+  pointer-events: none;
 }
 
+/* Contenedor de chispas optimizado */
 .sparks-container {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 1; /* Por debajo de todo el contenido */
-  pointer-events: none; /* Permite clics y otras interacciones a través de él */
+  z-index: 1;
+  pointer-events: none;
   overflow: hidden;
 }
 
+/* Chispas más pequeñas para mobile */
 .spark {
   position: absolute;
-  width: 6px;
-  height: 6px;
-  background-color: #3d58cf; /* Color de la chispa (dorado) */
-  border-radius: 60%;
+  width: 4px; /* Reducido de 6px */
+  height: 4px;
+  background-color: #3d58cf;
+  border-radius: 50%;
   opacity: 0;
-  box-shadow: 0 0 7px 2px #15739e;
+  box-shadow: 0 0 5px 1px #15739e; /* Reducido el brillo */
   animation: fly-in-out linear forwards;
+}
+
+@media (max-width: 767px) {
+  .spark {
+    width: 3px;
+    height: 3px;
+    box-shadow: 0 0 3px 1px #15739e;
+  }
 }
 
 @keyframes fly-in-out {
@@ -117,7 +154,30 @@
     opacity: 1;
   }
   100% {
-    transform: scale(0.3) translate(var(--x-move), -200px);
+    transform: scale(0.3) translate(var(--x-move, 0px), -100px); /* Fallback para --x-move */
     opacity: 0;
   }
+}
+
+/* Optimizaciones adicionales para viewport pequeños */
+@media (max-width: 480px) {
+  .game-card {
+    width: 95%;
+    max-width: 260px;
+  }
+  
+  .game-board {
+    padding: 1rem 0.5rem;
+    gap: 1rem;
+  }
+}
+
+/* Asegurar que el contenido no se desborde horizontalmente */
+* {
+  box-sizing: border-box;
+}
+
+body, html {
+  overflow-x: hidden;
+  max-width: 100%;
 }
