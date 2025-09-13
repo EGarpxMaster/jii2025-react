@@ -87,19 +87,6 @@
   line-height: 1.5;
 }
 
-/* Ajustes responsivos base (móviles) */
-.historia-stats-container {
-  padding: 1rem;
-}
-
-.historia-stats-item {
-  margin-bottom: 1.5rem;
-}
-
-.historia-testimonial-card {
-  margin-bottom: 1.5rem;
-}
-
 /* Animaciones suaves */
 @keyframes fadeInUp {
   from {
@@ -296,10 +283,6 @@
   }
   
   .historia-stats-item {
-    margin-bottom: 2rem;
-  }
-  
-  .historia-testimonial-card {
     margin-bottom: 2rem;
   }
 
