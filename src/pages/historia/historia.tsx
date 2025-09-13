@@ -241,36 +241,38 @@ export default function Historia() {
     }
   ];
 
-  // const testimonios = [
-  //   {
-  //     nombre: "Dra. María González",
-  //     cargo: "Directora de Ingeniería Industrial",
-  //     texto: "Las jornadas han permitido a nuestros estudiantes conectarse con la industria real y aplicar sus conocimientos en proyectos tangibles.",
-  //     imagen: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=200&h=200"
-  //   },
-  //   {
-  //     nombre: "Ing. Carlos Mendoza",
-  //     cargo: "Gerente de Producción, Industria ABC",
-  //     texto: "Como empresa participante, hemos encontrado talento excepcional en estas jornadas. Los proyectos presentados muestran un gran potencial.",
-  //     imagen: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=200&h=200"
-  //   },
-  //   {
-  //     nombre: "Ana Sánchez",
-  //     cargo: "Estudiante participante",
-  //     texto: "Participar en la jornada fue una experiencia transformadora. Pude aplicar lo aprendido en clase y hacer contactos profesionales valiosos.",
-  //     imagen: "https://images.unsplash.com/photo-1551836026-d5c8c5ab235e?auto=format&fit=crop&q=80&w=200&h=200"
-  //   }
-  // ];
+  const testimonios = [
+    {
+      nombre: "Dra. María González",
+      cargo: "Directora de Ingeniería Industrial",
+      texto: "Las jornadas han permitido a nuestros estudiantes conectarse con la industria real y aplicar sus conocimientos en proyectos tangibles.",
+      imagen: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=200&h=200"
+    },
+    {
+      nombre: "Ing. Carlos Mendoza",
+      cargo: "Gerente de Producción, Industria ABC",
+      texto: "Como empresa participante, hemos encontrado talento excepcional en estas jornadas. Los proyectos presentados muestran un gran potencial.",
+      imagen: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=200&h=200"
+    },
+    {
+      nombre: "Ana Sánchez",
+      cargo: "Estudiante participante",
+      texto: "Participar en la jornada fue una experiencia transformadora. Pude aplicar lo aprendido en clase y hacer contactos profesionales valiosos.",
+      imagen: "https://images.unsplash.com/photo-1551836026-d5c8c5ab235e?auto=format&fit=crop&q=80&w=200&h=200"
+    }
+  ];
 
   return (
     <div className="w-full historia-container">
       {/* Barra de progreso de scroll */}
       <div 
         className="scroll-progress-bar" 
-        style={{ '--scroll-progress': `${scrollProgress}%` } as React.CSSProperties}
+        style={{ 
+          '--scroll-progress': `${scrollProgress}%` 
+        } as React.CSSProperties}
       ></div>
       
-      <main className="w-full h-full lg:full">
+      <main className="w-full h-full lg:h-full">
         {/* Hero Section */}
         <section className="historia-container text-white body-font bg-gradient-to-r from-[#1b1c39] to-[#2a2b4a] py-16 relative overflow-hidden">
           <div className="absolute inset-0 opacity-10">
@@ -305,7 +307,7 @@ export default function Historia() {
                     <p className="historia-text-base">Cada año hemos crecido en participantes, actividades y alcance, consolidándonos como el evento de Ingeniería Industrial más importante de la región.</p>
                   </div>
                 </div>
-                <div className="sm:w-2/3 sm:pl-20 lg:pt-12  sm:pt-4 sm:border-l border-g0ray-200 sm:border-t-0 border-t sm:mt-4 sm:text-left">
+                <div className="sm:w-2/3 sm:pl-20 lg:pt-12  sm:pt-4 sm:border-l border-gray-200 sm:border-t-0 border-t sm:mt-4 sm:text-left">
                   <p className="historia-text-base leading-relaxed mb-4 mt-28">Desde nuestra primera edición en 2023, la Jornada de Ingeniería Industrial ha sido un espacio de encuentro para estudiantes, académicos y profesionales del sector. Un evento donde el conocimiento, la innovación y las oportunidades de networking se combinan para crear experiencias enriquecedoras.</p>
                   <p className="historia-text-base leading-relaxed mb-4">Cada año hemos superado expectativas, aumentando el número de participantes, actividades y aliados estratégicos que se suman a esta iniciativa.</p>
                 </div>
@@ -380,7 +382,7 @@ export default function Historia() {
           </div>
         </section>
 
-        {/* Testimonials Section
+        {/* Testimonials Section*/}
         <section className="text-gray-700 body-font py-16 bg-gray-50">
           <div className="container px-5 py-12 mx-auto">
             <div className="text-center mb-12">
@@ -423,12 +425,12 @@ export default function Historia() {
               ))}
             </div>
           </div>
-        </section> */}
+        </section> 
 
         {/* Gallery Section usando el componente GalleryMosaic */}
         <GalleryMosaic variant="A" mobileMode="stack" />
 
-        {/* Evolution Section
+        {/* Evolution Section */}
         <section className="text-gray-700 body-font py-16 bg-gradient-to-r from-[#1b1c39] to-[#2a2b4a]">
           <div className="container px-5 py-12 mx-auto">
             <div className="text-center mb-12">
@@ -468,7 +470,7 @@ export default function Historia() {
               </div>
             </div>
           </div>
-        </section> */}
+        </section>
 
         {/* Call to Action */}
         <section className="text-gray-700 body-font bg-gray-100 py-16">
