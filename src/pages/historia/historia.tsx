@@ -20,6 +20,7 @@ function GalleryMosaic({
     "lg:col-span-2 lg:row-span-1",
     "lg:col-span-3 lg:row-span-2",
     "lg:col-span-3 lg:row-span-1",
+    "lg:col-span-2 lg:row-span-1",
   ];
 
   const spansB = [
@@ -28,6 +29,7 @@ function GalleryMosaic({
     "lg:col-span-2 lg:row-span-1",
     "lg:col-span-4 lg:row-span-1",
     "lg:col-span-2 lg:row-span-2",
+    "lg:col-span-2 lg:row-span-1",
     "lg:col-span-2 lg:row-span-1",
   ];
 
@@ -61,7 +63,13 @@ function GalleryMosaic({
       src: "https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?auto=format&fit=crop&q=80&w=2000",
       alt: "Entrega de reconocimientos a los mejores proyectos",
       title: "Entrega de Reconocimientos"
-    }
+    },
+    {
+      src: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&q=80&w=1600", // Agrega una URL real
+      alt: "Estudiantes presentando proyectos innovadores",
+      title: "Presentación de Proyectos"
+    },
+
   ];
 
   const spans = variant === "A" ? spansA : spansB;
@@ -86,7 +94,7 @@ function GalleryMosaic({
   };
 
   const gridBase = mobileMode === "same"
-    ? "gallery-grid grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4"
+    ? "gallery-grid grid grid-cols-2 sm:grid-cols-3 gap-4 md:grid-cols-4 lg:grid-cols-6 gap-3 "
     : "gallery-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4";
 
   const getHeightClass = (index: number) => {
@@ -94,14 +102,16 @@ function GalleryMosaic({
       return "h-40 sm:h-48 md:h-40 lg:h-48 xl:h-56";
     }
     
-    switch(index % 6) {
-      case 0: return "h-56 sm:h-48 md:h-56 lg:h-64";
+    switch(index % 7) {
+      case 0: return "h-56 sm:h-48 md:h-56 lg:h-72";
       case 1: return "h-48 sm:h-56 md:h-48 lg:h-52";
-      case 2: return "h-52 sm:h-44 md:h-52 lg:h-60";
-      case 3: return "h-44 sm:h-52 md:h-44 lg:h-56";
-      case 4: return "h-60 sm:h-40 md:h-60 lg:h-52";
-      case 5: return "h-40 sm:h-60 md:h-40 lg:h-64";
-      default: return "h-48";
+      case 2: return "h-52 sm:h-44 md:h-52 lg:h-96";
+      case 3: return "h-44 sm:h-48 md:h-44 lg:h-72";
+      case 4: return "h-48 sm:h-56 m:h-52 lg:h-64";
+      case 5: return "h-60 sm:h-40 md:h-60 lg:h-64";
+      case 6: return "h-40 sm:h-48 md:h-44 lg:h-72";
+      
+      default: return "h-40";
     }
   };
 
@@ -178,7 +188,7 @@ function GalleryMosaic({
           <button 
             onClick={() => navigate("/galeria")} 
             id="btn_galery" 
-            className="inline-flex items-center text-white px-8 py-4 rounded-full font-medium text-lg"
+            className="inline-flex items-center text-white px-3 py-3 rounded-full font-medium text-lg"
           >
             Ver galería completa
             <svg className="w-5 h-5 ml-3" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round">
@@ -394,7 +404,7 @@ export default function Historia() {
                     <p className="historia-text-base">Cada año hemos crecido en participantes, actividades y alcance, consolidándonos como el evento de Ingeniería Industrial más importante de la región.</p>
                   </div>
                 </div>
-                <div className="sm:w-2/3 sm:pl-20 lg:pt-12 sm:pt-4 sm:border-l border-gray-200 sm:border-t-0 border-t sm:mt-4 sm:text-left">
+                <div className="sm:w-2/3 sm:pl-20 mt-8 pt-8 lg:pt-12 sm:pt-4 sm:border-l border-gray-200 sm:border-t-0 border-t sm:mt-4 sm:text-left">
                   <p className="historia-text-base leading-relaxed mb-4">
                     Desde nuestra primera edición en 2023, la Jornada de Ingeniería Industrial ha sido un espacio de encuentro para estudiantes, académicos y profesionales del sector. Un evento donde el conocimiento, la innovación y las oportunidades de networking se combinan para crear experiencias enriquecedoras.
                   </p>
