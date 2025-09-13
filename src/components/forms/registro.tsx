@@ -78,7 +78,7 @@ const RegistroComponent: React.FC<RegistroComponentProps> = ({
       segundoNombre: "Ingresa tu segundo nombre",
       email: "Correo electrónico",
       telefono: "Teléfono (10 dígitos)",
-      brazalete: "Ingresa tu número de brazalete",
+      brazalete: "Ingresa tu número de brazalete (3 dígitos)",
     }),
     []
   );

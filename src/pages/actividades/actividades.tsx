@@ -77,7 +77,7 @@ const activitiesData: Activity[] = [
   {
     id: "C3",
     kind: "conference",
-    banner: "/assets/images/actividades/banners/C3.1.png",
+    banner: "/assets/images/actividades/banners/C3.png",
     title: "Ingeniería en capas: como la manufactura aditiva construye el futuro",
     description:
       "Descubre cómo la impresión 3D está revolucionando los procesos industriales mediante el diseño funcional, materiales sostenibles y prototipado inteligente.",

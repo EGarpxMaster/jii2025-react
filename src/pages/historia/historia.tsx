@@ -287,8 +287,88 @@ export default function Historia() {
           </div>
         </section>
 
-        {/* Timeline Section */}
+        {/* Origen y Propósito */}
+        <section className="text-gray-700 body-font py-16 bg-white">
+          <div className="container px-5 py-12 mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">Origen y Propósito</h2>
+              <div className="w-20 h-1 bg-[#00d4d4] rounded mx-auto mb-6"></div>
+            </div>
+            <div className="lg:w-4/5 mx-auto">
+              <p className="text-lg leading-relaxed mb-6 text-center">
+                La Jornada de Ingeniería Industrial (JII) nació como un espacio académico innovador en la Universidad del Caribe, 
+                con el propósito fundamental de crear puentes entre el mundo académico y el sector productivo.
+              </p>
+              <div className="grid md:grid-cols-2 gap-8 mt-10">
+                <div className="bg-gray-50 p-6 rounded-lg">
+                  <h3 className="text-xl font-semibold mb-4 text-gray-900">Nuestra Misión</h3>
+                  <p className="text-base leading-relaxed">
+                    Vincular a estudiantes, docentes, egresados, empleadores y expertos del sector productivo, 
+                    generando un punto de encuentro estratégico para el intercambio de conocimientos y experiencias.
+                  </p>
+                </div>
+                <div className="bg-gray-50 p-6 rounded-lg">
+                  <h3 className="text-xl font-semibold mb-4 text-gray-900">Nuestro Enfoque</h3>
+                  <p className="text-base leading-relaxed">
+                    Compartir tendencias actuales de la disciplina y fortalecer la formación integral de los 
+                    futuros profesionales en Ingeniería Industrial a través de experiencias enriquecedoras.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Evolución y Características */}
         <section className="text-gray-700 body-font py-16 bg-gray-50">
+          <div className="container px-5 py-12 mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">Evolución del Evento</h2>
+              <div className="w-20 h-1 bg-[#00d4d4] rounded mx-auto mb-6"></div>
+            </div>
+            <div className="lg:w-4/5 mx-auto">
+              <p className="text-lg leading-relaxed mb-10 text-center">
+                Desde sus primeras ediciones, la JII se ha distinguido por su capacidad de adaptación y crecimiento continuo, 
+                evolucionando tanto en organización como en alcance para convertirse en un referente académico.
+              </p>
+              
+              <div className="grid md:grid-cols-3 gap-6">
+                <div className="text-center p-6 bg-white rounded-lg shadow-sm">
+                  <div className="w-16 h-16 mx-auto mb-4 bg-[#00d4d4] rounded-full flex items-center justify-center">
+                    <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-semibold mb-2">Conferencias Magistrales</h3>
+                  <p className="text-sm text-gray-600">Expertos reconocidos comparten sus conocimientos y experiencias profesionales.</p>
+                </div>
+                
+                <div className="text-center p-6 bg-white rounded-lg shadow-sm">
+                  <div className="w-16 h-16 mx-auto mb-4 bg-[#00d4d4] rounded-full flex items-center justify-center">
+                    <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"/>
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-semibold mb-2">Talleres Prácticos</h3>
+                  <p className="text-sm text-gray-600">Actividades hands-on que fortalecen las competencias técnicas y profesionales.</p>
+                </div>
+                
+                <div className="text-center p-6 bg-white rounded-lg shadow-sm">
+                  <div className="w-16 h-16 mx-auto mb-4 bg-[#00d4d4] rounded-full flex items-center justify-center">
+                    <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M17 8h1a1 1 0 110 2h-1v1a1 1 0 11-2 0v-1H4v1a1 1 0 11-2 0v-1H1a1 1 0 110-2h1V7a1 1 0 112 0v1h11V7a1 1 0 112 0v1z"/>
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-semibold mb-2">Paneles de Discusión</h3>
+                  <p className="text-sm text-gray-600">Espacios de debate sobre tendencias y desafíos actuales de la industria.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Nuestra Trayectoria */}
+        <section className="text-gray-700 body-font py-16 bg-white">
           <div className="container px-5 py-12 mx-auto flex flex-col">
             <div className="lg:w-4/6 mx-auto">
               <div className="flex flex-col sm:flex-row mt-10">
@@ -307,9 +387,50 @@ export default function Historia() {
                     <p className="historia-text-base">Cada año hemos crecido en participantes, actividades y alcance, consolidándonos como el evento de Ingeniería Industrial más importante de la región.</p>
                   </div>
                 </div>
-                <div className="sm:w-2/3 sm:pl-20 lg:pt-12  sm:pt-4 sm:border-l border-gray-200 sm:border-t-0 border-t sm:mt-4 sm:text-left">
-                  <p className="historia-text-base leading-relaxed mb-4 mt-28">Desde nuestra primera edición en 2023, la Jornada de Ingeniería Industrial ha sido un espacio de encuentro para estudiantes, académicos y profesionales del sector. Un evento donde el conocimiento, la innovación y las oportunidades de networking se combinan para crear experiencias enriquecedoras.</p>
-                  <p className="historia-text-base leading-relaxed mb-4">Cada año hemos superado expectativas, aumentando el número de participantes, actividades y aliados estratégicos que se suman a esta iniciativa.</p>
+                <div className="sm:w-2/3 sm:pl-20 lg:pt-12 sm:pt-4 sm:border-l border-gray-200 sm:border-t-0 border-t sm:mt-4 sm:text-left">
+                  <p className="historia-text-base leading-relaxed mb-4">
+                    Desde nuestra primera edición en 2023, la Jornada de Ingeniería Industrial ha sido un espacio de encuentro para estudiantes, académicos y profesionales del sector. Un evento donde el conocimiento, la innovación y las oportunidades de networking se combinan para crear experiencias enriquecedoras.
+                  </p>
+                  <p className="historia-text-base leading-relaxed mb-4">
+                    Cada año hemos superado expectativas, aumentando el número de participantes, actividades y aliados estratégicos que se suman a esta iniciativa.
+                  </p>
+                  <p className="historia-text-base leading-relaxed mb-4">
+                    Con el paso del tiempo, el evento ha evolucionado significativamente en su organización y alcance, incorporando nuevas metodologías, tecnologías emergentes y formatos innovadores que responden a las demandas actuales del mercado laboral.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Consolidación e Impacto */}
+        <section className="text-gray-700 body-font py-16 bg-gray-50">
+          <div className="container px-5 py-12 mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">Consolidación e Impacto</h2>
+              <div className="w-20 h-1 bg-[#00d4d4] rounded mx-auto mb-6"></div>
+            </div>
+            <div className="lg:w-4/5 mx-auto">
+              <div className="bg-white p-8 rounded-lg shadow-sm">
+                <p className="text-lg leading-relaxed mb-6 text-center">
+                  La JII se ha consolidado como una de las actividades más esperadas dentro del calendario académico de la carrera, 
+                  estableciendo un estándar de excelencia en la formación integral de futuros ingenieros e ingenieras.
+                </p>
+                <div className="grid md:grid-cols-2 gap-8 mt-8">
+                  <div>
+                    <h3 className="text-xl font-semibold mb-4 text-gray-900">Formación Integral</h3>
+                    <p className="text-base leading-relaxed mb-4">
+                      Nuestras actividades académicas y recreativas están diseñadas para fortalecer no solo las competencias técnicas, 
+                      sino también las habilidades blandas esenciales para el éxito profesional.
+                    </p>
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold mb-4 text-gray-900">Reconocimiento Regional</h3>
+                    <p className="text-base leading-relaxed mb-4">
+                      El crecimiento constante en participación y la calidad de nuestras actividades nos han posicionado como un 
+                      referente académico en el sureste mexicano y la región del Caribe.
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -366,13 +487,13 @@ export default function Historia() {
                       </ul>
                       
                       <div className="flex items-center flex-wrap">
-                        <a className="text-[#00d4d4] inline-flex items-center md:mb-2 lg:mb-0 hover:text-[#1b1c39] transition-colors delay-150 duration-300 ease-in-out cursor-pointer">
+                        {/* <a className="text-[#00d4d4] inline-flex items-center md:mb-2 lg:mb-0 hover:text-[#1b1c39] transition-colors delay-150 duration-300 ease-in-out cursor-pointer">
                           Ver galería
                           <svg className="w-4 h-4 ml-2" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round">
                             <path d="M5 12h14"></path>
                             <path d="M12 5l7 7-7 7"></path>
                           </svg>
-                        </a>
+                        </a> */}
                       </div>
                     </div>
                   </div>
@@ -383,7 +504,7 @@ export default function Historia() {
         </section>
 
         {/* Testimonials Section*/}
-        <section className="text-gray-700 body-font py-16 bg-gray-50">
+        {/* <section className="text-gray-700 body-font py-16 bg-gray-50">
           <div className="container px-5 py-12 mx-auto">
             <div className="text-center mb-12">
               <h2 className="historia-h2 font-bold title-font text-gray-900 mb-4">Testimonios</h2>
@@ -402,7 +523,7 @@ export default function Historia() {
                     </svg>
                     <p className="historia-text-base leading-relaxed mb-6">{testimonio.texto}</p>
                     <div className="inline-flex items-center">
-                      {/* Skeleton mientras carga */}
+                      
                       {!imagesLoaded[`testimonio-${index}`] && (
                         <div className="w-12 h-12 historia-testimonial-skeleton rounded-full flex-shrink-0"></div>
                       )}
@@ -425,13 +546,13 @@ export default function Historia() {
               ))}
             </div>
           </div>
-        </section> 
+        </section>  */}
 
         {/* Gallery Section usando el componente GalleryMosaic */}
         <GalleryMosaic variant="A" mobileMode="stack" />
 
         {/* Evolution Section */}
-        <section className="text-gray-700 body-font py-16 bg-gradient-to-r from-[#1b1c39] to-[#2a2b4a]">
+        {/* <section className="text-gray-700 body-font py-16 bg-gradient-to-r from-[#1b1c39] to-[#2a2b4a]">
           <div className="container px-5 py-12 mx-auto">
             <div className="text-center mb-12">
               <h2 className="historia-h2 font-bold title-font mb-4 text-white">Evolución de las Jornadas</h2>
@@ -470,7 +591,7 @@ export default function Historia() {
               </div>
             </div>
           </div>
-        </section>
+        </section> */}
 
         {/* Call to Action */}
         <section className="text-gray-700 body-font bg-gray-100 py-16">

@@ -12,11 +12,14 @@ dotenv.config();
 
 // Crear una conexión a la base de datos MySQL
 const db = mysql.createConnection({
-  host: process.env.DB_HOST,
+  host: process.env.DB_HOST,          // 127.0.0.1
+  port: Number(process.env.DB_PORT) || 3306,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
+  connectTimeout: Number(process.env.DB_CONNECT_TIMEOUT) || 15000,
 });
+
 
 // Conectar a la base de datos
 db.connect((err) => {
