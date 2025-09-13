@@ -204,7 +204,7 @@ const GameCard = ({ game, onClick, className }: { game: Seccion; onClick: () => 
       <img
         src={game.banner}
         alt={game.title}
-        className="w-full block"
+        className="h-48 object-cover w-full block"
       />
 
       {/* Número */}
@@ -227,10 +227,10 @@ export default function Concurso() {
   useScrollAnimations();
 
   const positions = [
-    'md:top-[45px] md:left-[65px]',
-    'md:top-[330px] md:right-[180px]',
-    'md:top-[570px] md:left-[100px]',
-    'md:top-[750px] md:right-[50px]'
+    'md:top-[60px] md:left-[90px]',
+    'md:top-[350px] md:right-[170px]',
+    'md:top-[580px] md:left-[120px]',
+    'md:top-[750px] md:right-[80px]'
   ];
 
   // Referencia para el contenedor de las chispas
