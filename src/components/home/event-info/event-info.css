@@ -159,6 +159,44 @@
   margin-bottom: 0;
 }
 
+/* Skeleton loading para event-info - Mejorado */
+.event-skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  border-radius: 4px;
+}
+
+.event-skeleton-text {
+  height: 1rem;
+  margin-bottom: 0.8rem;
+  border-radius: 4px;
+}
+
+.event-skeleton-text:last-child {
+  width: 80%;
+  margin-bottom: 0;
+}
+
+.event-skeleton-image {
+  height: 100%;
+  width: 100%;
+}
+
+.event-skeleton-map {
+  height: 400px;
+  width: 100%;
+  border-radius: 6px;
+}
+
+/* Mejoras de accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+  .event-skeleton {
+    animation: none;
+    background: #f0f0f0;
+  }
+}
+
 /* Estilos para laptops y pantallas grandes (1024px+) */
 @media (min-width: 1024px) {
   .event-info {

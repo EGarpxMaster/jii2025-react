@@ -1,7 +1,17 @@
-import { type FC } from 'react';
+import { type FC, useState, useEffect } from 'react';
 import './event-info.css';
 
 const EventInfo: FC = () => {
+  const [imagesLoaded, setImagesLoaded] = useState<{[key: string]: boolean}>({});
+  const [mapLoaded, setMapLoaded] = useState(false);
+
+  const handleImageLoad = (imageKey: string) => {
+    setImagesLoaded(prev => ({
+      ...prev,
+      [imageKey]: true
+    }));
+  };
+
   const sections = [
     {
       id: "acerca",
@@ -77,12 +87,25 @@ const EventInfo: FC = () => {
                 <p>{section.content}</p>
               </div>
               <div className="card-image">
+                {/* Skeleton mientras carga */}
+                {!imagesLoaded[`section-${index}`] && (
+                  <div className="event-skeleton event-skeleton-image"></div>
+                )}
+                
                 <img 
                   src={section.image}
                   alt={section.title}
+                  onLoad={() => handleImageLoad(`section-${index}`)}
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
                     target.src = '/assets/images/placeholder.jpg';
+                    handleImageLoad(`section-${index}`);
+                  }}
+                  style={{ 
+                    display: imagesLoaded[`section-${index}`] ? 'block' : 'none',
+                    height: '300px',
+                    objectFit: 'cover',
+                    width: '100%'
                   }}
                 />
               </div>
@@ -97,15 +120,21 @@ const EventInfo: FC = () => {
           </div>
           <div className="map-card">
             <div className="map-container">
+              {/* Skeleton para el mapa */}
+              {!mapLoaded && (
+                <div className="event-skeleton event-skeleton-map"></div>
+              )}
+              
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3719.79233394753!2d-86.82603072473866!3d21.200406980492243!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8f4c2c298cab405b%3A0xc7ce34485e9b3b8!2sUniversidad%20del%20Caribe!5e0!3m2!1ses!2smx!4v1751600476163!5m2!1ses!2smx"
                 width="100%"
                 height="400"
-                style={{ border: 0 }}
+                style={{ border: 0, display: mapLoaded ? 'block' : 'none' }}
                 allowFullScreen
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
                 title="Universidad del Caribe Location"
+                onLoad={() => setMapLoaded(true)}
               />
             </div>
             <div className="map-details">

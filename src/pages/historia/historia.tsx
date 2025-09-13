@@ -10,6 +10,8 @@ function GalleryMosaic({
   variant = "A",
   mobileMode = "stack",
 }: { variant?: Variant; mobileMode?: MobileMode }) {
+  const [imagesLoaded, setImagesLoaded] = useState<boolean[]>([]);
+  
   const spansA = [
     "lg:col-span-4 lg:row-span-2",
     "lg:col-span-2 lg:row-span-1",
@@ -63,6 +65,19 @@ function GalleryMosaic({
 
   const spans = variant === "A" ? spansA : spansB;
 
+  // Efecto para inicializar el estado de carga de imágenes
+  useEffect(() => {
+    setImagesLoaded(new Array(GALLERY_IMAGES.length).fill(false));
+  }, []);
+
+  const handleImageLoad = (index: number) => {
+    setImagesLoaded(prev => {
+      const newState = [...prev];
+      newState[index] = true;
+      return newState;
+    });
+  };
+
   // Grid base mejorada para móviles
   const gridBase = mobileMode === "same"
     ? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4"
@@ -100,7 +115,7 @@ function GalleryMosaic({
   };
 
   return (
-<section className="text-gray-700 body-font bg-white">
+    <section className="text-gray-700 body-font bg-white">
       <div className="container px-4 sm:px-8 py-12">
         <div className="text-center mb-12 mt-8">
           <h2 className="historia-h2 font-bold title-font text-gray-900 mb-4 p-8">Galería de Momentos</h2>
@@ -119,28 +134,39 @@ function GalleryMosaic({
               key={i}
               className={`relative group overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-all duration-300 ${getHeightClass(i)} ${getMobileSpan(i)} ${spans[i]}`}
             >
+              {/* Skeleton mientras carga */}
+              {!imagesLoaded[i] && (
+                <div className="absolute inset-0 historia-skeleton historia-gallery-skeleton"></div>
+              )}
+              
               <img
                 src={image.src}
                 alt={image.alt}
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 loading="lazy"
                 decoding="async"
+                onLoad={() => handleImageLoad(i)}
+                style={{ opacity: imagesLoaded[i] ? 1 : 0, transition: 'opacity 0.3s ease' }}
               />
               
-              {/* Overlay con título */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
-                <div className="p-4 text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                  <h3 className="font-semibold text-sm sm:text-base">{image.title}</h3>
-                  <p className="text-xs sm:text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
-                    {image.alt}
-                  </p>
+              {/* Overlay con título (solo cuando la imagen está cargada) */}
+              {imagesLoaded[i] && (
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
+                  <div className="p-4 text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                    <h3 className="font-semibold text-sm sm:text-base">{image.title}</h3>
+                    <p className="text-xs sm:text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
+                      {image.alt}
+                    </p>
+                  </div>
                 </div>
-              </div>
+              )}
               
-              {/* Badge móvil */}
-              <div className="absolute top-3 left-3 bg-[#00d4d4] text-white px-2 py-1 rounded-full text-xs font-medium sm:hidden">
-                {image.title}
-              </div>
+              {/* Badge móvil (solo cuando la imagen está cargada) */}
+              {imagesLoaded[i] && (
+                <div className="absolute top-3 left-3 bg-[#00d4d4] text-white px-2 py-1 rounded-full text-xs font-medium sm:hidden">
+                  {image.title}
+                </div>
+              )}
             </div>
           ))}
         </div>
@@ -162,6 +188,7 @@ function GalleryMosaic({
 // Componente principal Historia
 export default function Historia() {
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [imagesLoaded, setImagesLoaded] = useState<{[key: string]: boolean}>({});
   
   // Efecto para la barra de progreso de scroll
   useEffect(() => {
@@ -175,6 +202,13 @@ export default function Historia() {
     window.addEventListener('scroll', updateScrollProgress);
     return () => window.removeEventListener('scroll', updateScrollProgress);
   }, []);
+
+  const handleImageLoad = (imageKey: string) => {
+    setImagesLoaded(prev => ({
+      ...prev,
+      [imageKey]: true
+    }));
+  };
 
   const jornadas = [
     {
@@ -258,7 +292,7 @@ export default function Historia() {
               <div className="flex flex-col sm:flex-row mt-10">
                 <div className="sm:w-1/3 text-center sm:pr-8">
                   <div className="w-28 h-28 rounded-full inline-flex items-center justify-center bg-sky-500 text-gray-400 mb-4"> 
-                    <a href="/"  aria-label="Ir a inicio">
+                    <a href="/" aria-label="Ir a inicio">
                       <img
                         src="/assets/images/LogoUnificado_Blanco.png"
                         alt="Logotipo de la Jornada de Ingeniería Industrial"
@@ -271,7 +305,7 @@ export default function Historia() {
                     <p className="historia-text-base">Cada año hemos crecido en participantes, actividades y alcance, consolidándonos como el evento de ingeniería industrial más importante de la región.</p>
                   </div>
                 </div>
-                <div className="sm:w-2/3 sm:pl-20 lg:pt-12  sm:pt-4 sm:border-l border-g0ray-200 sm:border-t-0 border-t sm:mt-4 sm:text-left">
+                <div className="sm:w-2/3 sm:pl-20 lg:pt-12 sm:pt-4 sm:border-l border-gray-200 sm:border-t-0 border-t sm:mt-4 sm:text-left">
                   <p className="historia-text-base leading-relaxed mb-4 mt-28">Desde nuestra primera edición en 2023, la Jornada de Ingeniería Industrial ha sido un espacio de encuentro para estudiantes, académicos y profesionales del sector. Un evento donde el conocimiento, la innovación y las oportunidades de networking se combinan para crear experiencias enriquecedoras.</p>
                   <p className="historia-text-base leading-relaxed mb-4">Cada año hemos superado expectativas, aumentando el número de participantes, actividades y aliados estratégicos que se suman a esta iniciativa.</p>
                 </div>
@@ -295,7 +329,17 @@ export default function Historia() {
                 <div key={index} className="p-4 md:w-1/2 w-full">
                   <div className="h-full border-2 border-gray-200 border-opacity-60 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 historia-card">
                     <div className="relative h-48 overflow-hidden">
-                      <img className="object-cover object-center w-full h-full" src={jornada.imagen} alt={jornada.titulo} />
+                      {/* Skeleton mientras carga */}
+                      {!imagesLoaded[`jornada-${index}`] && (
+                        <div className="absolute inset-0 historia-skeleton"></div>
+                      )}
+                      <img 
+                        className="object-cover object-center w-full h-full" 
+                        src={jornada.imagen} 
+                        alt={jornada.titulo}
+                        onLoad={() => handleImageLoad(`jornada-${index}`)}
+                        style={{ opacity: imagesLoaded[`jornada-${index}`] ? 1 : 0, transition: 'opacity 0.3s ease' }}
+                      />
                       <div className="absolute top-4 right-4 bg-[#00d4d4] text-white px-3 py-1 rounded-full font-medium">
                         {jornada.año}
                       </div>
@@ -315,12 +359,12 @@ export default function Historia() {
                       </h3>
                       <ul className="mb-5 pl-5 text-left">
                         {jornada.logros.map((logro, i) => (
-                          <li key={i} className="historia-text-base text-gray-600 list-disc mb-1 ">{logro}</li>
+                          <li key={i} className="historia-text-base text-gray-600 list-disc mb-1">{logro}</li>
                         ))}
                       </ul>
                       
                       <div className="flex items-center flex-wrap">
-                        <a className="text-[#00d4d4] inline-flex items-center md:mb-2 lg:mb-0 hover:text-[#1b1c39] transition-colors delay-150 duration-300 ease-in-out cursor-pointer ">
+                        <a className="text-[#00d4d4] inline-flex items-center md:mb-2 lg:mb-0 hover:text-[#1b1c39] transition-colors delay-150 duration-300 ease-in-out cursor-pointer">
                           Ver galería
                           <svg className="w-4 h-4 ml-2" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round">
                             <path d="M5 12h14"></path>
@@ -354,9 +398,21 @@ export default function Historia() {
                     <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="block w-5 h-5 text-[#00d4d4] mb-4" viewBox="0 0 975.036 975.036">
                       <path d="M925.036 57.197h-304c-27.6 0-50 22.4-50 50v304c0 27.601 22.4 50 50 50h145.5c-1.9 79.601-20.4 143.3-55.4 191.2-27.6 37.8-69.399 69.1-125.3 93.8-25.7 11.3-36.8 41.7-24.8 67.101l36 76c11.6 24.399 40.3 35.1 65.1 24.399 66.2-28.6 122.101-64.8 167.7-108.8 55.601-53.7 93.7-114.3 114.3-181.9 20.601-67.6 30.9-159.8 30.9-276.8v-239c0-27.599-22.401-50-50-50zM106.036 913.497c65.4-28.5 121-64.699 166.9-108.6 56.1-53.7 94.4-114.1 115-181.2 20.6-67.1 30.899-159.6 30.899-277.5v-239c0-27.6-22.399-50-50-50h-304c-27.6 0-50 22.4-50 50v304c0 27.601 22.4 50 50 50h145.5c-1.9 79.601-20.4 143.3-55.4 191.2-27.6 37.8-69.4 69.1-125.3 93.8-25.7 11.3-36.8 41.7-24.8 67.101l35.9 75.8c11.601 24.399 40.501 35.2 65.301 24.399z"></path>
                     </svg>
-                    <p className="historia-text-base leading-relaxed mb-6 ">{testimonio.texto}</p>
+                    <p className="historia-text-base leading-relaxed mb-6">{testimonio.texto}</p>
                     <div className="inline-flex items-center">
-                      <img alt="testimonial" src={testimonio.imagen} className="w-12 h-12 rounded-full flex-shrink-0 object-cover object-center" />
+                      {/* Skeleton mientras carga */}
+                      {!imagesLoaded[`testimonio-${index}`] && (
+                        <div className="w-12 h-12 historia-testimonial-skeleton rounded-full flex-shrink-0"></div>
+                      )}
+                      <img 
+                        alt="testimonial" 
+                        src={testimonio.imagen} 
+                        className="w-12 h-12 rounded-full flex-shrink-0 object-cover object-center"
+                        onLoad={() => handleImageLoad(`testimonio-${index}`)}
+                        style={{ 
+                          display: imagesLoaded[`testimonio-${index}`] ? 'block' : 'none'
+                        }}
+                      />
                       <span className="flex-grow flex flex-col pl-4">
                         <span className="historia-text-base title-font font-medium text-gray-900 text-left">{testimonio.nombre}</span>
                         <span className="historia-text-sm text-gray-500 text-left">{testimonio.cargo}</span>
