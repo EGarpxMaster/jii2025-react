@@ -111,7 +111,7 @@ const rallySteps: Seccion[] = [
   },
 ];
 
-// Hook para cerrar con ESC y bloquear scroll cuando el modal está abierto
+// Hook para cerrar con ESC y bloquear scroll
 function useModalControls(isOpen: boolean, onClose: () => void) {
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -196,10 +196,10 @@ function Modal({
   );
 }
 
-const GameCard = ({ game, onClick, className }: { game: Seccion; onClick: () => void; className: string }) => {
+const GameCard = ({ game, onClick, className }: { game: Seccion; onClick: () => void; className?: string }) => {
   return (
-    <div className={`w-72 md:w-80 cursor-pointer rounded-3xl overflow-hidden border-4 border-[#a9a9a9] shadow-2xl z-10 
-              transform transition-all duration-500 hover:scale-105 hover:-translate-y-3 hover:shadow-3xl ${className}`}
+    <div className={`relative w-72 md:w-80 cursor-pointer rounded-3xl overflow-hidden border-4 border-[#a9a9a9] shadow-2xl z-10 
+              transform transition-all duration-500 hover:scale-105 hover:-translate-y-3 hover:shadow-3xl game-card ${className}`}
       onClick={onClick}>
       <img
         src={game.banner}
@@ -226,14 +226,6 @@ export default function Concurso() {
 
   useScrollAnimations();
 
-  const positions = [
-    'md:top-[60px] md:left-[90px]',
-    'md:top-[350px] md:right-[170px]',
-    'md:top-[580px] md:left-[120px]',
-    'md:top-[750px] md:right-[80px]'
-  ];
-
-  // Referencia para el contenedor de las chispas
   const sparksContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -308,10 +300,11 @@ export default function Concurso() {
       <section className="px-4">
         <div className="max-w-7xl mx-auto">
           {/* Contenedor principal del tablero */}
-          <div className="relative game-board min-h-[1050px] md:h-auto">
+          <div className="relative game-board min-h-[1050px] md:h-[1100px] lg:h-[1300px]">
             {/* Líneas serpenteantes (originales, solo para desktop) */}
-            <div className="absolute inset-0 z-0 pointer-events-none hidden md:block">
-              <svg className="w-full h-full" viewBox="0 0 200 1050" preserveAspectRatio="none">
+            {/* Se le aplica posición absoluta y se centra */}
+            <div className="absolute inset-x-0 top-0 bottom-0 z-0 pointer-events-none hidden md:flex justify-center">
+              <svg className="h-full w-full max-w-[950px] lg:max-w-[1200px]" viewBox="0 0 200 1050" preserveAspectRatio="none">
                 <defs>
                   <linearGradient id="snakeGradientVertical" x1="0%" y1="0%" x2="0%" y2="100%">
                     <stop offset="0%" stopColor="#cdd4ffff" />
@@ -320,7 +313,7 @@ export default function Concurso() {
                   </linearGradient>
                 </defs>
                 <path
-                  d="M 60 0 L 30 150 Q 50 200 140 270 T 140 440 Q 0 550 50 650 T 170 800 Q 160 880 150 950 Q 140 980 130 1050"
+                  d="M 40 0 L 40 150 Q 50 200 140 270 T 140 440 Q 0 550 50 650 T 170 800 Q 160 880 150 950 Q 140 980 130 1050"
                   stroke="url(#snakeGradientVertical)"
                   strokeWidth="8"
                   fill="none"
@@ -336,13 +329,19 @@ export default function Concurso() {
             <div ref={sparksContainerRef} className="sparks-container"></div>
 
             {/* Contenedor de las tarjetas */}
+            {/* Se vuelve a las posiciones absolutas en desktop, pero con porcentajes */}
             <div className="flex flex-col items-center gap-12 mt-12 md:mt-0 md:block">
               {rallySteps.map((game, index) => (
                 <GameCard
                   key={game.id}
                   game={game}
                   onClick={() => setOpenId(game.id)}
-                  className={`md:absolute ${positions[index]}`}
+                  className={`md:absolute md:w-[25%] ${
+                    index === 0 ? 'md:top-[7%] md:left-[10%]' :
+                    index === 1 ? 'md:top-[32%] md:right-[15%]' :
+                    index === 2 ? 'md:top-[53%] md:left-[15%]' :
+                    index === 3 ? 'md:top-[65%] md:right-[10%]' : ''
+                  }`}
                 />
               ))}
             </div>
@@ -390,4 +389,3 @@ export default function Concurso() {
     </div>
   );
 }
-

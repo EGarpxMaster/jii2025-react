@@ -91,7 +91,7 @@
 
   /* Todas las tarjetas en mobile */
   .game-card {
-    position: static !important;
+    position: relative !important;
     margin: 0 auto;
     width: 85%; /* Ligeramente más pequeñas */
     max-width: 280px; /* Más compactas */
