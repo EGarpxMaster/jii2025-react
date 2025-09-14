@@ -1,8 +1,15 @@
 import { useState, useEffect } from 'react';
 import './carousel.css';
 
+// Tipo para el estado de carga de imágenes
+type ImageLoadState = {
+  loading: boolean;
+  error: boolean;
+};
+
 const Carousel = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [imageLoadStates, setImageLoadStates] = useState<Record<number, ImageLoadState>>({});
 
   const slides = [
     {
@@ -32,6 +39,33 @@ const Carousel = () => {
     },
   ];
 
+  // Inicializar estados de carga
+  useEffect(() => {
+    const initialLoadStates: Record<number, ImageLoadState> = {};
+    slides.forEach((_, index) => {
+      initialLoadStates[index] = { loading: true, error: false };
+    });
+    setImageLoadStates(initialLoadStates);
+  }, []);
+
+  // Manejar carga exitosa de imagen
+  const handleImageLoad = (index: number) => {
+    setImageLoadStates(prev => ({
+      ...prev,
+      [index]: { loading: false, error: false }
+    }));
+  };
+
+  // Manejar error de carga de imagen
+  const handleImageError = (index: number, e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    const target = e.target as HTMLImageElement;
+    target.src = '/assets/images/placeholder.jpg';
+    setImageLoadStates(prev => ({
+      ...prev,
+      [index]: { loading: false, error: true }
+    }));
+  };
+
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
@@ -55,15 +89,20 @@ const Carousel = () => {
             key={index}
             className={`carousel-slide ${index === currentSlide ? 'active' : ''}`}
           >
+            {/* Skeleton que se muestra mientras carga la imagen */}
+            {imageLoadStates[index]?.loading && (
+              <div className="carousel-image-skeleton skeleton"></div>
+            )}
+            
             <img
               src={slide.image}
               alt={slide.title}
-              className="carousel-image"
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.src = '/assets/images/placeholder.jpg';
-              }}
+              className={`carousel-image ${imageLoadStates[index]?.loading ? 'loading' : 'loaded'}`}
+              onLoad={() => handleImageLoad(index)}
+              onError={(e) => handleImageError(index, e)}
+              loading="lazy"
             />
+            
             <div className="carousel-content">
               <h3 className="carousel-title">{slide.title}</h3>
               <p className="carousel-description">{slide.description}</p>
@@ -71,10 +110,10 @@ const Carousel = () => {
           </div>
         ))}
         
-        <button onClick={prevSlide} className="carousel-control prev">
+        <button onClick={prevSlide} className="carousel-control prev" aria-label="Imagen anterior">
           <span className="carousel-control-icon">‹</span>
         </button>
-        <button onClick={nextSlide} className="carousel-control next">
+        <button onClick={nextSlide} className="carousel-control next" aria-label="Siguiente imagen">
           <span className="carousel-control-icon">›</span>
         </button>
         
@@ -84,6 +123,7 @@ const Carousel = () => {
               key={index}
               className={`indicator ${index === currentSlide ? 'active' : ''}`}
               onClick={() => setCurrentSlide(index)}
+              aria-label={`Ir a imagen ${index + 1}`}
             />
           ))}
         </div>

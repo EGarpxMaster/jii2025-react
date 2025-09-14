@@ -9,6 +9,7 @@ import Aliados from './pages/aliados/aliados';
 import Staff from './pages/staff/staff';
 import Navbar from "./components/navbar/navbar";
 import Footer from './components/footer/footer';
+import Galeria from './pages/historia/GaleriaCompleta'; // Añade esta importación
 
 function App() {
 
@@ -19,6 +20,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} /> {/* Ruta a la página principal */}
             <Route path="/historia" element={<Historia />} /> {/* Ruta a la página 'Historia' */}
+            <Route path="/galeria" element={<Galeria />} /> {/* Añade esta ruta */}
             <Route path="/actividades" element={<Actividades />} /> {/* Ruta a la página 'Actividades' */}
             <Route path="/concurso" element={<Concurso />} /> {/* Ruta a la página 'Concurso' */}
             <Route path="/staff" element={<Staff />} /> {/* Ruta a la página 'Staff' */}

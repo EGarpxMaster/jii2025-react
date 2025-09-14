@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // Añade esta importación
 import "./historia.css";
 
 // Definición de tipos
 type Variant = "A" | "B";
 type MobileMode = "same" | "stack";
 
-// Componente GalleryMosaic separado
 function GalleryMosaic({
   variant = "A",
   mobileMode = "stack",
 }: { variant?: Variant; mobileMode?: MobileMode }) {
+  const navigate = useNavigate(); // Añade esto
   const [imagesLoaded, setImagesLoaded] = useState<boolean[]>([]);
-  
+  const [hoverPosition, setHoverPosition] = useState<{x: number, y: number}>({x: 0, y: 0});
   const spansA = [
     "lg:col-span-4 lg:row-span-2",
     "lg:col-span-2 lg:row-span-1",
@@ -19,6 +20,7 @@ function GalleryMosaic({
     "lg:col-span-2 lg:row-span-1",
     "lg:col-span-3 lg:row-span-2",
     "lg:col-span-3 lg:row-span-1",
+    "lg:col-span-2 lg:row-span-1",
   ];
 
   const spansB = [
@@ -27,6 +29,7 @@ function GalleryMosaic({
     "lg:col-span-2 lg:row-span-1",
     "lg:col-span-4 lg:row-span-1",
     "lg:col-span-2 lg:row-span-2",
+    "lg:col-span-2 lg:row-span-1",
     "lg:col-span-2 lg:row-span-1",
   ];
 
@@ -60,12 +63,17 @@ function GalleryMosaic({
       src: "https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?auto=format&fit=crop&q=80&w=2000",
       alt: "Entrega de reconocimientos a los mejores proyectos",
       title: "Entrega de Reconocimientos"
-    }
+    },
+    {
+      src: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&q=80&w=1600", // Agrega una URL real
+      alt: "Estudiantes presentando proyectos innovadores",
+      title: "Presentación de Proyectos"
+    },
+
   ];
 
   const spans = variant === "A" ? spansA : spansB;
 
-  // Efecto para inicializar el estado de carga de imágenes
   useEffect(() => {
     setImagesLoaded(new Array(GALLERY_IMAGES.length).fill(false));
   }, []);
@@ -78,34 +86,38 @@ function GalleryMosaic({
     });
   };
 
-  // Grid base mejorada para móviles
-  const gridBase = mobileMode === "same"
-    ? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4"
-    : "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4";
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    setHoverPosition({x, y});
+  };
 
-  // Alturas responsivas
+  const gridBase = mobileMode === "same"
+    ? "gallery-grid grid grid-cols-2 sm:grid-cols-3 gap-4 md:grid-cols-4 lg:grid-cols-6 gap-3 "
+    : "gallery-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4";
+
   const getHeightClass = (index: number) => {
     if (mobileMode === "same") {
       return "h-40 sm:h-48 md:h-40 lg:h-48 xl:h-56";
     }
     
-    // Para móviles: diseño más variado e interesante
-    switch(index % 6) {
-      case 0: return "h-56 sm:h-48 md:h-56 lg:h-64";
+    switch(index % 7) {
+      case 0: return "h-56 sm:h-48 md:h-56 lg:h-72";
       case 1: return "h-48 sm:h-56 md:h-48 lg:h-52";
-      case 2: return "h-52 sm:h-44 md:h-52 lg:h-60";
-      case 3: return "h-44 sm:h-52 md:h-44 lg:h-56";
-      case 4: return "h-60 sm:h-40 md:h-60 lg:h-52";
-      case 5: return "h-40 sm:h-60 md:h-40 lg:h-64";
-      default: return "h-48";
+      case 2: return "h-52 sm:h-44 md:h-52 lg:h-96";
+      case 3: return "h-44 sm:h-48 md:h-44 lg:h-72";
+      case 4: return "h-48 sm:h-56 m:h-52 lg:h-64";
+      case 5: return "h-60 sm:h-40 md:h-60 lg:h-64";
+      case 6: return "h-40 sm:h-48 md:h-44 lg:h-72";
+      
+      default: return "h-40";
     }
   };
 
-  // Span classes para móviles
   const getMobileSpan = (index: number) => {
     if (mobileMode === "same") return "";
     
-    // Diseño más interesante para móviles
     switch(index % 6) {
       case 0: return "sm:col-span-2 sm:row-span-2";
       case 4: return "sm:col-span-2";
@@ -127,14 +139,17 @@ function GalleryMosaic({
           </p>
         </div>
 
-        {/* GRID mejorado con diseño responsivo */}
-        <div className={`${gridBase} [grid-auto-flow:dense]`}>
+        <div className={`${gridBase}`}>
           {GALLERY_IMAGES.map((image, i) => (
             <div
               key={i}
-              className={`relative group overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-all duration-300 ${getHeightClass(i)} ${getMobileSpan(i)} ${spans[i]}`}
+              className={`gallery-item ${getHeightClass(i)} ${getMobileSpan(i)} ${spans[i]}`}
+              onMouseMove={handleMouseMove}
+              style={{ 
+                '--x': `${hoverPosition.x}%`,
+                '--y': `${hoverPosition.y}%`
+              } as React.CSSProperties}
             >
-              {/* Skeleton mientras carga */}
               {!imagesLoaded[i] && (
                 <div className="absolute inset-0 historia-skeleton historia-gallery-skeleton"></div>
               )}
@@ -142,43 +157,45 @@ function GalleryMosaic({
               <img
                 src={image.src}
                 alt={image.alt}
-                className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                className="gallery-image"
                 loading="lazy"
                 decoding="async"
                 onLoad={() => handleImageLoad(i)}
-                style={{ opacity: imagesLoaded[i] ? 1 : 0, transition: 'opacity 0.3s ease' }}
+                style={{ opacity: imagesLoaded[i] ? 1 : 0, transition: 'opacity 0.5s ease' }}
               />
               
-              {/* Overlay con título (solo cuando la imagen está cargada) */}
               {imagesLoaded[i] && (
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
-                  <div className="p-4 text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                    <h3 className="font-semibold text-sm sm:text-base">{image.title}</h3>
-                    <p className="text-xs sm:text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
-                      {image.alt}
-                    </p>
+                <>
+                  <div className="gallery-overlay">
+                    <div className="gallery-content">
+                      <h3 className="gallery-title">{image.title}</h3>
+                      <p className="gallery-description">
+                        {image.alt}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              )}
-              
-              {/* Badge móvil (solo cuando la imagen está cargada) */}
-              {imagesLoaded[i] && (
-                <div className="absolute top-3 left-3 bg-[#00d4d4] text-white px-2 py-1 rounded-full text-xs font-medium sm:hidden">
-                  {image.title}
-                </div>
+                  
+                  <div className="gallery-badge sm:hidden">
+                    {image.title}
+                  </div>
+                </>
               )}
             </div>
           ))}
         </div>
 
         <div className="flex justify-center pb-12 pt-12">
-          <a href="/galeria" id="btn_galery" className="inline-flex items-center bg-[#00d4d4] text-white px-6 py-3 rounded-full font-medium">
+          <button 
+            onClick={() => navigate("/galeria")} 
+            id="btn_galery" 
+            className="inline-flex items-center text-white px-3 py-3 rounded-full font-medium text-lg"
+          >
             Ver galería completa
-            <svg className="w-4 h-4 ml-2" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round">
+            <svg className="w-5 h-5 ml-3" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round">
               <path d="M5 12h14" />
               <path d="M12 5l7 7-7 7" />
             </svg>
-          </a>
+          </button>
         </div>
       </div>
     </section>
@@ -241,27 +258,6 @@ export default function Historia() {
     }
   ];
 
-  const testimonios = [
-    {
-      nombre: "Dra. María González",
-      cargo: "Directora de Ingeniería Industrial",
-      texto: "Las jornadas han permitido a nuestros estudiantes conectarse con la industria real y aplicar sus conocimientos en proyectos tangibles.",
-      imagen: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=200&h=200"
-    },
-    {
-      nombre: "Ing. Carlos Mendoza",
-      cargo: "Gerente de Producción, Industria ABC",
-      texto: "Como empresa participante, hemos encontrado talento excepcional en estas jornadas. Los proyectos presentados muestran un gran potencial.",
-      imagen: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=200&h=200"
-    },
-    {
-      nombre: "Ana Sánchez",
-      cargo: "Estudiante participante",
-      texto: "Participar en la jornada fue una experiencia transformadora. Pude aplicar lo aprendido en clase y hacer contactos profesionales valiosos.",
-      imagen: "https://images.unsplash.com/photo-1551836026-d5c8c5ab235e?auto=format&fit=crop&q=80&w=200&h=200"
-    }
-  ];
-
   return (
     <div className="w-full historia-container">
       {/* Barra de progreso de scroll */}
@@ -287,8 +283,88 @@ export default function Historia() {
           </div>
         </section>
 
-        {/* Timeline Section */}
+        {/* Origen y Propósito */}
+        <section className="text-gray-700 body-font py-16 bg-white">
+          <div className="container px-5 py-12 mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">Origen y Propósito</h2>
+              <div className="w-20 h-1 bg-[#00d4d4] rounded mx-auto mb-6"></div>
+            </div>
+            <div className="lg:w-4/5 mx-auto">
+              <p className="text-lg leading-relaxed mb-6 text-center">
+                La Jornada de Ingeniería Industrial (JII) nació como un espacio académico innovador en la Universidad del Caribe, 
+                con el propósito fundamental de crear puentes entre el mundo académico y el sector productivo.
+              </p>
+              <div className="grid md:grid-cols-2 gap-8 mt-10">
+                <div className="bg-gray-50 p-6 rounded-lg">
+                  <h3 className="text-xl font-semibold mb-4 text-gray-900">Nuestra Misión</h3>
+                  <p className="text-base leading-relaxed">
+                    Vincular a estudiantes, docentes, egresados, empleadores y expertos del sector productivo, 
+                    generando un punto de encuentro estratégico para el intercambio de conocimientos y experiencias.
+                  </p>
+                </div>
+                <div className="bg-gray-50 p-6 rounded-lg">
+                  <h3 className="text-xl font-semibold mb-4 text-gray-900">Nuestro Enfoque</h3>
+                  <p className="text-base leading-relaxed">
+                    Compartir tendencias actuales de la disciplina y fortalecer la formación integral de los 
+                    futuros profesionales en Ingeniería Industrial a través de experiencias enriquecedoras.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Evolución y Características */}
         <section className="text-gray-700 body-font py-16 bg-gray-50">
+          <div className="container px-5 py-12 mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">Evolución del Evento</h2>
+              <div className="w-20 h-1 bg-[#00d4d4] rounded mx-auto mb-6"></div>
+            </div>
+            <div className="lg:w-4/5 mx-auto">
+              <p className="text-lg leading-relaxed mb-10 text-center">
+                Desde sus primeras ediciones, la JII se ha distinguido por su capacidad de adaptación y crecimiento continuo, 
+                evolucionando tanto en organización como en alcance para convertirse en un referente académico.
+              </p>
+              
+              <div className="grid md:grid-cols-3 gap-6">
+                <div className="text-center p-6 bg-white rounded-lg shadow-sm">
+                  <div className="w-16 h-16 mx-auto mb-4 bg-[#00d4d4] rounded-full flex items-center justify-center">
+                    <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-semibold mb-2">Conferencias Magistrales</h3>
+                  <p className="text-sm text-gray-600">Expertos reconocidos comparten sus conocimientos y experiencias profesionales.</p>
+                </div>
+                
+                <div className="text-center p-6 bg-white rounded-lg shadow-sm">
+                  <div className="w-16 h-16 mx-auto mb-4 bg-[#00d4d4] rounded-full flex items-center justify-center">
+                    <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"/>
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-semibold mb-2">Talleres Prácticos</h3>
+                  <p className="text-sm text-gray-600">Actividades hands-on que fortalecen las competencias técnicas y profesionales.</p>
+                </div>
+                
+                <div className="text-center p-6 bg-white rounded-lg shadow-sm">
+                  <div className="w-16 h-16 mx-auto mb-4 bg-[#00d4d4] rounded-full flex items-center justify-center">
+                    <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M17 8h1a1 1 0 110 2h-1v1a1 1 0 11-2 0v-1H4v1a1 1 0 11-2 0v-1H1a1 1 0 110-2h1V7a1 1 0 112 0v1h11V7a1 1 0 112 0v1z"/>
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-semibold mb-2">Paneles de Discusión</h3>
+                  <p className="text-sm text-gray-600">Espacios de debate sobre tendencias y desafíos actuales de la industria.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Nuestra Trayectoria */}
+        <section className="text-gray-700 body-font py-16 bg-white">
           <div className="container px-5 py-12 mx-auto flex flex-col">
             <div className="lg:w-4/6 mx-auto">
               <div className="flex flex-col sm:flex-row mt-10">
@@ -307,9 +383,50 @@ export default function Historia() {
                     <p className="historia-text-base">Cada año hemos crecido en participantes, actividades y alcance, consolidándonos como el evento de Ingeniería Industrial más importante de la región.</p>
                   </div>
                 </div>
-                <div className="sm:w-2/3 sm:pl-20 lg:pt-12  sm:pt-4 sm:border-l border-gray-200 sm:border-t-0 border-t sm:mt-4 sm:text-left">
-                  <p className="historia-text-base leading-relaxed mb-4 mt-28">Desde nuestra primera edición en 2023, la Jornada de Ingeniería Industrial ha sido un espacio de encuentro para estudiantes, académicos y profesionales del sector. Un evento donde el conocimiento, la innovación y las oportunidades de networking se combinan para crear experiencias enriquecedoras.</p>
-                  <p className="historia-text-base leading-relaxed mb-4">Cada año hemos superado expectativas, aumentando el número de participantes, actividades y aliados estratégicos que se suman a esta iniciativa.</p>
+                <div className="sm:w-2/3 sm:pl-20 mt-8 pt-8 lg:pt-12 sm:pt-4 sm:border-l border-gray-200 sm:border-t-0 border-t sm:mt-4 sm:text-left">
+                  <p className="historia-text-base leading-relaxed mb-4">
+                    Desde nuestra primera edición en 2023, la Jornada de Ingeniería Industrial ha sido un espacio de encuentro para estudiantes, académicos y profesionales del sector. Un evento donde el conocimiento, la innovación y las oportunidades de networking se combinan para crear experiencias enriquecedoras.
+                  </p>
+                  <p className="historia-text-base leading-relaxed mb-4">
+                    Cada año hemos superado expectativas, aumentando el número de participantes, actividades y aliados estratégicos que se suman a esta iniciativa.
+                  </p>
+                  <p className="historia-text-base leading-relaxed mb-4">
+                    Con el paso del tiempo, el evento ha evolucionado significativamente en su organización y alcance, incorporando nuevas metodologías, tecnologías emergentes y formatos innovadores que responden a las demandas actuales del mercado laboral.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Consolidación e Impacto */}
+        <section className="text-gray-700 body-font py-16 bg-gray-50">
+          <div className="container px-5 py-12 mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">Consolidación e Impacto</h2>
+              <div className="w-20 h-1 bg-[#00d4d4] rounded mx-auto mb-6"></div>
+            </div>
+            <div className="lg:w-4/5 mx-auto">
+              <div className="bg-white p-8 rounded-lg shadow-sm">
+                <p className="text-lg leading-relaxed mb-6 text-center">
+                  La JII se ha consolidado como una de las actividades más esperadas dentro del calendario académico de la carrera, 
+                  estableciendo un estándar de excelencia en la formación integral de futuros ingenieros e ingenieras.
+                </p>
+                <div className="grid md:grid-cols-2 gap-8 mt-8">
+                  <div>
+                    <h3 className="text-xl font-semibold mb-4 text-gray-900">Formación Integral</h3>
+                    <p className="text-base leading-relaxed mb-4">
+                      Nuestras actividades académicas y recreativas están diseñadas para fortalecer no solo las competencias técnicas, 
+                      sino también las habilidades blandas esenciales para el éxito profesional.
+                    </p>
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold mb-4 text-gray-900">Reconocimiento Regional</h3>
+                    <p className="text-base leading-relaxed mb-4">
+                      El crecimiento constante en participación y la calidad de nuestras actividades nos han posicionado como un 
+                      referente académico en el sureste mexicano y la región del Caribe.
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -366,13 +483,13 @@ export default function Historia() {
                       </ul>
                       
                       <div className="flex items-center flex-wrap">
-                        <a className="text-[#00d4d4] inline-flex items-center md:mb-2 lg:mb-0 hover:text-[#1b1c39] transition-colors delay-150 duration-300 ease-in-out cursor-pointer">
+                        {/* <a className="text-[#00d4d4] inline-flex items-center md:mb-2 lg:mb-0 hover:text-[#1b1c39] transition-colors delay-150 duration-300 ease-in-out cursor-pointer">
                           Ver galería
                           <svg className="w-4 h-4 ml-2" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round">
                             <path d="M5 12h14"></path>
                             <path d="M12 5l7 7-7 7"></path>
                           </svg>
-                        </a>
+                        </a> */}
                       </div>
                     </div>
                   </div>
@@ -383,7 +500,7 @@ export default function Historia() {
         </section>
 
         {/* Testimonials Section*/}
-        <section className="text-gray-700 body-font py-16 bg-gray-50">
+        {/* <section className="text-gray-700 body-font py-16 bg-gray-50">
           <div className="container px-5 py-12 mx-auto">
             <div className="text-center mb-12">
               <h2 className="historia-h2 font-bold title-font text-gray-900 mb-4">Testimonios</h2>
@@ -402,7 +519,7 @@ export default function Historia() {
                     </svg>
                     <p className="historia-text-base leading-relaxed mb-6">{testimonio.texto}</p>
                     <div className="inline-flex items-center">
-                      {/* Skeleton mientras carga */}
+                      
                       {!imagesLoaded[`testimonio-${index}`] && (
                         <div className="w-12 h-12 historia-testimonial-skeleton rounded-full flex-shrink-0"></div>
                       )}
@@ -425,13 +542,13 @@ export default function Historia() {
               ))}
             </div>
           </div>
-        </section> 
+        </section>  */}
 
         {/* Gallery Section usando el componente GalleryMosaic */}
         <GalleryMosaic variant="A" mobileMode="stack" />
 
         {/* Evolution Section */}
-        <section className="text-gray-700 body-font py-16 bg-gradient-to-r from-[#1b1c39] to-[#2a2b4a]">
+        {/* <section className="text-gray-700 body-font py-16 bg-gradient-to-r from-[#1b1c39] to-[#2a2b4a]">
           <div className="container px-5 py-12 mx-auto">
             <div className="text-center mb-12">
               <h2 className="historia-h2 font-bold title-font mb-4 text-white">Evolución de las Jornadas</h2>
@@ -470,7 +587,7 @@ export default function Historia() {
               </div>
             </div>
           </div>
-        </section>
+        </section> */}
 
         {/* Call to Action */}
         <section className="text-gray-700 body-font bg-gray-100 py-16">

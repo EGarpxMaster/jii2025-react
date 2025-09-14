@@ -1,5 +1,4 @@
-
-/* historia.css - Mobile First con Clamp() */
+/* historia.css - Mobile First con Clamp() - VERSION MEJORADA */
 .historia-container {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
   scroll-behavior: smooth;
@@ -133,38 +132,14 @@
   background-size: 40px 40px;
 }
 
-/* Galería Responsive */
-.historia-gallery {
-  display: grid;
-  gap: 0.75rem;
-  margin: 1.5rem 0;
-}
+/* ============ MEJORAS PARA LA GALERÍA ============ */
 
-.historia-gallery-item {
-  width: 100%;
-  border-radius: 0.75rem;
-  overflow: hidden;
-  transition: transform 0.3s ease;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.historia-gallery-item:hover {
-  transform: scale(1.02);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-}
-
-.historia-gallery-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-/* Skeleton loading animation - Mejorado */
+/* Mejoras en el skeleton loading */
 .historia-skeleton {
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;
   animation: loading 1.5s infinite;
-  border-radius: 0.5rem;
+  border-radius: 0.75rem;
 }
 
 @keyframes loading {
@@ -176,7 +151,6 @@
   }
 }
 
-/* Skeleton para galería */
 .historia-gallery-skeleton {
   width: 100%;
   height: 100%;
@@ -215,6 +189,140 @@
   }
 }
 
+/* Mejoras en la galería - Efectos modernos */
+.gallery-grid {
+  display: grid;
+  gap: 1rem;
+  grid-auto-flow: dense;
+}
+
+.gallery-item {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: pointer;
+}
+
+.gallery-item:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 212, 212, 0.1);
+}
+
+.gallery-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s ease;
+}
+
+.gallery-item:hover .gallery-image {
+  transform: scale(1.08);
+}
+
+/* Overlay mejorado */
+.gallery-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg, 
+    transparent 0%, 
+    transparent 50%, 
+    rgba(0, 0, 0, 0.8) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1.5rem;
+}
+
+.gallery-item:hover .gallery-overlay {
+  opacity: 1;
+}
+
+.gallery-content {
+  transform: translateY(20px);
+  transition: transform 0.4s ease;
+  opacity: 0;
+}
+
+.gallery-item:hover .gallery-content {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.gallery-title {
+  color: white;
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.gallery-description {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.4s ease 0.1s;
+}
+
+.gallery-item:hover .gallery-description {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Badge móvil mejorado */
+.gallery-badge {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  background: linear-gradient(135deg, #00d4d4, #00b4b4);
+  color: white;
+  padding: 0.35rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0, 212, 212, 0.3);
+  z-index: 20;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+}
+
+.gallery-item:hover .gallery-badge {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Efecto de brillo al pasar el ratón */
+.gallery-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    circle at var(--x, 50%) var(--y, 50%), 
+    rgba(255, 255, 255, 0.15) 0%, 
+    transparent 40%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 15;
+}
+
+.gallery-item:hover::before {
+  opacity: 1;
+}
+
 /*Boton galería*/
 #btn_galery{
   padding: 0.75rem 1.5rem;
@@ -224,7 +332,10 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   position: relative;
   overflow: hidden;
+  background: linear-gradient(135deg, #00d4d4, #00b4b4);
+  transition: all 0.3s ease;
 }
+
 #btn_CallToAction{
   padding: 0.75rem 1.5rem;
   border-radius: 15px;
@@ -233,7 +344,17 @@
   overflow: hidden;
 }
 
-#btn_galery::before, #btn_CallToAction::before{
+#btn_gallery{
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+#btn_galery::before, #btn_CallToAction::before, #btn_gallery::before{
   content: '';
   position: absolute;
   top: 0;
@@ -247,14 +368,46 @@
 #btn_galery:hover::before, #btn_CallToAction:hover::before{
   left: 100%;
 }
+#btn_gallery::before{
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(76, 76, 76, 0.266), transparent);
+  transition: left 0.7s ease;
+}
+
+ #btn_gallery:hover::before{
+  left: 100%;
+}
+
 #btn_galery:hover{
-  background-color: #1b1c39;
+  background: linear-gradient(135deg, #00b4b4, #009494);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
   transform: translateY(-2px);
 }
+
 #btn_CallToAction:hover{
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
   transform: translateY(-2px);
+}
+
+#btn_galery::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+
+#btn_galery:hover::after {
+  transform: translateX(100%);
 }
 
 /* Mejoras de accesibilidad */
@@ -263,7 +416,13 @@
   .historia-transition-transform,
   .historia-transition-colors,
   .historia-card,
-  .scroll-progress-bar {
+  .scroll-progress-bar,
+  .gallery-item,
+  .gallery-image,
+  .gallery-overlay,
+  .gallery-content,
+  .gallery-description,
+  .gallery-badge {
     transition: none;
   }
   
@@ -273,6 +432,34 @@
   
   .historia-animate-fade-in-up {
     animation: none;
+  }
+  
+  .gallery-item:hover {
+    transform: none;
+  }
+}
+
+/* Mejoras responsive para la galería */
+@media (max-width: 640px) {
+  .gallery-badge {
+    opacity: 1;
+    transform: translateY(0);
+    top: 0.5rem;
+    left: 0.5rem;
+    font-size: 0.7rem;
+    padding: 0.25rem 0.6rem;
+  }
+  
+  .gallery-overlay {
+    padding: 1rem;
+  }
+  
+  .gallery-title {
+    font-size: 1rem;
+  }
+  
+  .gallery-description {
+    font-size: 0.8rem;
   }
 }
 
@@ -325,7 +512,6 @@
   }
 }
 
-
 /* =============== MEDIA QUERIES - DESKTOP (1024px) =============== */
 @media (min-width: 1024px) {
   .historia-stats-container {
@@ -354,13 +540,13 @@
   }
   
   .historia-gallery-item:nth-child(4) {
-    grid-column: span 2;
+    grid-column: span 3;
     grid-row: span 1;
   }
   
   .historia-gallery-item:nth-child(5) {
     grid-column: span 3;
-    grid-row: span 2;
+    grid-row: span 1;
   }
   
   .historia-gallery-item:nth-child(6) {
@@ -373,6 +559,19 @@
 .historia-gallery-item:focus {
   outline: 2px solid #00d4d4;
   outline-offset: 2px;
+}
+
+/* Efecto de superposición al hacer hover (solo en dispositivos que soportan hover) */
+@media (hover: hover) {
+  .historia-gallery-item {
+    position: relative;
+  }
+  
+  .historia-gallery-item::after {
+    content: '';
+    position: absolute;
+
+  }
 }
 
 /* Efecto de superposición al hacer hover (solo en dispositivos que soportan hover) */

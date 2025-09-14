@@ -28,17 +28,17 @@ const staffMembers: StaffMember[] = [
     name: "Mtro. Jarmen Said Virgen Suarez",
     position: "Staff",
     department: "Comité",
-    image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=400&h=400&fit=crop&crop=face",
+    image: "/assets/images/staff/comite/JarmenVirgen.jpeg",
     email: "jvirgen@ucaribe.edu.mx",
-    bio: "Doctora en Educación con más de 15 años de experiencia en gestión académica y desarrollo curricular.",
-    specialties: ["Gestión Académica", "Desarrollo Curricular", "Liderazgo Educativo"]
+    bio: "Profesor-Investigador de Tiempo Completo en la Universidad del Caribe, adscrito al Programa de Ingeniería Industrial. Su labor académica se ha consolidado en las áreas de eficiencia energética y energías renovables. Ha sido responsable de la organización de la Jornada de Ingeniería Industrial en 2023, 2024 y 2025, contribuyendo al fortalecimiento académico y a la vinculación de la comunidad universitaria con el sector productivo.",
+    specialties: ["Electricidad", "Mecánica", "Energía", "Ingeniería Aplicada", "Docencia Innovadora", "Organización Académica", "Proyectos con Impacto Social"]
   },
   {
     id: 2,
     name: "Doc. Alejandro Charbel Cardenas Leon",
     position: "Staff",
     department: "Comité",
-    image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=400&h=400&fit=crop&crop=face",
+    image: "/assets/images/staff",
     email: "accardenas@ucaribe.edu.mx",
     bio: "Doctor en Educación con más de 15 años de experiencia en gestión académica y desarrollo curricular.",
     specialties: ["Gestión Académica", "Desarrollo Curricular", "Liderazgo Educativo"]
@@ -48,7 +48,7 @@ const staffMembers: StaffMember[] = [
     name: "Doc. Mijail Armenta Aracenta",
     position: "Staff",
     department: "Comité",
-    image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=400&h=400&fit=crop&crop=face",
+    image: "/assets/images/staff",
     email: "marmenta@ucaribe.edu.mx",
     bio: "Doctora en Educación con más de 15 años de experiencia en gestión académica y desarrollo curricular.",
     specialties: ["Gestión Académica", "Desarrollo Curricular", "Liderazgo Educativo"]
@@ -58,7 +58,7 @@ const staffMembers: StaffMember[] = [
     name: "Mtra. Gaby Betsaida Batun Chay",
     position: "Staff",
     department: "Comité",
-    image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=400&h=400&fit=crop&crop=face",
+    image: "/assets/images/staff",
     email: "gbatun@ucaribe.edu.mx",
     bio: "Doctora en Educación con más de 15 años de experiencia en gestión académica y desarrollo curricular.",
     specialties: ["Gestión Académica", "Desarrollo Curricular", "Liderazgo Educativo"]
@@ -66,19 +66,19 @@ const staffMembers: StaffMember[] = [
   {
     id: 5,
     name: "Guadalupe Azucena Rodriguez Cauich",
-    position: "Coordinadora de Traslado de Ponentes",
+    position: "Coordinadora General",
     department: "Comité",
-    image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=400&h=400&fit=crop&crop=face",
+    image: "/assets/images/staff/comite/Guadalupe.jpeg",
     email: "210300603@ucaribe.edu.mx",
-    bio: "Doctora en Educación con más de 15 años de experiencia en gestión académica y desarrollo curricular.",
-    specialties: ["Gestión Académica", "Desarrollo Curricular", "Liderazgo Educativo"]
+    bio: "Estudiante de Ingeniería Industrial en la Universidad del Caribe. Participante activa en proyectos académicos y en la organización de la Jornada de Ingeniería Industrial 2025.",
+    specialties: ["Manufactura", "Gestión de Proyectos"]
   },
   {
     id: 6,
     name: "Mauricio Antonio Montero Martin",
     position: "Coordinador de Mundialito",
     department: "Comité",
-    image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=400&h=400&fit=crop&crop=face",
+    image: "/assets/images/staff",
     email: "220300886@ucaribe.edu.mx",
     bio: "Doctora en Educación con más de 15 años de experiencia en gestión académica y desarrollo curricular.",
     specialties: ["Gestión Académica", "Desarrollo Curricular", "Liderazgo Educativo"]
@@ -88,17 +88,17 @@ const staffMembers: StaffMember[] = [
     name: "Juan Diego Estañol Noh",
     position: "Coordinador de Comida/Infraestrutura",
     department: "Comité",
-    image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=400&h=400&fit=crop&crop=face",
+    image: "/assets/images/staff/comite/Diego.png",
     email: "220300868@ucaribe.edu.mx",
-    bio: "Doctora en Educación con más de 15 años de experiencia en gestión académica y desarrollo curricular.",
-    specialties: ["Gestión Académica", "Desarrollo Curricular", "Liderazgo Educativo"]
+    bio: "Ingeniero Industrial con aspiraciones Mecanico-Eléctricas.",
+    specialties: ["Resolución de problemas", "Actividades Técnicas", "Liderazgo"]
   },
   {
     id: 8,
     name: "José Antonio Arevalo Barrientos",
     position: "Staff",
     department: "Comité",
-    image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=400&h=400&fit=crop&crop=face",
+    image: "/assets/images/staff",
     email: "220300860@ucaribe.edu.mx",
     bio: "Doctora en Educación con más de 15 años de experiencia en gestión académica y desarrollo curricular.",
     specialties: ["Gestión Académica", "Desarrollo Curricular", "Liderazgo Educativo"]
@@ -108,7 +108,7 @@ const staffMembers: StaffMember[] = [
     name: "Estrella Marian Castro Meneses",
     position: "Coordinadora de Coffee Break",
     department: "Comité",
-    image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=400&h=400&fit=crop&crop=face",
+    image: "/assets/images/staff",
     email: "250300929@ucaribe.edu.mx",
     bio: "Doctora en Educación con más de 15 años de experiencia en gestión académica y desarrollo curricular.",
     specialties: ["Gestión Académica", "Desarrollo Curricular", "Liderazgo Educativo"]
@@ -118,7 +118,7 @@ const staffMembers: StaffMember[] = [
     name: "Angel David Victoriano Can",
     position: "Coordinador de Redes Sociales",
     department: "Comité",
-    image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=400&h=400&fit=crop&crop=face",
+    image: "/assets/images/staff",
     email: "230300927@ucaribe.edu.mx",
     bio: "Doctora en Educación con más de 15 años de experiencia en gestión académica y desarrollo curricular.",
     specialties: ["Gestión Académica", "Desarrollo Curricular", "Liderazgo Educativo"]
@@ -128,7 +128,7 @@ const staffMembers: StaffMember[] = [
     name: "Vanessa Regina Álvarez Hernández",
     position: "Registro",
     department: "Staff",
-    image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=400&h=400&fit=crop&crop=face",
+    image: "/assets/images/staff",
     email: "230300892@ucaribe.edu.mx",
     bio: "Doctora en Educación con más de 15 años de experiencia en gestión académica y desarrollo curricular.",
     specialties: ["Gestión Académica", "Desarrollo Curricular", "Liderazgo Educativo"]
@@ -138,7 +138,7 @@ const staffMembers: StaffMember[] = [
     name: "Zuri Sarahi Alvarez Hernandez",
     position: "Mundialito",
     department: "Staff",
-    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face",
+    image: "/assets/images/staff",
     email: "230300932@ucaribe.edu.mx",
     bio: "Ingeniero en Sistemas con especialización en infraestructura tecnológica educativa.",
     specialties: ["Infraestructura TI", "Sistemas Educativos", "Innovación Tecnológica"]
@@ -148,7 +148,7 @@ const staffMembers: StaffMember[] = [
     name: "America Sarahi Lavadores May",
     position: "Coffee Break",
     department: "Staff",
-    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop&crop=face",
+    image: "/assets/images/staff",
     email: "250300916@ucaribe.edu.mx",
     bio: "Licenciada en Psicología especializada en orientación estudiantil y bienestar universitario.",
     specialties: ["Orientación Estudiantil", "Bienestar Universitario", "Psicología Educativa"]
@@ -158,7 +158,7 @@ const staffMembers: StaffMember[] = [
     name: "José Gilberto Cano Greene",
     position: "Mundialito",
     department: "Staff",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+    image: "/assets/images/staff",
     email: "240300873@ucaribe.edu.mx",
     bio: "Doctor en Ciencias con amplia experiencia en investigación aplicada y gestión de proyectos.",
     specialties: ["Investigación Aplicada", "Gestión de Proyectos", "Metodología Científica"]
@@ -168,7 +168,7 @@ const staffMembers: StaffMember[] = [
     name: "Celeste Jazmin Chulin Arredondo",
     position: "Registro",
     department: "Staff",
-    image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=400&fit=crop&crop=face",
+    image: "/assets/images/staff",
     email: "230300890@ucaribe.edu.mx",
     bio: "Especialista en comunicación institucional y marketing educativo con enfoque digital.",
     specialties: ["Comunicación Institucional", "Marketing Digital", "Relaciones Públicas"]
@@ -178,7 +178,7 @@ const staffMembers: StaffMember[] = [
     name: "Yolanda Elizabeth Coronado Chim",
     position: "Mundialito",
     department: "Staff",
-    image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&h=400&fit=crop&crop=face",
+    image: "/assets/images/staff",
     email: "250300931@ucaribe.edu.mx",
     bio: "Ingeniero especializado en equipamiento y gestión de laboratorios técnicos.",
     specialties: ["Gestión de Laboratorios", "Equipamiento Técnico", "Seguridad Industrial"]
@@ -188,7 +188,7 @@ const staffMembers: StaffMember[] = [
     name: "José Armando Domenzain Gonzalez",
     position: "Coffee Break",
     department: "Staff",
-    image: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=400&h=400&fit=crop&crop=face",
+    image: "/assets/images/staff",
     email: "210300644@ucaribe.edu.mx",
     bio: "Licenciada en Administración con experiencia en gestión académica y atención estudiantil.",
     specialties: ["Gestión Administrativa", "Atención al Cliente", "Procesos Académicos"]
@@ -198,7 +198,7 @@ const staffMembers: StaffMember[] = [
     name: "Samantha De Jesus García Morales",
     position: "Coffee Break",
     department: "Staff",
-    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop&crop=face",
+    image: "/assets/images/staff",
     email: "230300923@ucaribe.edu.mx",
     bio: "Doctor en Educación especializado en aseguramiento de la calidad y acreditación universitaria.",
     specialties: ["Aseguramiento de Calidad", "Acreditación", "Evaluación Institucional"]
@@ -208,7 +208,7 @@ const staffMembers: StaffMember[] = [
     name: "Ariana Guelmes Sanchez",
     position: "Coffee Break",
     department: "Staff",
-    image: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&h=400&fit=crop&crop=face",
+    image: "/assets/images/staff",
     email: "240300882@ucaribe.edu.mx",
     bio: "Bibliotecóloga con especialización en recursos digitales y servicios de información académica.",
     specialties: ["Gestión Bibliotecaria", "Recursos Digitales", "Servicios de Información"]
@@ -218,7 +218,7 @@ const staffMembers: StaffMember[] = [
     name: "Ambar Atzimba Gutierrez Anell",
     position: "Registro",
     department: "Staff",
-    image: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&h=400&fit=crop&crop=face",
+    image: "/assets/images/staff",
     email: "240301030@ucaribe.edu.mx",
     bio: "Bibliotecóloga con especialización en recursos digitales y servicios de información académica.",
     specialties: ["Gestión Bibliotecaria", "Recursos Digitales", "Servicios de Información"]
@@ -228,37 +228,37 @@ const staffMembers: StaffMember[] = [
     name: "Jesús Adrián Hernández Clila",
     position: "Coffee Break",
     department: "Staff",
-    image: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&h=400&fit=crop&crop=face",
+    image: "/assets/images/staff/JesusHernandez.jpeg",
     email: "250300945@ucaribe.edu.mx",
-    bio: "Bibliotecóloga con especialización en recursos digitales y servicios de información académica.",
-    specialties: ["Gestión Bibliotecaria", "Recursos Digitales", "Servicios de Información"]
+    bio: "Soy estudiante de Ingeniería Industrial, con una formación técnica en Mantenimiento Industrial que desarrollé durante la preparatoria. Realicé mis prácticas profesionales en el taller de carritos de golf del Moon Palace, donde adquirí experiencia práctica en mantenimiento y reparación de equipos. Actualmente, me enfoco en seguir fortaleciendo mis conocimientos en procesos industriales para aportar soluciones eficientes en el ámbito laboral.",
+    specialties: ["Mantenimiento y Reparación de Equipos Industriales", "Uso de Herramientas y Maquinaria"]
   },
   {
     id: 22,
     name: "Rigoberto Jimenez Jimenez",
     position: "Coffee Break",
     department: "Staff",
-    image: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&h=400&fit=crop&crop=face",
+    image: "/assets/images/staff/RigobertoJimenez.png",
     email: "240300910@ucaribe.edu.mx",
-    bio: "Bibliotecóloga con especialización en recursos digitales y servicios de información académica.",
-    specialties: ["Gestión Bibliotecaria", "Recursos Digitales", "Servicios de Información"]
+    bio: "Estudiante de ingieneria industrial cursando tercer semestre.",
+    specialties: ["Pensamiento critico", "Creatividad", "Innovación","Resolución de problemas", "Adaptabilidad"]
   },
   {
     id: 23,
     name: "Keren Jaquelin Álvarez Luis",
     position: "Registro",
     department: "Staff",
-    image: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&h=400&fit=crop&crop=face",
+    image: "/assets/images/staff/KerenAlvarez.jpg",
     email: "240300903@ucaribe.edu.mx",
-    bio: "Bibliotecóloga con especialización en recursos digitales y servicios de información académica.",
-    specialties: ["Gestión Bibliotecaria", "Recursos Digitales", "Servicios de Información"]
+    bio: "Soy estudiante de la carrera de Ingeniería Industrial en la Universidad del Caribe, dónde me estoy formando en áreas relacionadas con la optimización de procesos, gestión de recursos y mejora continua.",
+    specialties: ["Gestión Académica"]
   },
   {
     id: 24,
     name: "Francisco Javier López Hernández",
     position: "Redes Sociales",
     department: "Staff",
-    image: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&h=400&fit=crop&crop=face",
+    image: "/assets/images/staff",
     email: "240300896@ucaribe.edu.mx",
     bio: "Bibliotecóloga con especialización en recursos digitales y servicios de información académica.",
     specialties: ["Gestión Bibliotecaria", "Recursos Digitales", "Servicios de Información"]
@@ -268,7 +268,7 @@ const staffMembers: StaffMember[] = [
     name: "Xochitl Andrea Marin Estrella",
     position: "Comida/Infraestrutura",
     department: "Staff",
-    image: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&h=400&fit=crop&crop=face",
+    image: "/assets/images/staff",
     email: "250300948@ucaribe.edu.mx",
     bio: "Bibliotecóloga con especialización en recursos digitales y servicios de información académica.",
     specialties: ["Gestión Bibliotecaria", "Recursos Digitales", "Servicios de Información"]
@@ -278,7 +278,7 @@ const staffMembers: StaffMember[] = [
     name: "Victoriano May May",
     position: "Registro",
     department: "Staff",
-    image: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&h=400&fit=crop&crop=face",
+    image: "/assets/images/staff",
     email: "240300889@ucaribe.edu.mx",
     bio: "Bibliotecóloga con especialización en recursos digitales y servicios de información académica.",
     specialties: ["Gestión Bibliotecaria", "Recursos Digitales", "Servicios de Información"]
@@ -288,7 +288,7 @@ const staffMembers: StaffMember[] = [
     name: "Edgar Mauricio May Perez",
     position: "Comida/Infraestrutura",
     department: "Staff",
-    image: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&h=400&fit=crop&crop=face",
+    image: "/assets/images/staff",
     email: "sofia.mendoza@universidad.edu",
     bio: "Bibliotecóloga con especialización en recursos digitales y servicios de información académica.",
     specialties: ["Gestión Bibliotecaria", "Recursos Digitales", "Servicios de Información"]
@@ -298,7 +298,7 @@ const staffMembers: StaffMember[] = [
     name: "Clío Aranzazú Mercado Infante",
     position: "Redes Sociales",
     department: "Staff",
-    image: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&h=400&fit=crop&crop=face",
+    image: "/assets/images/staff",
     email: "230300970@ucaribe.edu.mx",
     bio: "Bibliotecóloga con especialización en recursos digitales y servicios de información académica.",
     specialties: ["Gestión Bibliotecaria", "Recursos Digitales", "Servicios de Información"]
@@ -308,27 +308,27 @@ const staffMembers: StaffMember[] = [
     name: "Saul Nahuat Alvarado",
     position: "Traslado de Ponentes",
     department: "Staff",
-    image: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&h=400&fit=crop&crop=face",
+    image: "/assets/images/staff/SaulAlvarado.png",
     email: "230300880@ucaribe.edu.mx",
-    bio: "Bibliotecóloga con especialización en recursos digitales y servicios de información académica.",
-    specialties: ["Gestión Bibliotecaria", "Recursos Digitales", "Servicios de Información"]
+    bio: "Estudiante de Ing. Industrial.",
+    specialties: ["Trabajo en equipo", "Proactivo", "Aprendizaje constante"]
   },
   {
     id: 30,
     name: "David Olmedo Jiménez",
     position: "Coffee Break",
     department: "Staff",
-    image: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&h=400&fit=crop&crop=face",
+    image: "/assets/images/staff/DavidOlmedo.jpg",
     email: "240300881@ucaribe.edu.mx",
-    bio: "Bibliotecóloga con especialización en recursos digitales y servicios de información académica.",
-    specialties: ["Gestión Bibliotecaria", "Recursos Digitales", "Servicios de Información"]
+    bio: "Estudiante de Ingeniería Industrial y actualmente trabajando en lo que me apasiona.",
+    specialties: ["Matemáticas", "Cálculo", "Facilidad de Aprendizaje"]
   },
   {
     id: 31,
     name: "Gustavo Alberto Perez Cen",
     position: "Mundialito",
     department: "Staff",
-    image: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&h=400&fit=crop&crop=face",
+    image: "/assets/images/staff",
     email: "250300910@ucaribe.edu.mx",
     bio: "Bibliotecóloga con especialización en recursos digitales y servicios de información académica.",
     specialties: ["Gestión Bibliotecaria", "Recursos Digitales", "Servicios de Información"]
@@ -338,7 +338,7 @@ const staffMembers: StaffMember[] = [
     name: "Yoltzin Diego Piña Rangel",
     position: "Comida/Infraestrutura",
     department: "Staff",
-    image: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&h=400&fit=crop&crop=face",
+    image: "/assets/images/staff",
     email: "250301082@ucaribe.edu.mx",
     bio: "Bibliotecóloga con especialización en recursos digitales y servicios de información académica.",
     specialties: ["Gestión Bibliotecaria", "Recursos Digitales", "Servicios de Información"]
@@ -348,7 +348,7 @@ const staffMembers: StaffMember[] = [
     name: "José Francisco Poot Hernández",
     position: "Comida/Infraestrutura",
     department: "Staff",
-    image: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&h=400&fit=crop&crop=face",
+    image: "/assets/images/staff",
     email: "250300901@ucaribe.edu.mx",
     bio: "Bibliotecóloga con especialización en recursos digitales y servicios de información académica.",
     specialties: ["Gestión Bibliotecaria", "Recursos Digitales", "Servicios de Información"]
@@ -358,7 +358,7 @@ const staffMembers: StaffMember[] = [
     name: "Pamela Yzquierdo Guillen",
     position: "Redes Sociales",
     department: "Staff",
-    image: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&h=400&fit=crop&crop=face",
+    image: "/assets/images/staff",
     email: "240300875@ucaribe.edu.mx",
     bio: "Bibliotecóloga con especialización en recursos digitales y servicios de información académica.",
     specialties: ["Gestión Bibliotecaria", "Recursos Digitales", "Servicios de Información"]
@@ -368,7 +368,7 @@ const staffMembers: StaffMember[] = [
     name: "Aldo Alejandro Melquiades Mendez",
     position: "Redes Sociales",
     department: "Staff",
-    image: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&h=400&fit=crop&crop=face",
+    image: "/assets/images/staff",
     email: "230300917@ucaribe.edu.mx",
     bio: "Bibliotecóloga con especialización en recursos digitales y servicios de información académica.",
     specialties: ["Gestión Bibliotecaria", "Recursos Digitales", "Servicios de Información"]

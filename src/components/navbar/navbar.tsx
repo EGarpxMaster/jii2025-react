@@ -19,6 +19,7 @@ const Navbar = () => {
   // refs para scroll y rAF
   const lastScrollTopRef = useRef(0);
   const tickingRef = useRef(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const closeNavbar = useCallback(() => {
     setIsMenuOpen(false);
@@ -35,15 +36,23 @@ const Navbar = () => {
     const work = () => {
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
       const goingDown = scrollTop > lastScrollTopRef.current;
+      
+      // Cerrar el menú si está abierto y el usuario hace scroll
+      if (isMenuOpen) {
+        setIsMenuOpen(false);
+        setOpenDropdown(null);
+      }
+      
       setNavbarHidden(goingDown && scrollTop > 150);
       lastScrollTopRef.current = Math.max(scrollTop, 0);
       tickingRef.current = false;
     };
+    
     if (!tickingRef.current) {
       tickingRef.current = true;
       requestAnimationFrame(work);
     }
-  }, []);
+  }, [isMenuOpen]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -70,6 +79,23 @@ const Navbar = () => {
       document.body.style.overflow = "";
     };
   }, [isMenuOpen]);
+
+  // Cerrar menú al hacer clic fuera de él
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        closeNavbar();
+      }
+    };
+
+    if (isMenuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isMenuOpen, closeNavbar]);
 
   // resaltar link activo sin React Router (simple por pathname)
   const isActive = (href: string) =>
@@ -105,7 +131,11 @@ const Navbar = () => {
           </button>
 
           {/* Menú */}
-          <div className={`menu ${isMenuOpen ? "show" : ""}`} id="mainMenu">
+          <div 
+            className={`menu ${isMenuOpen ? "show" : ""}`} 
+            id="mainMenu"
+            ref={menuRef}
+          >
             <div className="nav-item">
               <a
                 href="/" id="homebtn"
