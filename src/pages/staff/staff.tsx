@@ -36,7 +36,7 @@ const StaffPage: React.FC<StaffPageProps> = ({ className = '' }) => {
   const [selectedDepartment, setSelectedDepartment] = useState<string>('all');
   const [selectedMember, setSelectedMember] = useState<StaffMember | null>(null);
 
-  // Datos de ejemplo del staff con posiciones actualizadas
+ // Datos de ejemplo del staff con posiciones actualizadas
 const staffMembers: StaffMember[] = [
   {
     id: 1,
@@ -53,20 +53,20 @@ const staffMembers: StaffMember[] = [
     name: "Doc. Alejandro Charbel Cardenas Leon",
     position: "Staff",
     department: "Comité",
-    image: "/assets/images/staff",
+    image: "/assets/images/staff/comite/AlejandroCardenas.png",
     email: "accardenas@ucaribe.edu.mx",
-    bio: "Doctor en Educación con más de 15 años de experiencia en gestión académica y desarrollo curricular.",
-    specialties: ["Gestión Académica", "Desarrollo Curricular", "Liderazgo Educativo"]
+    bio: "El Dr. Cárdenas es profesor-investigador de tiempo completo en la Universidad del Caribe, adscrito al Departamento de Ciencias Básicas e Ingenierías. Es Ingeniero Industrial por el Tecnológico Nacional de México, Maestro en Administración por la Universidad de Guanajuato y Doctor en Ciencias por la Universidad Michoacana de San Nicolás de Hidalgo. \n\nA lo largo de su trayectoria ha impartido asignaturas como matemáticas, estadística, economía, investigación de operaciones y modelado cuantitativo, orientadas a la formación integral del ingeniero industrial. Su línea de investigación se enfoca en el desarrollo de modelos económicos alternativos, destacando la propuesta de producción consciente, un enfoque que integra sostenibilidad, ética y eficiencia en los procesos productivos.",
+    specialties: ["Modelos Económicos Alternativos", "Análisis Cuantitativo y Estadístico", "Física Clásica y Cuántica","Docencia en Ciencias Básicas","Análisis y Visualización de Datos"]
   },
   {
     id: 3,
     name: "Doc. Mijail Armenta Aracenta",
     position: "Staff",
     department: "Comité",
-    image: "/assets/images/staff",
+    image: "/assets/images/staff/comite/MijailArmenta.jpg",
     email: "marmenta@ucaribe.edu.mx",
-    bio: "Doctora en Educación con más de 15 años de experiencia en gestión académica y desarrollo curricular.",
-    specialties: ["Gestión Académica", "Desarrollo Curricular", "Liderazgo Educativo"]
+    bio: "Ingeniero Industrial con Maestría en Ciencias de la ingeniería industrial con especialidad en calidad y Doctorado en Educación. Actualmente profesor investigador de tiempo completo del Departamento de Ciencias Básicas e Ingenierías de la Universidad del Caribe y Coordinador del Programa Educativo de Ingeniería Industrial.",
+    specialties: ["Metrologia", "Calidad", "Ergonomía","Análisis de Procesos","Seguridad e Higiene"]
   },
   {
     id: 4,
@@ -93,10 +93,10 @@ const staffMembers: StaffMember[] = [
     name: "Mauricio Antonio Montero Martin",
     position: "Coordinador de Mundialito",
     department: "Comité",
-    image: "/assets/images/staff",
+    image: "/assets/images/staff/comite/MauricioMontero.jpg",
     email: "220300886@ucaribe.edu.mx",
-    bio: "Doctora en Educación con más de 15 años de experiencia en gestión académica y desarrollo curricular.",
-    specialties: ["Gestión Académica", "Desarrollo Curricular", "Liderazgo Educativo"]
+    bio: "Estudiante de Ingeniería Industrial. Participante de la JII-2023 y staff en la JII-2024.",
+    specialties: ["Creatividad", "Empatía", "Compromiso"]
   },
   {
     id: 7,
@@ -113,130 +113,130 @@ const staffMembers: StaffMember[] = [
     name: "José Antonio Arevalo Barrientos",
     position: "Staff",
     department: "Comité",
-    image: "/assets/images/staff",
+    image: "/assets/images/staff/comite/JoseArevalo.png",
     email: "220300860@ucaribe.edu.mx",
-    bio: "Doctora en Educación con más de 15 años de experiencia en gestión académica y desarrollo curricular.",
-    specialties: ["Gestión Académica", "Desarrollo Curricular", "Liderazgo Educativo"]
+    bio: "Estudiante de Ingeniería Industrial especializado es el diseño 3D.",
+    specialties: ["Diseño 3D", "Soldadura", "Mantenimiento Industrial", "Gestión", "Manejo de Maquinaria"]
   },
   {
     id: 9,
     name: "Estrella Marian Castro Meneses",
     position: "Coordinadora de Coffee Break",
     department: "Comité",
-    image: "/assets/images/staff",
+    image: "/assets/images/staff/comite/EstrellaCastro.jpg",
     email: "250300929@ucaribe.edu.mx",
-    bio: "Doctora en Educación con más de 15 años de experiencia en gestión académica y desarrollo curricular.",
-    specialties: ["Gestión Académica", "Desarrollo Curricular", "Liderazgo Educativo"]
+    bio: "Estudiante de Ingeniería Industrial de primer semestre en la Universidad del Caribe, con iniciativa para aportar, crecer y aprender dentro de la comunidad universitaria.",
+    specialties: ["Trabajo en Equipo", "Organización", "Responsabilidad","Comunicación","Adaptabilidad","Creatividad"]
   },
   {
     id: 10,
-    name: "Angel David Victoriano Can",
+    name: "Ángel David Victoriano Can",
     position: "Coordinador de Redes Sociales",
     department: "Comité",
-    image: "/assets/images/staff",
+    image: "/assets/images/staff/AngelVictoriano.jpg",
     email: "230300927@ucaribe.edu.mx",
-    bio: "Doctora en Educación con más de 15 años de experiencia en gestión académica y desarrollo curricular.",
-    specialties: ["Gestión Académica", "Desarrollo Curricular", "Liderazgo Educativo"]
+    bio: "Estudiante de quinto semestre de Ingeniería Industrial, con interés en el diseño de planos, el armado de equipos y la mejora de procesos.",
+    specialties: ["Diseño y Elaboración de Planos", "Armado y Mantenimiento de Equipo", "Optimización de Procesos"]
   },
   {
     id: 11,
     name: "Vanessa Regina Álvarez Hernández",
     position: "Registro",
     department: "Staff",
-    image: "/assets/images/staff",
+    image: "/assets/images/staff/VanessaAlvarez.jpg",
     email: "230300892@ucaribe.edu.mx",
-    bio: "Doctora en Educación con más de 15 años de experiencia en gestión académica y desarrollo curricular.",
-    specialties: ["Gestión Académica", "Desarrollo Curricular", "Liderazgo Educativo"]
+    bio: "Estudiante de Ingeniería Industrial.",
+    specialties: ["Cocinar", "Realización de proyectos", "Tocar el violín",]
   },
   {
     id: 12,
     name: "Zuri Sarahi Alvarez Hernandez",
     position: "Mundialito",
     department: "Staff",
-    image: "/assets/images/staff",
+    image: "/assets/images/staff/ZuriAlvarez.png",
     email: "230300932@ucaribe.edu.mx",
-    bio: "Ingeniero en Sistemas con especialización en infraestructura tecnológica educativa.",
-    specialties: ["Infraestructura TI", "Sistemas Educativos", "Innovación Tecnológica"]
+    bio: "Estudiante de Ingeniería Industrial, actualmente cursando la preespecialidad en Producción, Manufactura y Mantenimiento.",
+    specialties: ["Liderazgo", "Trabajo en Equipo", "Resolución de Problemas", "Gestión y Mejora de Procesos"]
   },
   {
     id: 13,
     name: "America Sarahi Lavadores May",
     position: "Coffee Break",
     department: "Staff",
-    image: "/assets/images/staff",
+    image: "/assets/images/staff/AmericaLavadores.jpg",
     email: "250300916@ucaribe.edu.mx",
-    bio: "Licenciada en Psicología especializada en orientación estudiantil y bienestar universitario.",
-    specialties: ["Orientación Estudiantil", "Bienestar Universitario", "Psicología Educativa"]
+    bio: "Estudiante de Ingeniería Industrial, con educación previa en área de sociales, especialmente en derecho y arte.",
+    specialties: ["Matemáticas", "Gestión de personal", "Trabajo en Equipo", "Oratoria"]
   },
   {
     id: 14,
     name: "José Gilberto Cano Greene",
     position: "Mundialito",
     department: "Staff",
-    image: "/assets/images/staff",
+    image: "/assets/images/staff/JoseCano.png",
     email: "240300873@ucaribe.edu.mx",
-    bio: "Doctor en Ciencias con amplia experiencia en investigación aplicada y gestión de proyectos.",
-    specialties: ["Investigación Aplicada", "Gestión de Proyectos", "Metodología Científica"]
+    bio: "Estudiante de Ingeniería Industrial con formación en Mecatrónica e interés en la automatización, la tecnología y el diseño en SolidWorks.",
+    specialties: ["Diseño", "Adaptabilidad", "Automatización", "Trabajo en Equipo"]
   },
   {
     id: 15,
     name: "Celeste Jazmin Chulin Arredondo",
     position: "Registro",
     department: "Staff",
-    image: "/assets/images/staff",
+    image: "/assets/images/staff/CelesteChulin.jpg",
     email: "230300890@ucaribe.edu.mx",
-    bio: "Especialista en comunicación institucional y marketing educativo con enfoque digital.",
-    specialties: ["Comunicación Institucional", "Marketing Digital", "Relaciones Públicas"]
+    bio: "Estudiante de Ingeniería Industrial en 5to semestre, con un gran interés en el desarrollo de proyectos y el trabajo en equipo.",
+    specialties: ["Organización de eventos", "Networking","Adquisición de conocimientos"]
   },
   {
     id: 16,
     name: "Yolanda Elizabeth Coronado Chim",
     position: "Mundialito",
     department: "Staff",
-    image: "/assets/images/staff",
+    image: "/assets/images/staff/YolandaCoronado.png",
     email: "250300931@ucaribe.edu.mx",
-    bio: "Ingeniero especializado en equipamiento y gestión de laboratorios técnicos.",
-    specialties: ["Gestión de Laboratorios", "Equipamiento Técnico", "Seguridad Industrial"]
+    bio: "Estudiante de primer semestre de Ingeniería Industrial.",
+    specialties: ["Liderazgo", "Comunicación", "Capacitación"]
   },
   {
     id: 17,
     name: "José Armando Domenzain Gonzalez",
     position: "Coffee Break",
     department: "Staff",
-    image: "/assets/images/staff",
+    image: "/assets/images/staff/JoseDomenzain.jpg",
     email: "210300644@ucaribe.edu.mx",
-    bio: "Licenciada en Administración con experiencia en gestión académica y atención estudiantil.",
-    specialties: ["Gestión Administrativa", "Atención al Cliente", "Procesos Académicos"]
+    bio: "Estudiante de 9° semestre de la carrera de Ingeniería Industrial.",
+    specialties: ["Planeación", "Creatividad","Diseño"]
   },
   {
     id: 18,
     name: "Samantha De Jesus García Morales",
     position: "Coffee Break",
     department: "Staff",
-    image: "/assets/images/staff",
+    image: "/assets/images/staff/SamanthaGarcia.png",
     email: "230300923@ucaribe.edu.mx",
-    bio: "Doctor en Educación especializado en aseguramiento de la calidad y acreditación universitaria.",
-    specialties: ["Aseguramiento de Calidad", "Acreditación", "Evaluación Institucional"]
+    bio: "Estudiante de Ingeniería Industrial desde 2023, actualmente cursando la preespecialidad en Producción, Manufactura y Mantenimiento.",
+    specialties: ["Resolución de Problemas","Adaptabilidad","Creatividad","Innovación"]
   },
   {
     id: 19,
     name: "Ariana Guelmes Sanchez",
     position: "Coffee Break",
     department: "Staff",
-    image: "/assets/images/staff",
+    image: "/assets/images/staff/ArianaGuelmes.jpg",
     email: "240300882@ucaribe.edu.mx",
-    bio: "Bibliotecóloga con especialización en recursos digitales y servicios de información académica.",
-    specialties: ["Gestión Bibliotecaria", "Recursos Digitales", "Servicios de Información"]
+    bio: "Estudiante de 3er Semestre de la Carrera de Ingeniería Industrial.",
+    specialties: ["Cálculo", "Álgebra"]
   },
   {
     id: 20,
     name: "Ambar Atzimba Gutierrez Anell",
     position: "Registro",
     department: "Staff",
-    image: "/assets/images/staff",
+    image: "/assets/images/staff/AmbarGutierrez.jpeg",
     email: "240301030@ucaribe.edu.mx",
-    bio: "Bibliotecóloga con especialización en recursos digitales y servicios de información académica.",
-    specialties: ["Gestión Bibliotecaria", "Recursos Digitales", "Servicios de Información"]
+    bio: "Estudiante de ingeniería industrial que a largo de la trayectoria académica ha desarrollado sus habilidades para la resolución de problemas y la comunicación. En el ámbito profesional ha desarrollado organización y trabajo en equipo.",
+    specialties: ["Creatividad", "Trabajo en Equipo"]
   },
   {
     id: 21,
@@ -273,50 +273,50 @@ const staffMembers: StaffMember[] = [
     name: "Francisco Javier López Hernández",
     position: "Redes Sociales",
     department: "Staff",
-    image: "/assets/images/staff",
+    image: "/assets/images/staff/FranciscoLopez.jpg",
     email: "240300896@ucaribe.edu.mx",
-    bio: "Bibliotecóloga con especialización en recursos digitales y servicios de información académica.",
-    specialties: ["Gestión Bibliotecaria", "Recursos Digitales", "Servicios de Información"]
+    bio: "Técnico en Mantenimiento Industrial y Estudiante de Ingeniería Industrial de la Universidad del Caribe",
+    specialties: ["Resolución de Problemas Matemáticos y Físicos","Análisis Lógico","Pensamiento Crítico"]
   },
   {
     id: 25,
     name: "Xochitl Andrea Marin Estrella",
     position: "Comida/Infraestrutura",
     department: "Staff",
-    image: "/assets/images/staff",
+    image: "/assets/images/staff/XochitlMarin.jpg",
     email: "250300948@ucaribe.edu.mx",
-    bio: "Bibliotecóloga con especialización en recursos digitales y servicios de información académica.",
-    specialties: ["Gestión Bibliotecaria", "Recursos Digitales", "Servicios de Información"]
+    bio: "Estudiante de primer semestre en la carrera de Ingeniería Industrial. Actualmente en proceso de formación en distintas áreas desarrollando pensamiento analítico y capacidad de resolución de problemas. Profesionalmente, interesada en adquirir experiencia que complemente mi preparación académica, participando en proyectos, actividades estudiantiles y oportunidades que me permitan fortalecer habilidades como el trabajo en equipo, la comunicación efectiva y la organización, con el objetivo de crecer como futura Ingeniera Industrial.",
+    specialties: ["Trabajo en Equipo", "Tolerancia y Empatía", "Habilidades Manuales y Creativas", "Compromiso y Responsabilidad"]
   },
   {
     id: 26,
     name: "Victoriano May May",
     position: "Registro",
     department: "Staff",
-    image: "/assets/images/staff",
+    image: "/assets/images/staff/VictorianoMay.jpg",
     email: "240300889@ucaribe.edu.mx",
-    bio: "Bibliotecóloga con especialización en recursos digitales y servicios de información académica.",
-    specialties: ["Gestión Bibliotecaria", "Recursos Digitales", "Servicios de Información"]
+    bio: "Estudiante de Ingeniería Industrial en la Universidad del Caribe. con formación técnica en la industria hotelera con experiencia en control de calidad, atención al cliente y manejo de información.",
+    specialties: ["Control de Calidad", "Atención al Cliente", "Trabajo en Equipo", "Liderazgo"]
   },
   {
     id: 27,
     name: "Edgar Mauricio May Perez",
     position: "Comida/Infraestrutura",
     department: "Staff",
-    image: "/assets/images/staff",
+    image: "/assets/images/staff/EdgarMay.jpg",
     email: "sofia.mendoza@universidad.edu",
-    bio: "Bibliotecóloga con especialización en recursos digitales y servicios de información académica.",
-    specialties: ["Gestión Bibliotecaria", "Recursos Digitales", "Servicios de Información"]
+    bio: "Estudiante universitario que se ha esforzado al máximo en cada etapa de su formación. Durante el último año ha trabajado con dedicación y constancia, lo que le ha permitido obtener muy altas calificaciones y aprovechar al máximo cada aprendizaje. Cada materia y cada reto académico han sido una oportunidad para crecer, no solo en conocimientos, sino también en disciplina y compromiso.",
+    specialties: ["Matemáticas", "Responsable", "Organización", "Disciplina"]
   },
   {
     id: 28,
     name: "Clío Aranzazú Mercado Infante",
     position: "Redes Sociales",
     department: "Staff",
-    image: "/assets/images/staff",
+    image: "/assets/images/staff/ClioMercado.jpeg",
     email: "230300970@ucaribe.edu.mx",
-    bio: "Bibliotecóloga con especialización en recursos digitales y servicios de información académica.",
-    specialties: ["Gestión Bibliotecaria", "Recursos Digitales", "Servicios de Información"]
+    bio: "Estudiante de Ingeniería Industrial con interés  por los procesos de manufactura. Actualmente cursando la materia de Laboratorio de Manufactura, donde esta desarrollando habilidades en esmerilado y soldadura. Próxima a iniciar prácticas profesionales para fortalecer conocimientos y experiencia en la industria.",
+    specialties: ["Esmerilado y Soldadura", "Trabajo en Equipo","Mejora de Procesos de Manufactura "]
   },
   {
     id: 29,
@@ -343,50 +343,50 @@ const staffMembers: StaffMember[] = [
     name: "Gustavo Alberto Perez Cen",
     position: "Mundialito",
     department: "Staff",
-    image: "/assets/images/staff",
+    image: "/assets/images/staff/GustavoPerez.jpg",
     email: "250300910@ucaribe.edu.mx",
-    bio: "Bibliotecóloga con especialización en recursos digitales y servicios de información académica.",
-    specialties: ["Gestión Bibliotecaria", "Recursos Digitales", "Servicios de Información"]
+    bio: "Estudiante de Ingeniería Industrial comprometido con el aprendizaje.",
+    specialties: ["Trabajo en Equipo", "Resolución de problemas", "Creatividad","Comunicación"]
   },
   {
     id: 32,
     name: "Yoltzin Diego Piña Rangel",
     position: "Comida/Infraestrutura",
     department: "Staff",
-    image: "/assets/images/staff",
+    image: "/assets/images/staff/YoltzinPina.jpeg",
     email: "250301082@ucaribe.edu.mx",
-    bio: "Bibliotecóloga con especialización en recursos digitales y servicios de información académica.",
-    specialties: ["Gestión Bibliotecaria", "Recursos Digitales", "Servicios de Información"]
+    bio: "Egresado de CONALEP en la carrera de Técnico en Construcción, actualmente estudiando Ingeniería Industrial en la Universidad del Caribe para ampliar mis conocimientos y desarrollar habilidades que me permitan un enfoque más integral en el ámbito profesional.",
+    specialties: ["Liderazgo", "Trabajos Pesados"]
   },
   {
     id: 33,
     name: "José Francisco Poot Hernández",
     position: "Comida/Infraestrutura",
     department: "Staff",
-    image: "/assets/images/staff",
+    image: "/assets/images/staff/JosePoot.jpg",
     email: "250300901@ucaribe.edu.mx",
-    bio: "Bibliotecóloga con especialización en recursos digitales y servicios de información académica.",
-    specialties: ["Gestión Bibliotecaria", "Recursos Digitales", "Servicios de Información"]
+    bio: "Técnico en ventas con experiencia en áreas de servicio operativas y administrativas.",
+    specialties: ["Negociación", "Trabajo en Equipo", "Liderazgo"]
   },
   {
     id: 34,
     name: "Pamela Yzquierdo Guillen",
     position: "Redes Sociales",
     department: "Staff",
-    image: "/assets/images/staff",
+    image: "/assets/images/staff/PamelaYzquierdo.jpg",
     email: "240300875@ucaribe.edu.mx",
-    bio: "Bibliotecóloga con especialización en recursos digitales y servicios de información académica.",
-    specialties: ["Gestión Bibliotecaria", "Recursos Digitales", "Servicios de Información"]
+    bio: "Estudiante de Ingeniería Industrial de tercer semestre",
+    specialties: ["Amabilidad", "Adaptabilidad", "Empatía"]
   },
   {
     id: 35,
     name: "Aldo Alejandro Melquiades Mendez",
     position: "Redes Sociales",
     department: "Staff",
-    image: "/assets/images/staff",
+    image: "/assets/images/staff/AldoMelquiades.jpeg",
     email: "230300917@ucaribe.edu.mx",
-    bio: "Bibliotecóloga con especialización en recursos digitales y servicios de información académica.",
-    specialties: ["Gestión Bibliotecaria", "Recursos Digitales", "Servicios de Información"]
+    bio: "Egresado de Colegio de Bachilleres 2, actualmente cursando la carrera de Ingeniería Industrial.",
+    specialties: ["Creación y Edición de Multimedia"]
   },
 ];
 
