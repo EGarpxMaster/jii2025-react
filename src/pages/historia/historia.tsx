@@ -1,6 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // Añade esta importación
 import "./historia.css";
+import { motion } from 'framer-motion';
+import { AnimatedH1, AnimatedH2, AnimatedParagraph } from '../../components/animations';
+import { 
+  SlideLeftContainer,
+  SlideRightContainer
+} from '../../components/animations';
+import {
+  ScrollSlideUp,
+  ScrollStaggerContainer,
+  ScrollStaggerItem
+} from '../../components/animations';
+
 
 // Definición de tipos
 type Variant = "A" | "B";
@@ -130,7 +142,15 @@ function GalleryMosaic({
     <section className="text-gray-700 body-font bg-white">
       <div className="container px-4 sm:px-8 py-12">
         <div className="text-center mb-12 mt-8">
-          <h2 className="historia-h2 font-bold title-font text-gray-900 mb-4 p-8">Galería de Momentos</h2>
+          <motion.h2
+            className="historia-h2 font-bold title-font text-gray-900 mb-4 p-8"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            Galería de Momentos
+          </motion.h2>
           <div className="flex mt-2 justify-center">
             <div className="w-16 h-1 rounded-full bg-[#00d4d4] inline-flex"></div>
           </div>
@@ -154,14 +174,17 @@ function GalleryMosaic({
                 <div className="absolute inset-0 historia-skeleton historia-gallery-skeleton"></div>
               )}
               
-              <img
+              <motion.img
                 src={image.src}
                 alt={image.alt}
                 className="gallery-image"
                 loading="lazy"
                 decoding="async"
                 onLoad={() => handleImageLoad(i)}
-                style={{ opacity: imagesLoaded[i] ? 1 : 0, transition: 'opacity 0.5s ease' }}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                style={{ opacity: imagesLoaded[i] ? 1 : 0 }}
               />
               
               {imagesLoaded[i] && (
@@ -275,51 +298,59 @@ export default function Historia() {
             <div className="absolute top-0 left-0 w-full h-full pattern-grid-lg text-[#00d4d4]/20"></div>
           </div>
           <div className="container mx-auto px-5 text-center relative z-10">
-            <h1 className="historia-h1 mb-4">Historia de las Jornadas</h1>
+            <AnimatedH1 className="text-white">Historia de las Jornadas</AnimatedH1>
             <div className="flex mt-6 justify-center">
               <div className="w-16 h-1 rounded-full bg-[#00d4d4] inline-flex"></div>
             </div>
-            <p className="max-w-2xl mx-auto mt-6 historia-text-lg">Revive los momentos más destacados de ediciones anteriores de la Jornada de Ingeniería Industrial</p>
+            <AnimatedParagraph className="max-w-2xl mx-auto mt-6 historia-text-lg text-white" delay={0.2}>Revive los momentos más destacados de ediciones anteriores de la Jornada de Ingeniería Industrial</AnimatedParagraph>
           </div>
         </section>
 
         {/* Origen y Propósito */}
+        <ScrollSlideUp>
         <section className="text-gray-700 body-font py-16 bg-white">
           <div className="container px-5 py-12 mx-auto">
             <div className="text-center mb-12">
-              <h2 className="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">Origen y Propósito</h2>
+              <AnimatedH2>
+              <h2 className="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">Origen y Propósito</h2></AnimatedH2>
               <div className="w-20 h-1 bg-[#00d4d4] rounded mx-auto mb-6"></div>
             </div>
             <div className="lg:w-4/5 mx-auto">
+            <AnimatedParagraph>
               <p className="text-lg leading-relaxed mb-6 text-center">
                 La Jornada de Ingeniería Industrial (JII) nació como un espacio académico innovador en la Universidad del Caribe, 
                 con el propósito fundamental de crear puentes entre el mundo académico y el sector productivo.
               </p>
+            </AnimatedParagraph>
               <div className="grid md:grid-cols-2 gap-8 mt-10">
+                <SlideLeftContainer>
                 <div className="bg-gray-50 p-6 rounded-lg">
                   <h3 className="text-xl font-semibold mb-4 text-gray-900">Nuestra Misión</h3>
                   <p className="text-base leading-relaxed">
                     Vincular a estudiantes, docentes, egresados, empleadores y expertos del sector productivo, 
                     generando un punto de encuentro estratégico para el intercambio de conocimientos y experiencias.
                   </p>
-                </div>
+                </div></SlideLeftContainer>
+                <SlideRightContainer>
                 <div className="bg-gray-50 p-6 rounded-lg">
                   <h3 className="text-xl font-semibold mb-4 text-gray-900">Nuestro Enfoque</h3>
                   <p className="text-base leading-relaxed">
                     Compartir tendencias actuales de la disciplina y fortalecer la formación integral de los 
                     futuros profesionales en Ingeniería Industrial a través de experiencias enriquecedoras.
                   </p>
-                </div>
+                </div></SlideRightContainer>
               </div>
             </div>
           </div>
-        </section>
+        </section></ScrollSlideUp>
 
         {/* Evolución y Características */}
+        <ScrollSlideUp>
         <section className="text-gray-700 body-font py-16 bg-gray-50">
           <div className="container px-5 py-12 mx-auto">
+
             <div className="text-center mb-12">
-              <h2 className="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">Evolución del Evento</h2>
+              <AnimatedH2><h2 className="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">Evolución del Evento</h2></AnimatedH2>
               <div className="w-20 h-1 bg-[#00d4d4] rounded mx-auto mb-6"></div>
             </div>
             <div className="lg:w-4/5 mx-auto">
@@ -361,9 +392,10 @@ export default function Historia() {
               </div>
             </div>
           </div>
-        </section>
+        </section></ScrollSlideUp>
 
         {/* Nuestra Trayectoria */}
+        <ScrollSlideUp>
         <section className="text-gray-700 body-font py-16 bg-white">
           <div className="container px-5 py-12 mx-auto flex flex-col">
             <div className="lg:w-4/6 mx-auto">
@@ -398,8 +430,10 @@ export default function Historia() {
             </div>
           </div>
         </section>
+        </ScrollSlideUp>
 
         {/* Consolidación e Impacto */}
+        <ScrollSlideUp>
         <section className="text-gray-700 body-font py-16 bg-gray-50">
           <div className="container px-5 py-12 mx-auto">
             <div className="text-center mb-12">
@@ -432,8 +466,10 @@ export default function Historia() {
             </div>
           </div>
         </section>
+        </ScrollSlideUp>
 
         {/* Jornadas Section */}
+      <ScrollSlideUp>
         <section className="text-gray-700 body-font overflow-hidden bg-white pb-5">
           <div className="container mx-auto">
             <div className="text-center mb-12">
@@ -498,7 +534,7 @@ export default function Historia() {
             </div>
           </div>
         </section>
-
+      </ScrollSlideUp>
         {/* Testimonials Section*/}
         {/* <section className="text-gray-700 body-font py-16 bg-gray-50">
           <div className="container px-5 py-12 mx-auto">
@@ -589,6 +625,7 @@ export default function Historia() {
           </div>
         </section> */}
 
+        <ScrollSlideUp>
         {/* Call to Action */}
         <section className="text-gray-700 body-font bg-gray-100 py-16">
           <div className="container px-5 py-12 mx-auto text-center">
@@ -606,6 +643,7 @@ export default function Historia() {
             </div>
           </div>
         </section>
+        </ScrollSlideUp>
       </main>
     </div>
   );

@@ -1,5 +1,7 @@
     import React, { useState } from "react";
     import { useNavigate } from "react-router-dom";
+    import { AnimatedH1, AnimatedH2, AnimatedParagraph, AnimatedButtonPrimary, AnimatedButtonSecondary } from '../../components/animations';
+
     import "./historia.css";
     type GalleryImage = {
     src: string;
@@ -7,6 +9,8 @@
     title: string;
     category: string;
     };
+    
+    import { motion } from 'framer-motion';
 
     const Galeria = () => {
     const navigate = useNavigate();
@@ -119,12 +123,13 @@
         {/* Header */}
         <header className="bg-[#282948] py-16 text-center relative overflow-hidden border-b border-slate-200">
             <div className="before:absolute before:inset-0 before:bg-[radial-gradient(circle_at_20%_80%,rgba(0,212,212,0.05)_0%,transparent_40%),radial-gradient(circle_at_80%_20%,rgba(0,212,212,0.05)_0%,transparent_40%)] before:pointer-events-none">
-            <div className="container mx-auto px-4">            
-                <h1 className="text-4xl font-extrabold text-slate-50 mb-4">Galería Completa</h1>
+            <div className="container mx-auto px-4">     
+                <AnimatedH1>
+                <h1 className="text-4xl font-extrabold text-slate-50 mb-4">Galería Completa</h1></AnimatedH1>       
                 <div className="w-20 h-1 bg-gradient-to-r from-cyan-400 to-cyan-500 mx-auto mb-6 rounded"></div>
-                <p className="text-xl text-slate-50 max-w-2xl mx-auto leading-relaxed">
+                <AnimatedParagraph><p className="text-xl text-slate-50 max-w-2xl mx-auto leading-relaxed">
                 Todos los momentos especiales de nuestras jornadas de Ingeniería Industrial
-                </p>
+                </p></AnimatedParagraph>
             </div>
             </div>
         </header>
@@ -132,6 +137,7 @@
         {/* Botón de volver */}
         <div className="container mx-auto px-4 py-6 mt-8">
             <div className="flex justify-center">
+            <AnimatedButtonPrimary>
             <button id="btn_gallery"
                 onClick={() => navigate(-1)}
                 className="inline-flex items-center bg-white text-slate-700 py-3 px-6 pt-6 mt-8 rounded-full border border-slate-200 transition-all duration-300 font-medium shadow-sm hover:bg-slate-50 hover:-translate-x-1 hover:shadow-md"
@@ -140,16 +146,18 @@
                 <path d="M19 12H5M12 19l-7-7 7-7" />
                 </svg>
                 Volver atrás
-            </button>
+            </button></AnimatedButtonPrimary>
             </div>
         </div>
 
         {/* Filtros de categoría */}
         <div className="bg-white py-8 mb-8 border-b border-slate-100">
             <div className="container mx-auto px-4">
-            <h2 className="text-2xl font-bold text-[#1b1c39] text-center mb-6">Filtrar por categoría</h2>
+                <AnimatedH2>
+            <h2 className="text-2xl font-bold text-[#1b1c39] text-center mb-6">Filtrar por categoría</h2></AnimatedH2>
             <div className="flex justify-center flex-wrap gap-3">
                 {categories.map(category => (
+                <AnimatedButtonSecondary>
                 <button id="btn_gallery"
                     key={category.id}
                     onClick={() => setSelectedCategory(category.id)}
@@ -161,6 +169,7 @@
                 >
                     {category.name}
                 </button>
+                </AnimatedButtonSecondary>
                 ))}
             </div>
             </div>
@@ -169,14 +178,24 @@
         {/* Contador de imágenes */}
         <div className="container mx-auto px-4 py-4">
             <div className="text-center">
+            <AnimatedParagraph>
             <p className="text-slate-500 text-lg">
                 {filteredImages.length} {filteredImages.length === 1 ? 'imagen' : 'imágenes'} en la categoría 
                 <span className="font-semibold"> {selectedCategory === "todas" ? "Todas" : categories.find(c => c.id === selectedCategory)?.name}</span>
             </p>
+            </AnimatedParagraph>
             </div>
         </div>
 
         {/* Galería */}
+        <motion.section 
+          id="conferencias" 
+          className="actividades-section"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.7 }}
+        ></motion.section>
         <main className="container mx-auto px-4 pb-16">
             {loading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 py-4">

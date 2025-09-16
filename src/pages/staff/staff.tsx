@@ -1,5 +1,20 @@
 import React, { useState } from 'react';
 import './staff.css';
+import { AnimateSharedLayout, motion } from 'framer-motion';
+import { AnimatedH1, AnimatedH2,AnimatedParagraph, AnimatedButtonSecondary, AnimatedH4, AnimatedArrowIcon, ScaleContainer } from '../../components/animations';
+import { 
+  SlideUpContainer, 
+  StaggerContainer, 
+  StaggerItem ,
+  SlideLeftContainer,
+  SlideRightContainer
+} from '../../components/animations';
+import {
+  ScrollSlideUp,
+  ScrollStaggerContainer,
+  ScrollStaggerItem
+} from '../../components/animations';
+
 
 // Tipos TypeScript
 interface StaffMember {
@@ -399,11 +414,17 @@ const staffMembers: StaffMember[] = [
         {/* Hero Section */}
         <div className="staff-hero">
           <div className="container">
+            <AnimatedH1>
             <h1>Nuestro Equipo</h1>
-            <p>
+            </AnimatedH1>
+            <div className="flex mb-6 justify-center">
+              <div className="w-16 h-1 rounded-full bg-[#00d4d4] inline-flex"></div>
+            </div>
+            <AnimatedH4>
+            <p className="max-w-2xl mx-auto mt-6 historia-text-lg text-white">
               Conoce a los profesores y estudiantes que hacen posible nuestra misión educativa. 
               Un equipo comprometido con la excelencia y la innovación.
-            </p>
+            </p></AnimatedH4>
           </div>
         </div>
 
@@ -413,17 +434,19 @@ const staffMembers: StaffMember[] = [
             {/* Filtros por departamento */}
             <div className="staff-filters">
               {departments.map(dept => (
+                <AnimatedButtonSecondary>
                 <button
                   key={dept}
                   className={`filter-btn ${selectedDepartment === dept ? 'active' : ''}`}
                   onClick={() => setSelectedDepartment(dept)}
                 >
                   {dept === 'all' ? 'Todos' : dept}
-                </button>
+                </button></AnimatedButtonSecondary>
               ))}
             </div>
 
             {/* Grid de staff */}
+            <ScaleContainer>
             <div className="staff-grid">
               {filteredMembers.map(member => (
                 <div 
@@ -453,6 +476,7 @@ const staffMembers: StaffMember[] = [
                 </div>
               ))}
             </div>
+            </ScaleContainer>
           </div>
         </div>
 

@@ -5,11 +5,11 @@ import {
   faClock,
   faPersonRunning,
   faAward,
-  faAddressCard,
   faPeopleGroup,
   faHome,
 } from "@fortawesome/free-solid-svg-icons";
 import "./navbar.css";
+import { motion } from 'framer-motion';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -102,6 +102,13 @@ const Navbar = () => {
     typeof window !== "undefined" && window.location?.pathname === href;
 
   return (
+    <motion.nav
+      initial={{ y: -80 }}
+      animate={{ y: 0 }}
+      transition={{ type: "spring", stiffness: 1500 }}
+      className="fixed top-0 w-full bg-white shadow-md z-50"
+    >
+      <header>
     <nav className={`navbar ${navbarHidden ? "navbar-hidden" : ""}`} id="mainNav">
       <div className="navbar-container" role="navigation" aria-label="Principal">
         {/* Logo izquierdo */}
@@ -263,6 +270,8 @@ const Navbar = () => {
         </div>
       </div>
     </nav>
+    </header>
+    </motion.nav>
   );
 };
 

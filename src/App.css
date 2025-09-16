@@ -23,9 +23,7 @@
   --transition-speed: 0.3s;
 }
 
-body{
-  background-color: var(--primary-color);
-}
+
 
 .logo {
   height: 6em;

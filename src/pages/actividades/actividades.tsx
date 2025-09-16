@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { motion, AnimatePresence } from 'framer-motion';
 import "./actividades.css";
-
+import { AnimatedH1, AnimatedH2, AnimatedParagraph, AnimatedButtonPrimary, AnimatedButtonSecondary } from '../../components/animations';
 // Tipos
 type Speaker = {
   name: string;
@@ -393,7 +394,8 @@ type ModalProps = {
   speakers?: Speaker[]; // opcional
 };
 
-// Componente Modal mejorado (reemplaza tu Modal por este)
+
+// Componente Modal con animaciones
 function Modal({
   open,
   title,
@@ -412,79 +414,90 @@ function Modal({
     }
   }, [open]);
 
-  if (!open) return null;
-
   return (
-    <div className="actividades-modal">
-      <div
-        className="actividades-modal-backdrop"
-        onClick={onClose}
-      />
-
-      <div
-        className="actividades-modal-content"
-        ref={contentRef}
-        tabIndex={-1} // necesario para poder recibir foco
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="actividades-modal-title"
-      >
-        <div className="actividades-modal-header">
-          <h3 id="actividades-modal-title" className="actividades-modal-title">
-            {title}
-          </h3>
-
-          <button
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          className="actividades-modal"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <motion.div
+            className="actividades-modal-backdrop"
             onClick={onClose}
-            className="actividades-modal-close"
-            aria-label="Cerrar modal"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          />
+          <motion.div
+            className="actividades-modal-content"
+            ref={contentRef}
+            tabIndex={-1}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="actividades-modal-title"
+            initial={{ opacity: 0, scale: 0.8, y: 50 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.8, y: 50 }}
+            transition={{ type: "spring", damping: 25, stiffness: 300 }}
           >
-            &times;
-          </button>
-        </div>
+            <div className="actividades-modal-header">
+              <h3 id="actividades-modal-title" className="actividades-modal-title">
+                {title}
+              </h3>
 
-        <div className="actividades-modal-body">
-          <div className="actividades-modal-grid">
-            <div className="actividades-modal-main">{children}</div>
-
-            {speakers.length > 0 && (
-              <div className="actividades-modal-sidebar">
-                <h4>Ponente(s)</h4>
-                <div className="actividades-modal-speakers">
-                  {speakers.map((speaker) => (
-                    <div key={speaker.name} className="actividades-modal-speaker">
-                      {speaker.image && (
-                        <img
-                          src={speaker.image}
-                          alt={`Imagen de ${speaker.name}`}
-                          className="actividades-modal-speaker-image"
-                          loading="lazy"
-                        />
-                      )}
-                      <h5 className="actividades-modal-speaker-name">{speaker.name}</h5>
-                      {speaker.institution && (
-                        <p className="actividades-modal-speaker-institution">
-                          {speaker.institution}
-                        </p>
-                      )}
-                      {speaker.bio && (
-                        <p className="actividades-modal-speaker-bio">{speaker.bio}</p>
-                      )}
+              <button
+                onClick={onClose}
+                className="actividades-modal-close"
+                aria-label="Cerrar modal"
+              >
+                &times;
+              </button>
+            </div>
+            <div className="actividades-modal-body">
+              <div className="actividades-modal-grid">
+                <div className="actividades-modal-main">{children}</div>
+                {speakers.length > 0 && (
+                  <div className="actividades-modal-sidebar">
+                    <h4>Ponente(s)</h4>
+                    <div className="actividades-modal-speakers">
+                      {speakers.map((speaker) => (
+                        <div key={speaker.name} className="actividades-modal-speaker">
+                          {speaker.image && (
+                            <img
+                              src={speaker.image}
+                              alt={`Imagen de ${speaker.name}`}
+                              className="actividades-modal-speaker-image"
+                              loading="lazy"
+                            />
+                          )}
+                          <h5 className="actividades-modal-speaker-name">{speaker.name}</h5>
+                          {speaker.institution && (
+                            <p className="actividades-modal-speaker-institution">
+                              {speaker.institution}
+                            </p>
+                          )}
+                          {speaker.bio && (
+                            <p className="actividades-modal-speaker-bio">{speaker.bio}</p>
+                          )}
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-        </div>
-
-        <div className="actividades-modal-footer">
-          <button onClick={onClose} className="actividades-modal-close">
-            Cerrar
-          </button>
-        </div>
-      </div>
-    </div>
+            </div>
+            <div className="actividades-modal-footer">
+              <button onClick={onClose} className="actividades-modal-close">
+                Cerrar
+              </button>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
 
@@ -524,13 +537,15 @@ function SpeakersRow({ speakers }: { speakers: Speaker[] }) {
   );
 }
 
-// Card reutilizable mejorada - CORREGIDA Y ACTUALIZADA
+// Card reutilizable mejorada con animaciones
 function ActivityCard({
   activity,
   onOpen,
+  index // Ahora sí recibimos la prop index
 }: {
   activity: Activity;
   onOpen: () => void;
+  index: number; // Definimos correctamente la prop
 }) {
   const getBadgeInfo = () => {
     switch (activity.kind) {
@@ -542,7 +557,7 @@ function ActivityCard({
       case "workshop":
         return { label: "Workshop", className: "activity-badge-workshop" };
       case "forum":
-        return { label: "Foro", className: "activity-badge-workshop" };
+        return { label: "Foro", className: "activity-badge-forum" }; // Cambiado a forum
       default:
         return { label: "", className: "" };
     }
@@ -551,20 +566,26 @@ function ActivityCard({
   const badge = getBadgeInfo();
 
   return (
-    <div
+    <motion.div
       className="activity-card"
       onClick={onOpen}
       onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && onOpen()}
       tabIndex={0}
       role="button"
       aria-label={`Ver detalles de ${activity.title}`}
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+      whileHover={{ y: -10, transition: { duration: 0.2 } }}
     >
       <div className="activity-header">
-        <img
+        <motion.img
           src={activity.banner}
           alt={`Banner de ${activity.title}`}
           className="activity-logo"
           loading="lazy"
+          whileHover={{ scale: 1.05 }}
+          transition={{ duration: 0.2 }}
         />
         <span className={`activity-badge ${badge.className}`}>
           {badge.label}
@@ -578,11 +599,11 @@ function ActivityCard({
       </div>
 
       <SpeakersRow speakers={activity.speakers} />
-    </div>
+    </motion.div>
   );
 }
 
-// Componente principal - CORREGIDO Y ACTUALIZADO
+// Componente principal - CORREGIDO Y ACTUALIZADO mas animaciones
 export default function Activities() {
   const [openId, setOpenId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -703,56 +724,86 @@ export default function Activities() {
   };
 
   return (
-    <div className="actividades-container">
+  <div className="actividades-container">
       {/* Barra de progreso de scroll */}
       <div
         className="scroll-progress-bar"
         style={{ "--scroll-progress": `${scrollProgress}%` } as React.CSSProperties}
       />
-      <main className="w-full mt-[-80px] md:mt-[-80px]">
-        {/* Hero Section */}
-        <section className="actividades-hero">
-          <div className="container">
-            <h1>Actividades Académicas</h1>
-            <p className="text-balance">
-              Descubre todas las conferencias magistrales, workshops y foros
-              especializados que tenemos preparados para ti.
-            </p>
-            <div className="actividades-hero-buttons">
-              <button
-                onClick={() => scrollToSection("conferencias")}
-                className="actividades-hero-btn-primary"
-              >
-                Ver Conferencias
-              </button>
-              <button
-                onClick={() => scrollToSection("workshops")}
-                className="actividades-hero-btn-secondary"
-              >
-                Ver Workshops
-              </button>
-              {/* NEW BUTTON FOR FORUMS */}
-              <button
-                onClick={() => scrollToSection("forums")}
-                className="actividades-hero-btn-secondary"
-              >
-                Ver Foros
-              </button>
+      
+      <motion.main 
+        className="w-full mt-[-80px] md:mt-[-80px]"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        {/* Hero Section con animación */}
+      <section className="actividades-hero">
+        <div className="container">
+          <AnimatedH1>Actividades Académicas</AnimatedH1>
+            <div className="flex mb-6 justify-center">
+              <div className="w-16 h-1 rounded-full bg-[#00d4d4] inline-flex"></div>
             </div>
+          <AnimatedParagraph className="max-w-2xl mx-auto mt-6 historia-text-lg text-white" delay={0.2}>
+            Descubre todas las conferencias magistrales, workshops y foros
+            especializados que tenemos preparados para ti.
+          </AnimatedParagraph>
+          
+          <div className="actividades-hero-buttons">
+            <AnimatedButtonPrimary 
+              onClick={() => scrollToSection("conferencias")}
+              className="actividades-hero-btn-primary"
+            >
+              Ver Conferencias
+            </AnimatedButtonPrimary>
+            
+            <AnimatedButtonSecondary 
+              onClick={() => scrollToSection("workshops")}
+              className="actividades-hero-btn-secondary"
+            >
+              Ver Workshops
+            </AnimatedButtonSecondary>
+            
+            <AnimatedButtonSecondary 
+              onClick={() => scrollToSection("forums")}
+              className="actividades-hero-btn-secondary"
+            >
+              Ver Foros
+            </AnimatedButtonSecondary>
           </div>
-        </section>
-
-        {/* Sección de Conferencias */}
-        <section id="conferencias" className="actividades-section">
+        </div>
+      </section>
+        {/* Sección de Conferencias con animación */}
+        <motion.section 
+          id="conferencias" 
+          className="actividades-section"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.7 }}
+        >
           <div className="container">
             <div className="actividades-section-header">
-              <h2 className="actividades-section-title">
+              <motion.h2 
+                className="actividades-section-title"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+              >
                 Conferencias Magistrales
-              </h2>
-              <p className="actividades-section-description">
+              </motion.h2>
+              <motion.p 
+
+                className="actividades-section-description"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+              >
                 Sesiones magistrales con expertos en diferentes áreas de la
                 ingeniería industrial
-              </p>
+              </motion.p>
             </div>
 
             <div className="activities-container">
@@ -760,55 +811,96 @@ export default function Activities() {
                 ? Array.from({ length: 4 }).map((_, index) => (
                     <SkeletonCard key={index} />
                   ))
-                : conferences.map((activity) => (
+                : conferences.map((activity, index) => ( // Añadimos index aquí
                     <ActivityCard
                       key={activity.id}
                       activity={activity}
                       onOpen={() => setOpenId(activity.id)}
+                      index={index} // Pasamos el index correctamente
                     />
                   ))}
             </div>
           </div>
-        </section>
+        </motion.section>
 
-        {/* Sección de Workshops */}
-        <section id="workshops" className="actividades-section">
+        {/* Sección de Workshops con animación */}
+        <motion.section 
+          id="workshops" 
+          className="actividades-section"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.7, delay: 0.1 }}
+        >
           <div className="container">
             <div className="actividades-section-header">
-              <h2 className="actividades-section-title">
+              <motion.h2 
+                className="actividades-section-title"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+              >
                 Workshops Especializados
-              </h2>
-              <p className="actividades-section-description">
+              </motion.h2>
+              <motion.p 
+                className="actividades-section-description"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+              >
                 Talleres prácticos para desarrollar habilidades específicas en
                 el ámbito industrial
-              </p>
+              </motion.p>
             </div>
-
-            <div className="activities-container">
+                        <div className="activities-container">
               {isLoading
                 ? Array.from({ length: 4 }).map((_, index) => (
                     <SkeletonCard key={index} />
                   ))
-                : workshops.map((activity) => (
+                : workshops.map((activity, index) => ( // Añadimos index aquí
                     <ActivityCard
                       key={activity.id}
                       activity={activity}
                       onOpen={() => setOpenId(activity.id)}
+                      index={index} // Pasamos el index correctamente
                     />
                   ))}
             </div>
           </div>
-        </section>
+        </motion.section>
 
-        {/* NEW FORUMS SECTION */}
-        <section id="forums" className="actividades-section">
+       {/* Sección de Foros con animación */}
+        <motion.section 
+          id="forums" 
+          className="actividades-section"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.7, delay: 0.2 }}
+        >
           <div className="container">
             <div className="actividades-section-header">
-              <h2 className="actividades-section-title">Foros y Paneles</h2>
-              <p className="actividades-section-description">
+              <motion.h2 
+                className="actividades-section-title"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+              >
+                Foros y Paneles
+              </motion.h2>
+              <motion.p 
+                className="actividades-section-description"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+              >
                 Espacios de diálogo y debate sobre tendencias, desarrollo
                 profesional y futuro académico.
-              </p>
+              </motion.p>
             </div>
 
             <div className="activities-container">
@@ -816,20 +908,21 @@ export default function Activities() {
                 ? Array.from({ length: 3 }).map((_, index) => (
                     <SkeletonCard key={index} />
                   ))
-                : forums.map((activity) => (
+                : forums.map((activity, index) => ( // Añadimos index aquí
                     <ActivityCard
                       key={activity.id}
                       activity={activity}
                       onOpen={() => setOpenId(activity.id)}
+                      index={index} // Pasamos el index correctamente
                     />
                   ))}
             </div>
           </div>
-        </section>
-      </main>
+        </motion.section>
+      </motion.main>
 
       {/* Modal */}
-      {current && (
+    {current && (
         <Modal
           open={!!current}
           title={current.modal.title}

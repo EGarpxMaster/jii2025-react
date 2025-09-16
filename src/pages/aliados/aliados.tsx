@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { motion } from 'framer-motion';
 import "./aliados.css";
 
 // Tipo simplificado para Aliado
@@ -77,40 +78,55 @@ function useScrollProgress() {
   return scrollProgress;
 }
 
-// Componente para cada tarjeta de aliado (sin badge de categoría)
-function AllyCard({ ally }: { ally: Ally }) {
+// Componente para cada tarjeta de aliado con animaciones
+function AllyCard({ ally, index }: { ally: Ally; index: number }) {
   return (
-    <div className="ally-card">
+    <motion.div
+      className="ally-card"
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+      whileHover={{ y: -10, transition: { duration: 0.2 } }}
+    >
       <div className="ally-header">
-        <img
+        <motion.img
           src={ally.logo}
           alt={`Logo de ${ally.name}`}
           className="ally-logo"
           loading="lazy"
+          whileHover={{ scale: 1.05 }}
+          transition={{ duration: 0.2 }}
         />
       </div>
       <div className="ally-content">
         <h3 className="ally-name">{ally.name}</h3>
         <p className="ally-description">{ally.description}</p>
         {ally.website && (
-          <a
+          <motion.a
             href={ally.website}
             target="_blank"
             rel="noopener noreferrer"
             className="ally-website-link"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
             Visitar sitio web
-          </a>
+          </motion.a>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 }
 
-// Componente Skeleton para loading
-function SkeletonCard() {
+// Componente Skeleton con animación
+function SkeletonCard({ index }: { index: number }) {
   return (
-    <div className="ally-card">
+    <motion.div
+      className="ally-card"
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+    >
       <div className="ally-header">
         <div className="ally-logo skeleton"></div>
       </div>
@@ -119,14 +135,13 @@ function SkeletonCard() {
         <div className="skeleton-text" style={{ height: "16px", marginBottom: "0.5rem" }}></div>
         <div className="skeleton-text" style={{ height: "16px", width: "80%" }}></div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
 export default function Aliados() {
   const scrollProgress = useScrollProgress();
   const [isLoading, setIsLoading] = useState(true);
-
   // Simular carga de datos
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -135,8 +150,7 @@ export default function Aliados() {
 
     return () => clearTimeout(timer);
   }, []);
-
-  return (
+ return (
     <div className="aliados-container">
       {/* Barra de progreso de scroll */}
       <div
@@ -144,45 +158,99 @@ export default function Aliados() {
         style={{ "--scroll-progress": `${scrollProgress}%` } as React.CSSProperties}
       />
       
-      <main className="w-full mt-[-80px] md:mt-[-80px]">
-        {/* Hero Section */}
-        <section className="aliados-hero">
+      <motion.main 
+        className="w-full mt-[-80px] md:mt-[-80px]"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        {/* Hero Section con animación */}
+        <motion.section 
+          className="aliados-hero"
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
+        >
           <div className="container">
-            <h1>Nuestros Aliados</h1>
-            <p className="text-balance">
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              Nuestros Aliados
+            </motion.h1>
+            <div className="flex mb-6 justify-center">
+              <div className="w-16 h-1 rounded-full bg-[#00d4d4] inline-flex"></div>
+            </div>
+            <motion.p 
+              className="text-balance"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+            >
               Conoce a las organizaciones y patrocinadores que hacen posible la realización de la Jornada de Ingeniería Industrial 2025.
-            </p>
+            </motion.p>
           </div>
-        </section>
+        </motion.section>
 
         {/* Sección de Aliados */}
-        <section className="aliados-section">
+        <motion.section 
+          className="aliados-section"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.7 }}
+        >
           <div className="container">
             <div className="aliados-section-header">
-              <h2 className="aliados-section-title">
+              <motion.h2 
+                className="aliados-section-title"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+              >
                 Impulsando la Excelencia
-              </h2>
-              <p className="aliados-section-description">
+              </motion.h2>
+              <motion.p 
+                className="aliados-section-description"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+              >
                 Agradecemos profundamente el apoyo y la confianza de cada uno de nuestros aliados estratégicos.
-              </p>
+              </motion.p>
             </div>
 
             <div className="allies-grid-container">
               {isLoading
                 ? Array.from({ length: alliesData.length }).map((_, index) => (
-                    <SkeletonCard key={index} />
+                    <SkeletonCard key={index} index={index} />
                   ))
-                : alliesData.map((ally) => (
-                    <AllyCard key={ally.id} ally={ally} />
+                : alliesData.map((ally, index) => (
+                    <AllyCard key={ally.id} ally={ally} index={index} />
                   ))}
             </div>
           </div>
-        </section>
+        </motion.section>
 
-        {/* Sección de Agradecimiento */}
-        <section className="aliados-thanks">
+        {/* Sección de Agradecimiento con animación */}
+        <motion.section 
+          className="aliados-thanks"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.7 }}
+        >
           <div className="container">
-            <div className="thanks-content">
+            <motion.div 
+              className="thanks-content"
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+            >
               <h2>Agradecimiento Especial</h2>
               <p className="thanks-message">
                 Queremos expresar nuestro más sincero agradecimiento a todos nuestros aliados. 
@@ -193,14 +261,24 @@ export default function Aliados() {
                 Gracias por creer en el futuro de la Ingeniería Industrial.
               </p>
               <div className="thanks-decoration">
-                <span>✦</span>
+                <motion.span
+                  initial={{ scale: 0 }}
+                  whileInView={{ scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.1 }}
+                >✦</motion.span>
                 <span>Universidad del Caribe</span>
-                <span>✦</span>
+                <motion.span
+                  initial={{ scale: 0 }}
+                  whileInView={{ scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                >✦</motion.span>
               </div>
-            </div>
+            </motion.div>
           </div>
-        </section>
-      </main>
+        </motion.section>
+      </motion.main>
     </div>
   );
 }

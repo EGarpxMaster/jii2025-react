@@ -22,6 +22,7 @@
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
+    "framer-motion": "^12.23.13",
     "intl-tel-input": "^25.8.5",
     "libphonenumber-js": "^1.12.15",
     "lucide-react": "^0.543.0",

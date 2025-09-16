@@ -28,7 +28,9 @@ body, html {
 /* =============== NAVBAR PRINCIPAL - MÓVIL FIRST =============== */
 body {
   padding-top: 4.5rem;
+  background-color: #1b1c39; 
 }
+
 
 .navbar {
   background-color: var(--primary-color);

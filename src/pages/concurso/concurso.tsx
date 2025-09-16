@@ -1,6 +1,19 @@
 import React, { useEffect, useMemo, useState, useRef } from "react";
 import { Trophy, Users, Clock, Target } from "lucide-react";
 import './concurso.css';
+import { motion } from 'framer-motion';
+import { AnimatedH1, AnimatedH2, AnimatedParagraph, ScaleContainer } from '../../components/animations';
+import { 
+  SlideLeftContainer,
+  SlideRightContainer
+} from '../../components/animations';
+import {
+  ScrollSlideUp,
+  ScrollStaggerContainer,
+  ScrollStaggerItem
+} from '../../components/animations';
+
+
 
 type ModalSection = {
   type: "paragraph" | "bullet" | "numbered";
@@ -258,19 +271,28 @@ export default function Concurso() {
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-[#1b1c39]"></div>
         <div className="relative z-10 flex flex-col items-center justify-center min-h-[60vh] px-4 pb-10 text-center text-white">
-          <div className="mb-8 transform hover:scale-110 transition-transform duration-500">
+          <div className="mb-8 mt-4 transform hover:scale-110 transition-transform duration-500">
+            <ScaleContainer>
             <div className="w-24 h-24 md:w-32 md:h-32 mx-auto rounded-full shadow-2xl border-4 border-white/30 bg-gradient-to-br from-blue-500 to-gray-500 flex items-center justify-center text-4xl">
               <img src="assets/images/concurso/logorally.jpg " alt="Logo Mundialito Industrial" className="w-20 h-20 md:w-28 md:h-28 rounded-full object-cover" />
-            </div>
+            </div></ScaleContainer>
           </div>
+          <AnimatedH1>
           <h1 className="text-4xl md:text-6xl lg:text-5xl font-bold mb-4">
             Mundialito Industrial
-          </h1>
+          </h1></AnimatedH1>
+          <ScaleContainer>
+            <div className="flex mb-6 justify-center">
+              <div className="w-16 h-1 rounded-full bg-[#00d4d4] inline-flex"></div>
+            </div>
+            </ScaleContainer>
+            <AnimatedParagraph>
           <p className="text-lg md:text-xl max-w-2xl text-white/90 leading-relaxed">
             Participa en emocionantes juegos que pondrán a prueba tu agilidad, estrategia y conocimientos
-          </p>
+          </p></AnimatedParagraph>
 
           {/* Stats cards */}
+          <ScaleContainer>
           <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-2xl">
             <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 text-center border border-white/20">
               <Trophy className="w-8 h-8 mx-auto mb-2 text-yellow-300" />
@@ -293,6 +315,7 @@ export default function Concurso() {
               <div className="text-sm opacity-90">Diversión</div>
             </div>
           </div>
+          </ScaleContainer>
         </div>
       </section>
 
