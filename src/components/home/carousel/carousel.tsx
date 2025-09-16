@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import './carousel.css';
 
+
 // Tipo para el estado de carga de imágenes
 type ImageLoadState = {
   loading: boolean;

@@ -1,5 +1,14 @@
 import { useState, useEffect } from 'react';
 import './countdown.css';
+import { AnimatedH1, AnimatedParagraph, ScaleContainer } from '../../animations';
+import { 
+  SlideUpContainer,
+  SlideLeftContainer,
+  SlideRightContainer
+} from '../../animations';
+import {
+  ScrollSlideUp
+} from '../../animations';
 
 const Countdown = () => {
   const targetDate = new Date('2025-09-25T09:00:00').getTime();
@@ -35,11 +44,16 @@ const Countdown = () => {
   return (
     <div className="countdown-container">
       <div className="countdown-header">
+        <AnimatedH1>
         <h2 className="countdown-title">Cuenta Regresiva JII 2025</h2>
+        </AnimatedH1>
+        <AnimatedParagraph>
         <p className="countdown-subtitle">25-26 de Septiembre</p>
-        <div className="header-divider"></div>
+        </AnimatedParagraph>
+        <ScaleContainer>
+        <div className="header-divider"></div></ScaleContainer>
       </div>
-      
+      <ScaleContainer>
       <div className="countdown-timer">
         <div className="countdown-item">
           <div className="countdown-value">{timeLeft.days.toString().padStart(2, '0')}</div>
@@ -58,13 +72,18 @@ const Countdown = () => {
           <span className="countdown-label">Segundos</span>
         </div>
       </div>
+      </ScaleContainer>
 
       <div className="event-details">
         <div className="detail-item">
-          <span>Universidad del Caribe</span>
+          <AnimatedParagraph>
+            <span>Universidad del Caribe</span>
+          </AnimatedParagraph>
         </div>
         <div className="detail-item">
-          <span>Ingeniería Industrial</span>
+          <AnimatedParagraph>
+            <span>Ingeniería Industrial</span>
+          </AnimatedParagraph>
         </div>
       </div>
     </div>

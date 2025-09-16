@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from 'framer-motion';
 import "./actividades.css";
-import { AnimatedH1, AnimatedH2, AnimatedParagraph, AnimatedButtonPrimary, AnimatedButtonSecondary } from '../../components/animations';
+import { AnimatedH1, AnimatedParagraph, AnimatedButtonPrimary, AnimatedButtonSecondary } from '../../components/animations';
 // Tipos
 type Speaker = {
   name: string;

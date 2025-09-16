@@ -8,9 +8,7 @@ import {
   SlideRightContainer
 } from '../../components/animations';
 import {
-  ScrollSlideUp,
-  ScrollStaggerContainer,
-  ScrollStaggerItem
+  ScrollSlideUp
 } from '../../components/animations';
 
 

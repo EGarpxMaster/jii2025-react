@@ -16,7 +16,7 @@ export const AnimatedButtonPrimary = ({ children, onClick, className = '' }: { c
 );
 
 // Botón secundario con animación
-export const AnimatedButtonSecondary = ({ children, onClick, className = '' }: { children: React.ReactNode; onClick: () => void; className?: string }) => (
+export const AnimatedButtonSecondary = ({ children, onClick, }: { children: React.ReactNode; onClick: () => void; className?: string }) => (
   <motion.button
     onClick={onClick}
     whileHover={{ y: -3, transition: { duration: 0.2 } }}

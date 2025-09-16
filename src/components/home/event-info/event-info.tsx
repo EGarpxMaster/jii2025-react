@@ -1,5 +1,17 @@
 import { type FC, useState, useEffect } from 'react';
 import './event-info.css';
+import { motion } from 'framer-motion';
+import { AnimatedH1, AnimatedH2, AnimatedH3, AnimatedParagraph } from '../../animations';
+import { 
+  SlideLeftContainer,
+  SlideRightContainer
+} from '../../animations';
+import {
+  ScrollSlideUp,
+  ScrollStaggerContainer,
+  ScrollStaggerItem
+} from '../../animations';
+
 
 const EventInfo: FC = () => {
   const [imagesLoaded, setImagesLoaded] = useState<{[key: string]: boolean}>({});
@@ -73,11 +85,16 @@ const EventInfo: FC = () => {
     <section className="event-info">
       <div className="container">
         <div className="event-header">
+          <AnimatedH1>
           <h2>Jornada de Ingeniería Industrial 2025</h2>
+          </AnimatedH1>
+          <AnimatedH2>
           <p className="event-subtitle">Universidad del Caribe</p>
-          <div className="header-divider"></div>
+          </AnimatedH2>
+          <ScrollStaggerItem>
+          <div className="header-divider"></div></ScrollStaggerItem>
         </div>
-        
+        <ScrollSlideUp>
         <div className="info-sections">
           {sections.map((section, index) => (
             <div key={section.id} className="info-card">
@@ -112,7 +129,8 @@ const EventInfo: FC = () => {
             </div>
           ))}
         </div>
-        
+        </ScrollSlideUp>
+        <ScrollSlideUp>
         <div className="map-section">
           <div className="map-header">
             <h3>Ubicación del Evento</h3>
@@ -149,6 +167,7 @@ const EventInfo: FC = () => {
             </div>
           </div>
         </div>
+        </ScrollSlideUp>
       </div>
     </section>
   );
