@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion } from 'framer-motion';
+import { getAliadosImagePath } from "../../utils/paths";
 import "./aliados.css";
 
 // Tipo simplificado para Aliado
@@ -14,47 +15,54 @@ type Ally = {
 // Datos de ejemplo - Todos los aliados al mismo nivel
 const alliesData: Ally[] = [
   {
-    id: "P1",
+  id: "P1",
+  name: "ADO",
+  logo: getAliadosImagePath("ADO.png"),
+  description: "Empresa de transporte que ofrece servicios de autobuses de pasajeros en México.",
+  website: "https://www.ado.com.mx/",
+  },
+  {
+    id: "P2",
     name: "Aguakan",
-    logo: "/assets/images/aliados/logo-aguakan.png",
+    logo: getAliadosImagePath("logo-aguakan.png"),
     description: "A través de su infraestructura provee el servicio público de agua potable. Esencial tanto para residentes como para la industria turística de la región.",
     website: "https://www2.aguakan.com/",
   },
   {
-    id: "P2",
+    id: "P3",
     name: "Ancona Autopartes",
-    logo: "/assets/images/aliados/Autopartes-ANCONA.png",
+    logo: getAliadosImagePath("Autopartes-ANCONA.png"),
     description: "Empresa líder en la península de Yucatán, dedicada a la comercialización de refacciones y autopartes para todo tipo de vehículos.",
     website: "https://www.anconaautopartes.com",
   },
   {
-    id: "P3",
+    id: "P4",
     name: "CrocoCunZoo",
-    logo: "/assets/images/aliados/CrocoCunZoo.png",
+    logo: getAliadosImagePath("CrocoCunZoo.png"),
     description: "Zoológico interactivo de conservación que ofrece una experiencia educativa, permitiendo un acercamiento directo con la fauna de la región.",
     website: "https://www.crococunzoo.com/",
   },
   {
-    id: "P4",
+    id: "P5",
     name: "GOmart",
-    logo: "/assets/images/aliados/GOmart.png",
+    logo: getAliadosImagePath("GOmart.png"),
     description: "Cadena de tiendas de conveniencia que ofrece una amplia variedad de productos y servicios rápidos para clientes en movimiento.",
     website: "https://gomart.com.mx/",
   },
   {
-    id: "P5",
+    id: "P6",
     name: "Pink",
-    logo: "/assets/images/aliados/Pink.png",
+    logo: getAliadosImagePath("Pink.png"),
     description: "Empresa local que plasma tus diseños e ideas en una gran variedad de artículos, creando regalos únicos y personalizados para cualquier evento.",
     website: "https://www.facebook.com/profile.php?id=61567258522023",
   },
-    {
-    id: "P6",
-    name: "RECREATIVO",
-    logo: "/assets/images/aliados/RECREATIVO.png",
-    description: "Fabricante de soluciones de identificación y seguridad para eventos, especializado en brazaletes, etiquetas y uniformes para el control de acceso.",
-    website: "https://www.recreativo.cloudsoftmx.com/",
-  }
+  {
+  id: "P7",
+  name: "RECREATIVO",
+  logo: getAliadosImagePath("RECREATIVO.png"),
+  description: "Fabricante de soluciones de identificación y seguridad para eventos, especializado en brazaletes, etiquetas y uniformes para el control de acceso.",
+  website: "https://www.recreativo.cloudsoftmx.com/",
+  },
 ];
 
 // Hook para controlar el scroll progress

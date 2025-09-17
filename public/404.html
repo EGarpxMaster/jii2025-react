@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>JII 2025 - Redirect</title>
+  <script>
+    // Single Page App hack para GitHub Pages
+    // https://github.com/rafgraph/spa-github-pages
+    
+    // Obtener el path y redirigir a la página principal con el path como query parameter
+    var pathName = window.location.pathname;
+    var redirectPath = pathName.slice('/jii2025-react'.length);
+    
+    if (redirectPath !== '/') {
+      window.location.replace(
+        window.location.protocol + '//' + 
+        window.location.host + 
+        '/jii2025-react/?redirect=' + 
+        encodeURIComponent(redirectPath)
+      );
+    }
+  </script>
+</head>
+<body>
+  <p>Redirecting...</p>
+</body>
+</html>

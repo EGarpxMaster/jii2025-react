@@ -8,6 +8,7 @@ import {
   faPeopleGroup,
   faHome,
 } from "@fortawesome/free-solid-svg-icons";
+import { getLogoPath } from "../../utils/paths";
 import "./navbar.css";
 import { motion } from 'framer-motion';
 
@@ -265,7 +266,7 @@ const Navbar = () => {
         {/* Logo derecho */}
         <div className="navbar-logo2">
           <a href="https://unicaribe.mx/" aria-label="Ir al sitio de Universidad del Caribe.">
-            <img src="/assets/images/LogoUnicaribe_Blanco.png" alt="Logotipo Universidad del Caribe" />
+            <img src={getLogoPath("LogoUnicaribe_Blanco.png")} alt="Logotipo Universidad del Caribe" />
           </a>
         </div>
       </div>

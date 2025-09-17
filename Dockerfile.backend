@@ -1,0 +1,59 @@
+# Dockerfile para el backend (Node.js + Express)
+FROM node:18-alpine AS build
+
+# Instalar dependencias del sistema necesarias
+RUN apk add --no-cache python3 make g++
+
+# Establecer directorio de trabajo
+WORKDIR /app
+
+# Copiar archivos de dependencias
+COPY server/package*.json ./
+COPY server/tsconfig.json ./
+
+# Instalar dependencias
+RUN npm ci --only=production
+
+# Copiar código fuente
+COPY server/src/ ./src/
+
+# Construir la aplicación TypeScript
+RUN npm run build
+
+# Etapa de producción
+FROM node:18-alpine AS production
+
+# Crear usuario no-root para seguridad
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S nodejs -u 1001
+
+# Establecer directorio de trabajo
+WORKDIR /app
+
+# Copiar archivos de dependencias para producción
+COPY server/package*.json ./
+
+# Instalar solo dependencias de producción
+RUN npm ci --only=production && npm cache clean --force
+
+# Copiar archivos construidos desde la etapa de build
+COPY --from=build /app/dist ./dist/
+COPY --from=build /app/src/templates ./src/templates/
+
+# Cambiar propiedad de archivos al usuario nodejs
+RUN chown -R nodejs:nodejs /app
+USER nodejs
+
+# Variables de entorno
+ENV NODE_ENV=production
+ENV PORT=3001
+
+# Exponer puerto
+EXPOSE 3001
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD node -e "require('http').get('http://localhost:3001/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"
+
+# Comando de inicio
+CMD ["npm", "start"]

@@ -9,9 +9,11 @@
     "dev:frontend": "vite",
     "build": "npm run build:frontend && npm --prefix server run build",
     "build:frontend": "vite build",
+    "build:gh-pages": "vite build --mode production",
     "preview": "vite preview",
-    "predeploy": "npm run build:frontend",
-    "deploy": "gh-pages -d deploy"
+    "predeploy": "npm run build:gh-pages",
+    "deploy": "gh-pages -d dist",
+    "deploy:gh-pages": "npm run predeploy && npm run deploy"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^7.0.0",
@@ -41,6 +43,7 @@
   "devDependencies": {
     "@eslint/js": "^9.33.0",
     "@netlify/vite-plugin-react-router": "^1.0.1",
+    "@types/node": "^24.5.1",
     "@types/react": "^19.1.10",
     "@types/react-dom": "^19.1.7",
     "@vitejs/plugin-react": "^5.0.0",

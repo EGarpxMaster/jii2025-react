@@ -11,11 +11,14 @@ import Navbar from "./components/navbar/navbar";
 import Footer from './components/footer/footer';
 import Galeria from './pages/historia/GaleriaCompleta';
 
+// Configuración para GitHub Pages
+const basename = import.meta.env.PROD ? '/jii2025-react' : '';
+
 function App() {
   return (
     <>
       <Navbar />
-      <BrowserRouter>
+      <BrowserRouter basename={basename}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/historia" element={<Historia />} />

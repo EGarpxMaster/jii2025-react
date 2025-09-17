@@ -1,0 +1,77 @@
+# Archivos y directorios a excluir del contexto de Docker
+
+# Dependencias
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Builds y distribuciones
+dist/
+build/
+.vite/
+
+# Archivos de desarrollo
+.env
+.env.local
+.env.development
+.env.test
+.env.production.local
+
+# IDEs y editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+logs/
+*.log
+
+# Base de datos
+*.sqlite
+*.db
+
+# Archivos temporales
+.tmp/
+*.tmp
+
+# Git
+.git/
+.gitignore
+
+# Docker
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# Documentación
+*.md
+docs/
+
+# Archivos de configuración local
+.eslintcache
+.stylelintcache
+
+# Coverage
+coverage/
+.nyc_output/
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Backups
+*.bak
+*.backup
+
+# Archivos de deploy
+deploy.sh
+deploy.bat
+
+# SSL certificates
+ssl/
+*.pem
+*.crt
+*.key

@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="utf-8">
-  <title>Jornada Ingenieria Industrial</title>
-  <base href="/">
+  <title>JII 2025 - Jornada de Ingeniería Industrial</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Jornada de Ingeniería Industrial 2025 - Universidad del Caribe">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link href="/tailwind.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
@@ -12,6 +12,28 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+  
+  <!-- GitHub Pages SPA Routing Fix -->
+  <script>
+    // Verificar si hay una redirección pendiente
+    (function() {
+      var redirect = sessionStorage.redirect;
+      delete sessionStorage.redirect;
+      if (redirect && redirect !== location.href) {
+        history.replaceState(null, null, redirect);
+      }
+    })();
+
+    // Manejar parámetro de redirección 
+    (function() {
+      var query = window.location.search;
+      if (query.startsWith('?redirect=')) {
+        var redirect = decodeURIComponent(query.substring(10));
+        sessionStorage.redirect = location.href.replace(query, redirect);
+        location.replace(location.href.replace(query, redirect));
+      }
+    })();
+  </script>
 </head>
   <body>
     <div id="root"></div>
