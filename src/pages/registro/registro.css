@@ -902,10 +902,17 @@ body {
     }
     
     .tabs-wrapper {
-        max-width: 300px; /* 2.5 tabs visibles */
-        gap: 0.1rem;
-        margin: 0;
-        padding: 0;
+    display: flex;
+    gap: 0.25rem;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    flex: 1;
+    padding: 0;
+    /* Esto es importante: */
+    width: 100%;
+    max-width: none; /* O el valor apropiado para tu diseño */
     }
     
     .tab-button {

@@ -21,34 +21,47 @@ const RegistroPage: React.FC = () => {
   const checkScrollButtons = () => {
     if (tabsRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = tabsRef.current;
-      setShowLeftArrow(scrollLeft > 0);
-      setShowRightArrow(scrollLeft < scrollWidth - clientWidth); // Solo mostrar si hay más contenido para desplazarse
+      const maxScrollLeft = scrollWidth - clientWidth;
+      
+      // Mostrar flecha izquierda si no estamos al inicio
+      setShowLeftArrow(scrollLeft > 10);
+      
+      // Mostrar flecha derecha solo si no estamos cerca del final (70px antes)
+      setShowRightArrow(scrollLeft < maxScrollLeft - 86);
     }
   };
-
-
 
   const scrollTabs = (direction: 'left' | 'right') => {
     if (tabsRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = tabsRef.current;
-      const maxScrollLeft = scrollWidth - clientWidth;
-
-      // Desplazarse al final de los tabs solo si hay más contenido por mostrar
-      const newScrollLeft = direction === 'left'
-        ? 0 // Ir al inicio
-        : maxScrollLeft; // Ir al final si es posible
-
-      // Solo hacer scroll si no estamos ya al final
-      if (scrollLeft !== newScrollLeft) {
+      
+      if (direction === 'left') {
+        // Ir al inicio
         tabsRef.current.scrollTo({
-          left: newScrollLeft,
+          left: 0,
           behavior: 'smooth',
         });
+      } else {
+        // Ir al final - calcular la posición exacta
+        const maxScrollLeft = scrollWidth - clientWidth;
+        
+        // Si ya estamos cerca del final, ir al final exacto
+        if (scrollLeft >= maxScrollLeft - 10) {
+          tabsRef.current.scrollTo({
+            left: maxScrollLeft,
+            behavior: 'smooth',
+          });
+        } else {
+          // Calcular cuánto falta para mostrar todos los tabs
+          const remainingScroll = maxScrollLeft - scrollLeft;
+          tabsRef.current.scrollTo({
+            left: scrollLeft + remainingScroll,
+            behavior: 'smooth',
+          });
+        }
       }
     }
   };
-
-
 
   const scrollToActiveTab = () => {
     if (tabsRef.current) {
@@ -65,7 +78,14 @@ const RegistroPage: React.FC = () => {
       }
     }
   };
-
+  useEffect(() => {
+    // Verificar los botones después de un breve delay
+    const timer = setTimeout(() => {
+      checkScrollButtons();
+    }, 300);
+    
+    return () => clearTimeout(timer);
+  }, []);
   useEffect(() => {
     checkScrollButtons();
     window.addEventListener('resize', checkScrollButtons);
@@ -80,6 +100,20 @@ const RegistroPage: React.FC = () => {
     }
   }, []);
 
+useEffect(() => {
+  const tabsElement = tabsRef.current;
+  if (tabsElement) {
+    tabsElement.addEventListener('scroll', checkScrollButtons);
+    // También verificar después de que termine la animación de scroll
+    const handleScrollEnd = () => setTimeout(checkScrollButtons, 100);
+    tabsElement.addEventListener('scrollend', handleScrollEnd);
+    
+    return () => {
+      tabsElement.removeEventListener('scroll', checkScrollButtons);
+      tabsElement.removeEventListener('scrollend', handleScrollEnd);
+    };
+  }
+}, []);
 
   useEffect(() => {
     // Scroll to active tab when it changes
