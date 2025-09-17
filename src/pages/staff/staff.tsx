@@ -73,7 +73,7 @@ const staffMembers: StaffMember[] = [
     name: "Mtra. Gaby Betsaida Batun Chay",
     position: "Staff",
     department: "Comité",
-    image: "/assets/images/staff",
+    image: "/assets/images/staff/comite/usuario.png",
     email: "gbatun@ucaribe.edu.mx",
     bio: "Doctora en Educación con más de 15 años de experiencia en gestión académica y desarrollo curricular.",
     specialties: ["Gestión Académica", "Desarrollo Curricular", "Liderazgo Educativo"]
@@ -350,16 +350,6 @@ const staffMembers: StaffMember[] = [
   },
   {
     id: 32,
-    name: "Yoltzin Diego Piña Rangel",
-    position: "Comida/Infraestrutura",
-    department: "Staff",
-    image: "/assets/images/staff/YoltzinPina.jpeg",
-    email: "250301082@ucaribe.edu.mx",
-    bio: "Egresado de CONALEP en la carrera de Técnico en Construcción, actualmente estudiando Ingeniería Industrial en la Universidad del Caribe para ampliar mis conocimientos y desarrollar habilidades que me permitan un enfoque más integral en el ámbito profesional.",
-    specialties: ["Liderazgo", "Trabajos Pesados"]
-  },
-  {
-    id: 33,
     name: "José Francisco Poot Hernández",
     position: "Comida/Infraestrutura",
     department: "Staff",
@@ -369,7 +359,7 @@ const staffMembers: StaffMember[] = [
     specialties: ["Negociación", "Trabajo en Equipo", "Liderazgo"]
   },
   {
-    id: 34,
+    id: 33,
     name: "Pamela Yzquierdo Guillen",
     position: "Redes Sociales",
     department: "Staff",
@@ -379,7 +369,7 @@ const staffMembers: StaffMember[] = [
     specialties: ["Amabilidad", "Adaptabilidad", "Empatía"]
   },
   {
-    id: 35,
+    id: 34,
     name: "Aldo Alejandro Melquiades Mendez",
     position: "Redes Sociales",
     department: "Staff",

@@ -42,70 +42,389 @@ body {
     border-bottom: 1px solid var(--border-color);
     position: sticky;
     top: 0;
-    z-index: 50;
+    z-index: 1;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    padding: 0.5rem 0; /* Mobile-first: padding más pequeño */
+}
+
+.tabs-navigation {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding: 0 0.3rem; /* Mobile-first: padding más pequeño */
+    gap: 0.3rem; /* Mobile-first: gap más pequeño */
+}
+
+.tabs-navigation::before,
+.tabs-navigation::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 20px;
+    pointer-events: none;
+    z-index: 3;
+    transition: opacity 0.3s ease;
+}
+
+.tabs-navigation::before {
+    left: 30px; /* Ajustado para móviles */
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.95), transparent);
+    opacity: 0;
+}
+
+.tabs-navigation::after {
+    right: 30px; /* Ajustado para móviles */
+    background: linear-gradient(to left, rgba(255, 255, 255, 0.95), transparent);
+    opacity: 0;
+}
+
+/* Mostrar gradientes en dispositivos móviles */
+@media (max-width: 767px) {
+    .tabs-navigation.show-left-gradient::before {
+        opacity: 1;
+    }
+    
+    .tabs-navigation.show-right-gradient::after {
+        opacity: 1;
+    }
+    
+    .tabs-navigation::before {
+        left: 28px; /* Ajuste específico para móviles */
+    }
+    
+    .tabs-navigation::after {
+        right: 28px; /* Ajuste específico para móviles */
+    }
 }
 
 .tabs-wrapper {
-    max-width: 800px;
-    margin: 0 auto;
     display: flex;
-    padding: 0 0.5rem;
-    flex-wrap: wrap;
-    justify-content: center;
     gap: 0.25rem;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    flex: 1;
+    padding: 0;
+    /* Mobile-first: Optimizado para 320px */
+    max-width: 310px; /* Para mostrar exactamente 2.5 tabs en 320px */
+    justify-content: flex-start;
+}
+
+.tabs-wrapper::-webkit-scrollbar {
+    display: none;
+}
+
+.scroll-arrow {
+    display: flex; /* Visible por defecto en mobile */
+    align-items: center;
+    justify-content: center;
+    width: 32px; /* Más pequeño para móviles */
+    height: 32px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid var(--border-color);
+    border-radius: 50%;
+    cursor: pointer;
+    color: var(--light-text);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: var(--transition);
+    z-index: 2;
+    flex-shrink: 0;
+    backdrop-filter: blur(4px);
+}
+
+.scroll-arrow:hover {
+    color: var(--secondary-color);
+    border-color: var(--secondary-color);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.scroll-arrow-left {
+    margin-right: 0.75rem;
+}
+
+.scroll-arrow-right {
+    margin-left: 1rem;
 }
 
 .tab-button {
     display: flex;
     align-items: center;
-    gap: 0.25rem;
-    padding: 0.5rem 0.75rem;
+    gap: 0.3srem;
+    padding: 0.5rem 0.7rem; /* Más compacto para móviles */
     background: none;
     border: none;
     cursor: pointer;
     font-family: var(--font-family);
-    font-size: 0.8rem;
+    font-size: 0.75rem; /* Más pequeño para móviles */
     font-weight: 600;
     color: var(--light-text);
-    border-bottom: 2px solid transparent;
+    border-bottom: 3px solid transparent;
     transition: var(--transition);
     position: relative;
     overflow: hidden;
-    flex: 1;
-    min-width: 0;
-    justify-content: center;
+    white-space: nowrap;
+    flex-shrink: 0;
+    min-width: 100px; /* Optimizado para 320px */
+    max-width: 100px;
+    border-radius: 8px 8px 0 0;
     text-align: center;
+    justify-content: center;
+}
+
+/* Mobile-first: 320px - 359px (dispositivos muy pequeños) */
+@media (min-width: 320px) {
+    .tabs-container {
+        padding: 0.5rem 0;
+    }
+    
+    .tabs-navigation {
+        padding: 0 0.5rem;
+        gap: 0.1rem;
+    }
+    
+    .tabs-wrapper {
+        max-width: 310px; /* 2.5 tabs visibles */
+        gap: 0.2rem;
+    }
+    
+    .tab-button {
+        min-width: 95px;
+        max-width: 95px;
+        padding: 0.45rem 0.6rem;
+        font-size: 0.7rem;
+        gap: 0.2rem;
+    }
+    
+    .tab-text {
+        display: block;
+        font-size: 0.65rem;
+    }
+    
+    .tab-icon {
+        font-size: 0.7rem;
+    }
+    
+    .scroll-arrow {
+        width: 28px;
+        height: 28px;
+    }
+}
+
+/* 360px - 399px (móviles pequeños) */
+@media (min-width: 360px) {
+    .tabs-wrapper {
+        max-width: 300px; /* Permite ver 3 tabs parcialmente */
+    }
+    
+    .tab-button {
+        min-width: 100px;
+        max-width: 100px;
+        padding: 0.5rem 0.7rem;
+        font-size: 0.75rem;
+    }
+    
+    .tab-text {
+        font-size: 0.7rem;
+    }
+    
+    .scroll-arrow {
+        width: 30px;
+        height: 30px;
+    }
+}
+
+/* 400px - 479px (móviles medianos) */
+@media (min-width: 400px) {
+    .tabs-wrapper {
+        max-width: 340px; /* 3 tabs cómodos */
+        gap: 0.25rem;
+    }
+    
+    .tab-button {
+        min-width: 110px;
+        max-width: 110px;
+        padding: 0.55rem 0.8rem;
+        font-size: 0.8rem;
+        gap: 0.3rem;
+    }
+    
+    .tab-text {
+        font-size: 0.75rem;
+    }
+    
+    .tab-icon {
+        font-size: 0.75rem;
+    }
+    
+    .scroll-arrow {
+        width: 32px;
+        height: 32px;
+    }
+}
+
+/* 480px - 639px (móviles grandes) */
+@media (min-width: 480px) {
+    .tabs-wrapper {
+        max-width: 380px; /* 3 tabs + espacio extra */
+        gap: 0.3rem;
+    }
+    
+    .tab-button {
+        min-width: 120px;
+        max-width: 120px;
+        padding: 0.6rem 0.9rem;
+        font-size: 0.85rem;
+    }
+    
+    .tab-text {
+        font-size: 0.8rem;
+    }
+    
+    .tab-icon {
+        font-size: 0.8rem;
+    }
+    
+    .scroll-arrow {
+        width: 34px;
+        height: 34px;
+    }
+}
+
+/* 640px - 767px (tablets pequeñas) */
+@media (min-width: 640px) {
+    .tabs-wrapper {
+        max-width: 450px; /* Más espacio para tabs */
+        gap: 0.4rem;
+    }
+    
+    .tab-button {
+        min-width: 135px;
+        max-width: 135px;
+        padding: 0.65rem 1rem;
+        font-size: 0.9rem;
+        gap: 0.4rem;
+    }
+    
+    .tab-text {
+        font-size: 0.85rem;
+    }
+    
+    .tab-icon {
+        font-size: 0.85rem;
+    }
+    
+    .scroll-arrow {
+        width: 36px;
+        height: 36px;
+    }
+}
+
+/* 768px - 1023px (tablets) */
+@media (min-width: 768px) {
+    .tabs-container {
+        padding: 0.75rem 0;
+    }
+    
+    .tabs-navigation {
+        max-width: 1000px;
+        padding: 0 1rem;
+        gap: 0.5rem;
+    }
+    
+    .tabs-wrapper {
+        justify-content: center;
+        max-width: none;
+        overflow-x: visible;
+        width: 100%;
+        gap: 0.5rem;
+    }
+    
+    .tab-button {
+        padding: 0.75rem 1.2rem;
+        font-size: 0.9rem;
+        min-width: 140px;
+        max-width: 180px;
+        flex: 1;
+        gap: 0.5rem;
+    }
+    
+    .tab-text {
+        font-size: 0.9rem;
+    }
+    
+    .tab-icon {
+        font-size: 0.9rem;
+    }
+    
+    .scroll-arrow {
+        display: none !important;
+    }
+}
+
+/* 1024px+ (desktop) */
+@media (min-width: 1024px) {
+    .tabs-navigation {
+        max-width: 1200px;
+        padding: 0 1.5rem;
+    }
+    
+    .tabs-wrapper {
+        max-width: 800px;
+        margin: 0 auto;
+        gap: 0.75rem;
+    }
+    
+    .tab-button {
+        padding: 0.8rem 1.5rem;
+        font-size: 0.95rem;
+        min-width: 150px;
+        max-width: 200px;
+        gap: 0.6rem;
+    }
+    
+    .tab-text {
+        font-size: 0.95rem;
+    }
+    
+    .tab-icon {
+        font-size: 0.95rem;
+    }
 }
 
     .tab-button:hover {
-    background: rgba(37, 99, 235, 0.05);
-    color: var(--secondary-color);
+        background: rgba(37, 99, 235, 0.08);
+        color: var(--secondary-color);
+        transform: translateY(-1px);
     }
 
     .tab-button.active {
-    color: var(--secondary-color);
-    border-bottom-color: var(--secondary-color);
-    background: rgba(37, 99, 235, 0.05);
+        color: var(--secondary-color);
+        border-bottom-color: var(--secondary-color);
+        background: rgba(37, 99, 235, 0.1);
+        font-weight: 700;
     }
 
     .tab-button::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.1), transparent);
-    transition: left 0.6s ease;
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.1), transparent);
+        transition: left 0.6s ease;
     }
 
     .tab-button:hover::before {
-    left: 100%;
+        left: 100%;
     }
         
     .tab-icon {
-        font-size: 0.9rem;
+        font-size: 1rem;
         flex-shrink: 0;
     }
 
@@ -650,15 +969,13 @@ body {
     /* Responsive adjustments */    
 @media (max-width: 640px) {
     .tabs-wrapper {
-        padding: 0 0.25rem;
-        gap: 0.125rem;
+        max-width: 300px;  /* Ajustar para tres tabs visibles */
+        justify-content: flex-start;
     }
-    
+
     .tab-button {
-        padding: 0.5rem 0.5rem;
-        font-size: 0.75rem;
-        gap: 0.125rem;
-        min-width: 60px;
+        min-width: 90px;
+        max-width: 90px;
     }
     
     .tab-icon {
@@ -702,12 +1019,9 @@ body {
 
 @media (max-width: 400px) {
     .tabs-wrapper {
-        flex-wrap: nowrap;
-        overflow-x: auto;
+        /* Para pantallas menores a 400px, mostrar 2.2 tabs para indicar scroll */
+        max-width: 270px;
         justify-content: flex-start;
-        padding-bottom: 0.25rem;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
     }
     
     .tabs-wrapper::-webkit-scrollbar {
@@ -716,9 +1030,10 @@ body {
     
     .tab-button {
         flex: 0 0 auto;
-        min-width: 70px;
-        padding: 0.5rem 0.5rem;
-        font-size: 0.7rem;
+        min-width: 90px;
+        max-width: 90px;
+        padding: 0.5rem 0.6rem;
+        font-size: 0.75rem;
     }
     
     .tab-icon {
@@ -726,7 +1041,7 @@ body {
     }
     
     .tab-text {
-        font-size: 0.65rem;
+        font-size: 0.7rem;
     }
     
     .registro-header h2 {
@@ -740,12 +1055,15 @@ body {
 
 @media (min-width: 401px) and (max-width: 640px) {
     .tabs-wrapper {
-        justify-content: space-between;
+        /* En este rango, permitir scroll horizontal pero con más espacio */
+        max-width: 400px;
+        justify-content: flex-start;
     }
     
     .tab-button {
-        flex: 1;
-        min-width: 0;
+        flex: 0 0 auto;
+        min-width: 110px;
+        max-width: 110px;
     }
 }
 /* Media query específica para pantallas menores de 350px */
@@ -761,6 +1079,7 @@ body {
         margin: 0 -0.5rem;
         padding-left: 0.5rem;
         padding-right: 0.5rem;
+        max-width: fit-content;
     }
     
     .tabs-wrapper::-webkit-scrollbar {
@@ -769,9 +1088,9 @@ body {
     
     .tab-button {
         flex: 0 0 auto;
-        min-width: 65px;
-        padding: 0.4rem 0.35rem;
-        font-size: 0.65rem;
+        min-width: 75px;
+        padding: 0.4rem 0.5rem;
+        font-size: 0.7rem;
         border-bottom-width: 1px;
         border-radius: 6px;
         margin: 0 0.05rem;
@@ -783,7 +1102,7 @@ body {
     }
     
     .tab-text {
-        font-size: 0.6rem;
+        font-size: 0.65rem;
         letter-spacing: -0.01em;
     }
     
@@ -820,9 +1139,9 @@ body {
 /* Ajustes adicionales para pantallas extremadamente pequeñas (menos de 300px) */
 @media (max-width: 300px) {
     .tab-button {
-        min-width: 60px;
-        padding: 0.35rem 0.3rem;
-        font-size: 0.6rem;
+        min-width: 70px;
+        padding: 0.35rem 0.4rem;
+        font-size: 0.65rem;
     }
     
     .tab-icon {
@@ -830,7 +1149,7 @@ body {
     }
     
     .tab-text {
-        font-size: 0.55rem;
+        font-size: 0.6rem;
     }
     
     .registro-header h2 {
@@ -839,5 +1158,104 @@ body {
     
     .registro-description {
         font-size: 0.75rem;
+    }
+}
+
+/* Estilos para indicadores de cupo */
+.cupo-badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.375rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.cupo-badge.disponible {
+    background-color: #dcfce7;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+}
+
+.cupo-badge.casi_lleno {
+    background-color: #fef3c7;
+    color: #92400e;
+    border: 1px solid #fde68a;
+}
+
+.cupo-badge.lleno {
+    background-color: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+.submit-button.disabled {
+    background-color: #d1d5db;
+    color: #6b7280;
+    cursor: not-allowed;
+}
+
+.submit-button.disabled:hover {
+    background-color: #d1d5db;
+    transform: none;
+}
+
+/* Estilos para la sección de brazalete */
+.brazalete-section {
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    border: 2px solid var(--warning-color);
+    border-radius: var(--border-radius);
+    background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+    box-shadow: var(--shadow);
+}
+
+.warning-header {
+    margin-bottom: 1.5rem;
+}
+
+.warning-header h4 {
+    color: #92400e;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.warning-header p {
+    color: #92400e;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.input-button-group {
+    display: flex;
+    gap: 0.75rem;
+    align-items: end;
+}
+
+.input-button-group .form-input {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+.input-button-group .submit-button {
+    white-space: nowrap;
+    min-width: auto;
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 0;
+}
+
+@media (max-width: 640px) {
+    .input-button-group {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .input-button-group .submit-button {
+        width: 100%;
     }
 }
