@@ -229,7 +229,7 @@ const activitiesData: Activity[] = [
     speakers: [
       {
         name: "Dra. Martha Elva Pérez Ramos",
-        image: "/assets/images/actividades/ponentes/Dra.MarthaPerez.jpg",
+        image: "/assets/images/actividades/ponentes/Dra.Martha.jpg",
         bio: "Egresada de la Universidad Autónoma de Querétaro en Metalurgia, con estudios de Maestría y Doctorado en Ciencias con especialidad en Materiales por el Cinvestav-IPN. Actualmente docente de tiempo completo en el TecNM campus Querétaro.",
         institution: "Tecnológico Nacional de México, campus Querétaro",
       },
@@ -300,17 +300,12 @@ const activitiesData: Activity[] = [
     banner: "/assets/images/actividades/banners/P1.png",
     title: "Panel de egresados: “de Industrial a Industrial”",
     description:
-      "Egresados exitosos comparten sus trayectorias profesionales y ofrecen valiosos consejos a las nuevas generaciones.",
+      "La Evolución del Ingeniero Industrial: Experiencias y Lecciones Aprendidas.",
     speakers: [
       {
         name: "Ing. Sofía Reyes",
         image: "/assets/images/actividades/ponentes/ponente_placeholder_1.png",
         bio: "Gerente de Proyectos en Tech Solutions, egresada de la generación 2015.",
-      },
-      {
-        name: "Ing. Carlos Vega",
-        image: "/assets/images/actividades/ponentes/ponente_placeholder_2.png",
-        bio: "Especialista en Cadena de Suministro en Global Logistics, egresado de la generación 2017.",
       },
     ],
     modal: {
@@ -326,12 +321,30 @@ const activitiesData: Activity[] = [
     banner: "/assets/images/actividades/banners/P2.png",
     title: "Conversatorio: “Movilidad Nacional e Internacional: Casos de éxito”",
     description:
-      "Descubre las oportunidades de intercambio y desarrollo profesional más allá de las fronteras locales.",
+      "Presentación de estudiantes que han realizado o están realizando movilidad nacional e internacional, compartiendo sus experiencias y aprendizajes como ejemplos de éxito.",
     speakers: [
       {
-        name: "M.C. Laura Méndez",
+        name: "Jorge Castro",
         image: "/assets/images/actividades/ponentes/ponente_placeholder_3.png",
-        bio: "Coordinadora de Programas Internacionales con experiencia en convenios universitarios en Europa y América del Norte.",
+        bio: "",
+        institution: "Universidad del Caribe",
+      },
+      {
+        name: "Yoali Gutiérrez",
+        image: "/assets/images/actividades/ponentes/ponente_placeholder_1.png",
+        bio: "",
+        institution: "Universidad del Caribe",
+      },
+      {
+        name: "Enrique Alamilla",
+        image: "/assets/images/actividades/ponentes/ponente_placeholder_2.png",
+        bio: "",
+        institution: "Universidad del Caribe",
+      },
+      {
+        name: "Brenda Rico",
+        image: "/assets/images/actividades/ponentes/ponente_placeholder_2.png",
+        bio: "",
         institution: "Universidad del Caribe",
       },
     ],

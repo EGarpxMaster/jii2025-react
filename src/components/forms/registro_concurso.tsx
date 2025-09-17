@@ -20,7 +20,6 @@ type ParticipanteInfo = {
 };
 
 type Errors = Partial<Record<keyof FormData | `miembro${number}`, string>>;
-
 type ParticipantStatus = "idle" | "checking" | "valid" | "invalid" | "error";
 
 interface RegistroConcursoProps {
@@ -28,132 +27,128 @@ interface RegistroConcursoProps {
   className?: string;
 }
 
-const RegistroConcursoComponent: React.FC<RegistroConcursoProps> = ({ 
+const RegistroConcursoComponent: React.FC<RegistroConcursoProps> = ({
   onSuccess,
-  className = ""
+  className = "",
 }) => {
   const [data, setData] = useState<FormData>({
     nombreEquipo: "",
     emailCapitan: "",
-    emailsMiembros: ["", "", "", "", ""]
+    emailsMiembros: ["", "", "", "", ""],
   });
 
   const [errors, setErrors] = useState<Errors>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  
-  // Estados para validaciones en tiempo real
-  const [equipoNameStatus, setEquipoNameStatus] = useState<"idle" | "checking" | "available" | "taken">("idle");
-  const [participantStatuses, setParticipantStatuses] = useState<Record<string, ParticipantStatus>>({});
-  const [participantInfos, setParticipantInfos] = useState<Record<string, ParticipanteInfo | null>>({});
 
-  // Verificar disponibilidad del nombre del equipo
+  const [equipoNameStatus, setEquipoNameStatus] =
+    useState<"idle" | "checking" | "available" | "taken">("idle");
+  const [participantStatuses, setParticipantStatuses] = useState<
+    Record<string, ParticipantStatus>
+  >({});
+  const [participantInfos, setParticipantInfos] = useState<
+    Record<string, ParticipanteInfo | null>
+  >({});
+
+  // Banner de ventana
+  const ventanaTexto =
+    "Registro abierto del 19/09 09:00 al 20/09 23:59 (hora Cancún).";
+
   const checkEquipoName = useCallback(async (nombre: string) => {
     if (!nombre.trim()) {
       setEquipoNameStatus("idle");
       return;
     }
-
     setEquipoNameStatus("checking");
     try {
-      const response = await fetch(`${API_URL}/check-name?nombre=${encodeURIComponent(nombre)}`);
+      const response = await fetch(
+        `${API_URL}/check-name?nombre=${encodeURIComponent(nombre)}`
+      );
       const result = await response.json();
-      
       if (response.ok) {
         setEquipoNameStatus(result.available ? "available" : "taken");
       } else {
         setEquipoNameStatus("idle");
       }
-    } catch (error) {
-      console.error("Error verificando nombre:", error);
+    } catch {
       setEquipoNameStatus("idle");
     }
   }, []);
 
-  // Verificar validez de un participante
   const checkParticipant = useCallback(async (email: string, field: string) => {
     if (!email.trim()) {
-      setParticipantStatuses(prev => ({ ...prev, [field]: "idle" }));
-      setParticipantInfos(prev => ({ ...prev, [field]: null }));
+      setParticipantStatuses((prev) => ({ ...prev, [field]: "idle" }));
+      setParticipantInfos((prev) => ({ ...prev, [field]: null }));
       return;
     }
-
-    setParticipantStatuses(prev => ({ ...prev, [field]: "checking" }));
-    
+    setParticipantStatuses((prev) => ({ ...prev, [field]: "checking" }));
     try {
-      const response = await fetch(`${API_URL}/check-participant?email=${encodeURIComponent(email)}`);
+      const response = await fetch(
+        `${API_URL}/check-participant?email=${encodeURIComponent(email)}`
+      );
       const result = await response.json();
-      
       if (response.ok) {
         if (result.valid) {
-          setParticipantStatuses(prev => ({ ...prev, [field]: "valid" }));
-          setParticipantInfos(prev => ({ ...prev, [field]: result.participante }));
+          setParticipantStatuses((prev) => ({ ...prev, [field]: "valid" }));
+          setParticipantInfos((prev) => ({ ...prev, [field]: result.participante }));
         } else {
-          setParticipantStatuses(prev => ({ ...prev, [field]: "invalid" }));
-          setParticipantInfos(prev => ({ ...prev, [field]: result.participante }));
-          setErrors(prev => ({ ...prev, [field]: result.error }));
+          setParticipantStatuses((prev) => ({ ...prev, [field]: "invalid" }));
+          setParticipantInfos((prev) => ({ ...prev, [field]: result.participante }));
+          setErrors((prev) => ({ ...prev, [field]: result.error }));
         }
       } else {
-        setParticipantStatuses(prev => ({ ...prev, [field]: "error" }));
-        setParticipantInfos(prev => ({ ...prev, [field]: null }));
+        setParticipantStatuses((prev) => ({ ...prev, [field]: "error" }));
+        setParticipantInfos((prev) => ({ ...prev, [field]: null }));
       }
-    } catch (error) {
-      console.error("Error verificando participante:", error);
-      setParticipantStatuses(prev => ({ ...prev, [field]: "error" }));
-      setParticipantInfos(prev => ({ ...prev, [field]: null }));
+    } catch {
+      setParticipantStatuses((prev) => ({ ...prev, [field]: "error" }));
+      setParticipantInfos((prev) => ({ ...prev, [field]: null }));
     }
   }, []);
 
-  // Debounced check para nombre de equipo
   useEffect(() => {
     const timer = setTimeout(() => {
       if (data.nombreEquipo.trim()) {
         checkEquipoName(data.nombreEquipo.trim());
       }
     }, 500);
-
     return () => clearTimeout(timer);
   }, [data.nombreEquipo, checkEquipoName]);
 
   const handleChange = (field: keyof FormData, value: string | string[]) => {
-    setData(prev => ({ ...prev, [field]: value }));
-    
-    // Limpiar errores del campo
-    setErrors(prev => {
-      const newErrors = { ...prev };
-      delete newErrors[field];
-      return newErrors;
+    setData((prev) => ({ ...prev, [field]: value }));
+    setErrors((prev) => {
+      const e = { ...prev };
+      delete e[field];
+      return e;
     });
   };
 
-  const handleEmailChange = (index: number, value: string, isCapitan: boolean = false) => {
+  const handleEmailChange = (index: number, value: string, isCapitan = false) => {
     if (isCapitan) {
-      setData(prev => ({ ...prev, emailCapitan: value }));
-      setErrors(prev => {
-        const newErrors = { ...prev };
-        delete newErrors.emailCapitan;
-        return newErrors;
+      setData((prev) => ({ ...prev, emailCapitan: value }));
+      setErrors((prev) => {
+        const e = { ...prev };
+        delete e.emailCapitan;
+        return e;
       });
     } else {
       const newEmails = [...data.emailsMiembros];
       newEmails[index] = value;
-      setData(prev => ({ ...prev, emailsMiembros: newEmails }));
-      
-      setErrors(prev => {
-        const newErrors = { ...prev };
-        delete newErrors[`miembro${index}` as keyof Errors];
-        return newErrors;
+      setData((prev) => ({ ...prev, emailsMiembros: newEmails }));
+      setErrors((prev) => {
+        const e = { ...prev };
+        delete e[`miembro${index}` as keyof Errors];
+        return e;
       });
     }
   };
 
   const handleBlur = (field: string, email: string) => {
-    setTouched(prev => ({ ...prev, [field]: true }));
-    
-    // Solo verificar si el email tiene formato válido básico
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (email && emailRegex.test(email)) {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+    const basic = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (email && basic.test(email)) {
       checkParticipant(email, field);
     }
   };
@@ -161,41 +156,29 @@ const RegistroConcursoComponent: React.FC<RegistroConcursoProps> = ({
   const validate = (): boolean => {
     const newErrors: Errors = {};
 
-    // Validar nombre del equipo
     if (!data.nombreEquipo.trim()) {
       newErrors.nombreEquipo = "Nombre del equipo obligatorio";
     } else if (equipoNameStatus === "taken") {
       newErrors.nombreEquipo = "Este nombre ya está en uso";
     }
 
-    // Validar email del capitán
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const basic = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!data.emailCapitan.trim()) {
       newErrors.emailCapitan = "Email del capitán obligatorio";
-    } else if (!emailRegex.test(data.emailCapitan)) {
+    } else if (!basic.test(data.emailCapitan)) {
       newErrors.emailCapitan = "Formato de email inválido";
-    } else if (participantStatuses.emailCapitan === "invalid") {
-      // El error ya está establecido desde la verificación
     }
 
-    // Validar emails de miembros
-    const allEmails = [data.emailCapitan, ...data.emailsMiembros.filter(email => email.trim())];
-    const uniqueEmails = new Set(allEmails);
-    
-    if (uniqueEmails.size !== allEmails.length) {
+    const allEmails = [data.emailCapitan, ...data.emailsMiembros.filter((e) => e.trim())];
+    const unique = new Set(allEmails);
+    if (unique.size !== allEmails.length) {
       newErrors.emailCapitan = "No pueden haber emails duplicados";
     }
 
     data.emailsMiembros.forEach((email, index) => {
-      const fieldKey = `miembro${index}` as keyof Errors;
-      
-      if (!email.trim()) {
-        newErrors[fieldKey] = "Email de miembro obligatorio";
-      } else if (!emailRegex.test(email)) {
-        newErrors[fieldKey] = "Formato de email inválido";
-      } else if (participantStatuses[`miembro${index}`] === "invalid") {
-        // El error ya está establecido desde la verificación
-      }
+      const key = `miembro${index}` as keyof Errors;
+      if (!email.trim()) newErrors[key] = "Email de miembro obligatorio";
+      else if (!basic.test(email)) newErrors[key] = "Formato de email inválido";
     });
 
     setErrors(newErrors);
@@ -205,41 +188,34 @@ const RegistroConcursoComponent: React.FC<RegistroConcursoProps> = ({
   const handleSubmit = async (ev: React.FormEvent) => {
     ev.preventDefault();
 
-    // Marcar todos los campos como touched
     const touchedFields: Record<string, boolean> = {
       nombreEquipo: true,
       emailCapitan: true,
     };
-    
-    data.emailsMiembros.forEach((_, index) => {
-      touchedFields[`miembro${index}`] = true;
+    data.emailsMiembros.forEach((_, i) => {
+      touchedFields[`miembro${i}`] = true;
     });
-
     setTouched(touchedFields);
 
-    if (!validate()) {
-      return;
-    }
+    if (!validate()) return;
 
-    // Verificar que todas las validaciones estén completadas y sean válidas
-    const allValid = 
+    const allValid =
       equipoNameStatus === "available" &&
       participantStatuses.emailCapitan === "valid" &&
-      data.emailsMiembros.every((_, index) => 
-        participantStatuses[`miembro${index}`] === "valid"
-      );
+      data.emailsMiembros.every((_, i) => participantStatuses[`miembro${i}`] === "valid");
 
     if (!allValid) {
-      setErrors(prev => ({ 
-        ...prev, 
-        nombreEquipo: equipoNameStatus !== "available" ? "Verifica el nombre del equipo" : undefined,
-        emailCapitan: participantStatuses.emailCapitan !== "valid" ? "Verifica el email del capitán" : undefined
+      setErrors((prev) => ({
+        ...prev,
+        nombreEquipo:
+          equipoNameStatus !== "available" ? "Verifica el nombre del equipo" : prev.nombreEquipo,
+        emailCapitan:
+          participantStatuses.emailCapitan !== "valid" ? "Verifica el email del capitán" : prev.emailCapitan,
       }));
       return;
     }
 
     setIsSubmitting(true);
-
     try {
       const response = await fetch(API_URL, {
         method: "POST",
@@ -248,43 +224,34 @@ const RegistroConcursoComponent: React.FC<RegistroConcursoProps> = ({
         body: JSON.stringify({
           nombreEquipo: data.nombreEquipo.trim(),
           emailCapitan: data.emailCapitan.trim(),
-          emailsMiembros: data.emailsMiembros.map(email => email.trim())
-        })
+          emailsMiembros: data.emailsMiembros.map((e) => e.trim()),
+        }),
       });
 
-      const result = await response.json();
-
+      const result = await response.json().catch(() => ({}));
       if (response.status === 422) {
         setErrors(result.errors || {});
         return;
       }
-
       if (response.status === 400 || response.status === 409) {
-        if (result.details && Array.isArray(result.details)) {
-          // Mostrar errores específicos de validación de participantes
-          const errorMessage = result.details.join("\n");
-          alert(`Error en el registro:\n\n${errorMessage}`);
+        if (Array.isArray(result.details)) {
+          alert(`Error en el registro:\n\n${result.details.join("\n")}`);
         } else {
           alert(result.error || "Error en el registro del equipo");
         }
         return;
       }
-
       if (!response.ok) {
         alert(result.error || "Error interno del servidor");
         return;
       }
 
-      // Éxito
       setSubmitted(true);
-      if (onSuccess) {
-        onSuccess();
-      } else {
-        setTimeout(() => {
-          window.location.href = "/";
-        }, 3000);
-      }
-
+      onSuccess
+        ? onSuccess()
+        : setTimeout(() => {
+            window.location.href = "/";
+          }, 3000);
     } catch (error) {
       console.error("Error en el registro:", error);
       alert("Error de red. Verifica tu conexión.");
@@ -295,32 +262,20 @@ const RegistroConcursoComponent: React.FC<RegistroConcursoProps> = ({
 
   const renderParticipantStatus = (field: string, participante: ParticipanteInfo | null) => {
     const status = participantStatuses[field];
-    
-    if (status === "checking") {
-      return <small className="checking">Verificando participante...</small>;
-    }
-    
+    if (status === "checking") return <small className="checking">Verificando participante...</small>;
     if (status === "valid" && participante) {
       return (
         <div className="participant-info">
           <small className="success">
             ✓ {participante.primerNombre} {participante.apellidoPaterno}
           </small>
-          {participante.programa && (
-            <small className="program">{participante.programa}</small>
-          )}
+          {participante.programa && <small className="program">{participante.programa}</small>}
         </div>
       );
     }
-    
-    if (status === "invalid") {
+    if (status === "invalid")
       return <small className="error">{errors[field as keyof Errors] || "Participante no válido"}</small>;
-    }
-
-    if (status === "error") {
-      return <small className="error">Error verificando participante</small>;
-    }
-
+    if (status === "error") return <small className="error">Error verificando participante</small>;
     return null;
   };
 
@@ -332,9 +287,11 @@ const RegistroConcursoComponent: React.FC<RegistroConcursoProps> = ({
             <div className="registro-header">
               <h2>Registro de Equipo - Concurso</h2>
               <p className="registro-description">
-                Registra tu equipo para el concurso. Los equipos deben tener exactamente <b>6 integrantes</b> 
-                y todos deben estar previamente registrados como <b>estudiantes</b>. 
-                Designa un <b>capitán</b> y asigna un nombre único a tu equipo.
+                Registra tu equipo para el concurso. Los equipos deben tener exactamente <b>6 integrantes</b>. 
+                Abierto <b>para todas las personas</b> previamente registradas. Solo se permite <b>un equipo por persona</b>.
+              </p>
+              <p className="registro-description" style={{ marginTop: "0.5rem", fontWeight: 600 }}>
+                🗓️ {ventanaTexto}
               </p>
             </div>
 
@@ -355,7 +312,7 @@ const RegistroConcursoComponent: React.FC<RegistroConcursoProps> = ({
                       placeholder="Ingresa un nombre único para tu equipo"
                       value={data.nombreEquipo}
                       onChange={(e) => handleChange("nombreEquipo", e.target.value)}
-                      onBlur={() => setTouched(prev => ({ ...prev, nombreEquipo: true }))}
+                      onBlur={() => setTouched((prev) => ({ ...prev, nombreEquipo: true }))}
                       className={`form-input ${errors.nombreEquipo ? "input-error" : ""}`}
                       required
                     />
@@ -427,17 +384,23 @@ const RegistroConcursoComponent: React.FC<RegistroConcursoProps> = ({
                         value={email}
                         onChange={(e) => handleEmailChange(index, e.target.value)}
                         onBlur={(e) => handleBlur(`miembro${index}`, e.target.value)}
-                        className={`form-input ${errors[`miembro${index}` as keyof Errors] ? "input-error" : ""}`}
+                        className={`form-input ${
+                          errors[`miembro${index}` as keyof Errors] ? "input-error" : ""
+                        }`}
                         required
                       />
                       <div className="participant-status">
-                        {renderParticipantStatus(`miembro${index}`, participantInfos[`miembro${index}`])}
+                        {renderParticipantStatus(
+                          `miembro${index}`,
+                          participantInfos[`miembro${index}`]
+                        )}
                       </div>
-                      {touched[`miembro${index}`] && errors[`miembro${index}` as keyof Errors] && (
-                        <small role="alert" className="error-message">
-                          {errors[`miembro${index}` as keyof Errors]}
-                        </small>
-                      )}
+                      {touched[`miembro${index}`] &&
+                        errors[`miembro${index}` as keyof Errors] && (
+                          <small role="alert" className="error-message">
+                            {errors[`miembro${index}` as keyof Errors]}
+                          </small>
+                        )}
                     </div>
                   ))}
                 </div>
