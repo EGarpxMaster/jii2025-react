@@ -1141,7 +1141,6 @@ body {
         min-width: 140px;
         max-width: 180px;
         flex: 1;
-        gap: 0.5rem;
     }
     
     .tab-text {
@@ -1171,11 +1170,10 @@ body {
     }
     
     .tab-button {
-        padding: 0.8rem 1.5rem;
+        padding: 0.8rem 1rem;
         font-size: 0.95rem;
         min-width: 150px;
         max-width: 200px;
-        gap: 0.6rem;
     }
     
     .tab-text {
