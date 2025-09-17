@@ -316,7 +316,7 @@ const AsistenciaComponent: React.FC<AsistenciaComponentProps> = ({
                         placeholder="Ej: 123"
                         value={brazalete}
                         onChange={(e) => setBrazalete(e.target.value)}
-                        className="form-input"
+                        className="form-input w-100"
                         min="1"
                         max="9999"
                       />
