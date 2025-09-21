@@ -1,0 +1,71 @@
+/* CupoBadge minimalista con pill styling y color dots */
+.cupo-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  color: #e2e8f0;
+}
+
+/* Color indicator dots */
+.cupo-badge__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.cupo-badge__dot--green {
+  background-color: #10b981;
+}
+
+.cupo-badge__dot--yellow {
+  background-color: #f59e0b;
+}
+
+.cupo-badge__dot--red {
+  background-color: #ef4444;
+}
+
+/* Text styling */
+.cupo-badge__text {
+  white-space: nowrap;
+  color: inherit;
+}
+
+/* Color variations */
+.cupo-badge--green {
+  border-color: rgba(16, 185, 129, 0.3);
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+}
+
+.cupo-badge--yellow {
+  border-color: rgba(245, 158, 11, 0.3);
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+}
+
+.cupo-badge--red {
+  border-color: rgba(239, 68, 68, 0.3);
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+/* Compact variant */
+.cupo-badge--compact {
+  padding: 2px 8px;
+  font-size: 11px;
+  gap: 4px;
+}
+
+.cupo-badge--compact .cupo-badge__dot {
+  width: 6px;
+  height: 6px;
+}

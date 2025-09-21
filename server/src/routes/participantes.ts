@@ -1,130 +1,111 @@
-import { Router } from 'express';
-import { pool } from '../db/pool.js';
-import { participanteCreateSchema, asignarBrazaleteSchema } from '../schemas/participantes.js';
-import { ok, fail } from '../utils/reply.js';
+import { Router, Request, Response } from 'express';
+import { ParticipanteService } from '../services/participantes.service.js';
+import { asyncHandler } from '../middleware/errors.js';
+import { createApiResponse, createErrorResponse } from '../utils/helpers.js';
+import type { ParticipanteCreateDTO, ParticipanteUpdateDTO } from '../types/database.js';
 
-export const participantes = Router();
+const router = Router();
+const participanteService = new ParticipanteService();
 
-/** POST /api/participantes */
-participantes.post('/', async (req, res, next) => {
-  try {
-    const parse = participanteCreateSchema.safeParse(req.body);
-    if (!parse.success) return res.status(422).json(fail('Datos inválidos', 'VALIDATION_ERROR', undefined, parse.error.issues));
-    const d = parse.data;
+// GET /api/participantes - Obtener todos los participantes
+router.get('/', asyncHandler(async (req: Request, res: Response) => {
+  const participantes = await participanteService.getAllParticipantes();
+  res.json(createApiResponse(participantes));
+}));
 
-    // email único
-    const [ex] = await pool.query("SELECT id FROM participantes WHERE email = ?", [d.email.trim().toLowerCase()]);
-    if ((ex as any[]).length) return res.status(409).json(fail('Este correo ya fue registrado', 'EMAIL_TAKEN', 'email'));
+// GET /api/participantes/stats - Obtener estadísticas de participantes
+router.get('/stats', asyncHandler(async (req: Request, res: Response) => {
+  const stats = await participanteService.getParticipantesStats();
+  res.json(createApiResponse(stats));
+}));
 
-    const [r] = await pool.query(
-      `INSERT INTO participantes 
-       (apellido_paterno, apellido_materno, primer_nombre, segundo_nombre, email, telefono, categoria, programa) 
-       VALUES (?,?,?,?,?,?,?,?)`,
-      [
-        d.apellidoPaterno.trim(),
-        d.apellidoMaterno.trim(),
-        d.primerNombre.trim(),
-        d.segundoNombre || null,
-        d.email.trim().toLowerCase(),
-        d.telefono || null,
-        d.categoria,
-        d.categoria === 'Estudiante' ? d.programa! : null
-      ]
-    );
-    const id = (r as any).insertId;
-    const [row] = await pool.query("SELECT * FROM participantes WHERE id = ?", [id]);
-    res.json(ok((row as any[])[0]));
-  } catch (err) { next(err); }
-});
+// GET /api/participantes/check-email - Verificar si email está disponible
+router.get('/check-email', asyncHandler(async (req: Request, res: Response) => {
+  const email = req.query.email as string;
+  
+  if (!email) {
+    return res.status(400).json(createErrorResponse('Email es requerido'));
+  }
 
-/** GET /api/participantes?email=... */
-participantes.get('/', async (req, res, next) => {
-  try {
-    const email = String(req.query.email || '').toLowerCase();
-    if (!email) return res.status(400).json(fail('Email requerido'));
-    const [rows] = await pool.query("SELECT * FROM participantes WHERE email = ?", [email]);
-    if (!(rows as any[]).length) return res.status(404).json(fail('No encontrado'));
-    res.json((rows as any[])[0]); // FE de Workshop/Asistencia esperan objeto directo
-  } catch (err) { next(err); }
-});
+  const existingParticipante = await participanteService.getParticipanteByEmail(email);
+  const unique = !existingParticipante;
+  
+  res.json(createApiResponse({ unique, email }));
+}));
 
-/** GET /api/participantes/check-email?email=... */
-participantes.get('/check-email', async (req, res, next) => {
-  try {
-    const email = String(req.query.email || '').toLowerCase();
-    if (!email) return res.json({ unique: false });
-    const [rows] = await pool.query("SELECT 1 FROM participantes WHERE email = ? LIMIT 1", [email]);
-    const unique = (rows as any[]).length === 0;
-    res.json({ unique });
-  } catch (err) { next(err); }
-});
+// GET /api/participantes/email/:email - Obtener participante por email
+router.get('/email/:email', asyncHandler(async (req: Request, res: Response) => {
+  const email = req.params.email;
+  const participante = await participanteService.getParticipanteByEmail(email);
+  
+  if (!participante) {
+    return res.status(404).json(createErrorResponse('Participante no encontrado'));
+  }
 
-/** POST /api/participantes/brazalete { email, brazalete } */
-participantes.post('/brazalete', async (req, res, next) => {
-  try {
-    const parse = asignarBrazaleteSchema.safeParse(req.body);
-    if (!parse.success) return res.status(422).json(fail('Datos inválidos', 'VALIDATION_ERROR', undefined, parse.error.issues));
-    const { email, brazalete } = parse.data;
+  res.json(createApiResponse(participante));
+}));
 
-    const conn = await pool.getConnection();
-    try {
-      await conn.beginTransaction();
-      const [rows] = await conn.query("SELECT id, brazalete FROM participantes WHERE email = ? FOR UPDATE", [email.toLowerCase()]);
-      if (!(rows as any[]).length) {
-        await conn.rollback(); conn.release();
-        return res.status(404).json(fail('Participante no encontrado'));
-      }
-      const p = (rows as any[])[0];
-      if (p.brazalete) {
-        await conn.rollback(); conn.release();
-        return res.status(409).json(fail('Ya tiene brazalete asignado', 'BRAZALETE_YA_ASIGNADO'));
-      }
-      // Verificar disponibilidad del brazalete
-      const [b] = await conn.query("SELECT 1 FROM participantes WHERE brazalete = ? LIMIT 1", [brazalete]);
-      if ((b as any[]).length) {
-        await conn.rollback(); conn.release();
-        return res.status(409).json(fail('Brazalete en uso', 'BRAZALETE_OCUPADO', 'brazalete'));
-      }
-      await conn.query("UPDATE participantes SET brazalete = ? WHERE id = ?", [brazalete, p.id]);
-      await conn.commit(); conn.release();
-      res.json(ok({ email, brazalete }));
-    } catch (e) {
-      await conn.rollback(); conn.release(); throw e;
-    }
-  } catch (err) { next(err); }
-});
+// GET /api/participantes/:id - Obtener participante por ID
+router.get('/:id', asyncHandler(async (req: Request, res: Response) => {
+  const id = parseInt(req.params.id);
+  if (isNaN(id)) {
+    return res.status(400).json(createErrorResponse('ID inválido'));
+  }
 
-/** PATCH /api/participantes/asignar-brazalete { email, brazalete } */
-participantes.patch('/asignar-brazalete', async (req, res, next) => {
-  try {
-    const parse = asignarBrazaleteSchema.safeParse(req.body);
-    if (!parse.success) return res.status(422).json(fail('Datos inválidos', 'VALIDATION_ERROR', undefined, parse.error.issues));
-    const { email, brazalete } = parse.data;
+  const participante = await participanteService.getParticipanteById(id);
+  if (!participante) {
+    return res.status(404).json(createErrorResponse('Participante no encontrado'));
+  }
 
-    const conn = await pool.getConnection();
-    try {
-      await conn.beginTransaction();
-      const [rows] = await conn.query("SELECT id, brazalete FROM participantes WHERE email = ? FOR UPDATE", [email.toLowerCase()]);
-      if (!(rows as any[]).length) {
-        await conn.rollback(); conn.release();
-        return res.status(404).json(fail('Participante no encontrado'));
-      }
-      const p = (rows as any[])[0];
-      if (p.brazalete) {
-        await conn.rollback(); conn.release();
-        return res.status(409).json(fail('Ya tiene brazalete asignado', 'BRAZALETE_YA_ASIGNADO'));
-      }
-      // Verificar disponibilidad del brazalete
-      const [b] = await conn.query("SELECT 1 FROM participantes WHERE brazalete = ? LIMIT 1", [brazalete]);
-      if ((b as any[]).length) {
-        await conn.rollback(); conn.release();
-        return res.status(409).json(fail('Brazalete en uso', 'BRAZALETE_OCUPADO', 'brazalete'));
-      }
-      await conn.query("UPDATE participantes SET brazalete = ? WHERE id = ?", [brazalete, p.id]);
-      await conn.commit(); conn.release();
-      res.json(ok({ email, brazalete }));
-    } catch (e) {
-      await conn.rollback(); conn.release(); throw e;
-    }
-  } catch (err) { next(err); }
-});
+  res.json(createApiResponse(participante));
+}));
+
+// POST /api/participantes - Crear nuevo participante
+router.post('/', asyncHandler(async (req: Request, res: Response) => {
+  const data: ParticipanteCreateDTO = req.body;
+  
+  const participante = await participanteService.createParticipante(data);
+  res.status(201).json(createApiResponse(participante, 'Participante creado exitosamente'));
+}));
+
+// PUT /api/participantes/:id - Actualizar participante
+router.put('/:id', asyncHandler(async (req: Request, res: Response) => {
+  const id = parseInt(req.params.id);
+  if (isNaN(id)) {
+    return res.status(400).json(createErrorResponse('ID inválido'));
+  }
+
+  const data: ParticipanteUpdateDTO = req.body;
+  const participante = await participanteService.updateParticipante(id, data);
+  
+  res.json(createApiResponse(participante, 'Participante actualizado exitosamente'));
+}));
+
+// POST /api/participantes/brazalete - Asignar brazalete a participante
+router.post('/brazalete', asyncHandler(async (req: Request, res: Response) => {
+  const { email, brazalete } = req.body;
+  
+  if (!email || !brazalete) {
+    return res.status(400).json(createErrorResponse('email y brazalete son requeridos'));
+  }
+
+  const participante = await participanteService.asignarBrazalete(email, brazalete);
+  res.json(createApiResponse(participante, 'Brazalete asignado exitosamente'));
+}));
+
+// DELETE /api/participantes/:id - Eliminar participante
+router.delete('/:id', asyncHandler(async (req: Request, res: Response) => {
+  const id = parseInt(req.params.id);
+  if (isNaN(id)) {
+    return res.status(400).json(createErrorResponse('ID inválido'));
+  }
+
+  const success = await participanteService.deleteParticipante(id);
+  if (!success) {
+    return res.status(404).json(createErrorResponse('Participante no encontrado'));
+  }
+
+  res.json(createApiResponse(null, 'Participante eliminado exitosamente'));
+}));
+
+export { router as participantesRoutes };

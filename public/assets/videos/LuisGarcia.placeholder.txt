@@ -1,0 +1,11 @@
+Este es un archivo placeholder para el video de Luis García.
+Para que el carousel funcione correctamente, reemplaza este archivo con el video real en formato MP4.
+
+Nombre del archivo requerido: LuisGarcia.mp4
+Formato recomendado: MP4 (H.264)
+Resolución recomendada: 1920x1080 o 1280x720
+Duración recomendada: 2-5 minutos
+Tamaño máximo recomendado: 50MB
+
+Título en el carousel: "Testimonio de Luis García"
+Descripción: "Experiencia profesional en el sector industrial"

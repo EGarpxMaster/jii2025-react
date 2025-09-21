@@ -2,7 +2,7 @@
 
 /**
  * Genera la ruta correcta para assets (imágenes, archivos) 
- * dependiendo del entorno (desarrollo vs GitHub Pages)
+ * dependiendo del entorno (desarrollo vs producción)
  */
 export const getAssetPath = (path: string): string => {
   // Remover slash inicial si existe
@@ -13,8 +13,9 @@ export const getAssetPath = (path: string): string => {
     return `/${cleanPath}`;
   }
   
-  // En producción (GitHub Pages), incluir el basename del repositorio
-  const basename = '/jii2025-react';
+  // En producción, verificar si es para GitHub Pages o servidor propio
+  const isGitHubPages = import.meta.env.VITE_DEPLOY_TARGET === 'github';
+  const basename = isGitHubPages ? '/jii2025-react' : '';
   return `${basename}/${cleanPath}`;
 };
 

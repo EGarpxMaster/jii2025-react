@@ -35,6 +35,8 @@ interface StaffPageProps {
 const StaffPage: React.FC<StaffPageProps> = ({ className = '' }) => {
   const [selectedDepartment, setSelectedDepartment] = useState<string>('all');
   const [selectedMember, setSelectedMember] = useState<StaffMember | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [imageLoadStates, setImageLoadStates] = useState<Record<number, boolean>>({});
 
  // Datos de ejemplo del staff con posiciones actualizadas
 const staffMembers: StaffMember[] = [
@@ -73,10 +75,10 @@ const staffMembers: StaffMember[] = [
     name: "Mtra. Gaby Betsaida Batun Chay",
     position: "Staff",
     department: "Comité",
-    image: "/assets/images/staff/comite/usuario.png",
+    image: "/assets/images/staff/comite/GabyBatun.jpeg",
     email: "gbatun@ucaribe.edu.mx",
-    bio: "Doctora en Educación con más de 15 años de experiencia en gestión académica y desarrollo curricular.",
-    specialties: ["Gestión Académica", "Desarrollo Curricular", "Liderazgo Educativo"]
+    bio: "Ingeniera Industrial con experiencia en gestión de la calidad y control interno, enfocada en el diseño, implementación y mejora de sistemas de gestión bajo estándares internacionales (ISO 9001, ISO 21001) y el modelo COSO. Actualmente se desempeña en la Universidad del Caribe, en el área de Gestión de la Calidad, donde participa en proyectos estratégicos para la integración del Sistema de Gestión de la Calidad con el Sistema de Control Interno Institucional, alineando lineamientos federales y estatales. En el ámbito académico, es docente de Ingeniería Industrial, con experiencia en la enseñanza de asignaturas relacionadas con la planeación, organización y mejora de procesos productivos, la optimización de recursos y la gestión de sistemas de manufactura.",
+    specialties: ["Gestión de Calidad", "Control Interno", "Mejora de Procesos", "Planeación Estratégica", "Análisis de Riesgos"]
   },
   {
     id: 5,
@@ -304,7 +306,7 @@ const staffMembers: StaffMember[] = [
     position: "Comida/Infraestrutura",
     department: "Staff",
     image: "/assets/images/staff/EdgarMay.jpg",
-    email: "sofia.mendoza@universidad.edu",
+    email: "240300889@ucaribe.edu.mx",
     bio: "Estudiante universitario que se ha esforzado al máximo en cada etapa de su formación. Durante el último año ha trabajado con dedicación y constancia, lo que le ha permitido obtener muy altas calificaciones y aprovechar al máximo cada aprendizaje. Cada materia y cada reto académico han sido una oportunidad para crecer, no solo en conocimientos, sino también en disciplina y compromiso.",
     specialties: ["Matemáticas", "Responsable", "Organización", "Disciplina"]
   },
@@ -388,6 +390,47 @@ const staffMembers: StaffMember[] = [
     ? staffMembers 
     : staffMembers.filter(member => member.department === selectedDepartment);
 
+  // Simular carga de datos
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1200);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Timeout para imágenes que no cargan
+  React.useEffect(() => {
+    if (!isLoading) {
+      const imageTimeout = setTimeout(() => {
+        // Marcar todas las imágenes como cargadas después de 2 segundos como fallback
+        const allLoaded = filteredMembers.reduce((acc, member) => {
+          acc[member.id] = true;
+          return acc;
+        }, {} as Record<number, boolean>);
+        setImageLoadStates(prev => ({ ...prev, ...allLoaded }));
+      }, 2000);
+      
+      return () => clearTimeout(imageTimeout);
+    }
+  }, [isLoading, filteredMembers]);
+
+  // Manejar carga de imágenes individuales
+  const handleImageLoad = React.useCallback((memberId: number) => {
+    setImageLoadStates(prev => ({ ...prev, [memberId]: true }));
+  }, []);
+
+  // Componente Skeleton para las tarjetas
+  const SkeletonCard = () => (
+    <div className="staff-card">
+      <div className="staff-image skeleton"></div>
+      <div className="staff-info">
+        <div className="skeleton-text" style={{ height: "20px", marginBottom: "8px", width: "80%" }}></div>
+        <div className="skeleton-text" style={{ height: "16px", marginBottom: "6px", width: "60%" }}></div>
+        <div className="skeleton-text" style={{ height: "14px", width: "40%" }}></div>
+      </div>
+    </div>
+  );
+
   const openModal = (member: StaffMember) => {
     setSelectedMember(member);
     document.body.style.overflow = 'hidden';
@@ -424,9 +467,8 @@ const staffMembers: StaffMember[] = [
             {/* Filtros por departamento */}
             <div className="staff-filters">
               {departments.map(dept => (
-                <AnimatedButtonSecondary>
+                <AnimatedButtonSecondary key={dept} onClick={() => setSelectedDepartment(dept)}>
                 <button
-                  key={dept}
                   className={`filter-btn ${selectedDepartment === dept ? 'active' : ''}`}
                   onClick={() => setSelectedDepartment(dept)}
                 >
@@ -438,33 +480,46 @@ const staffMembers: StaffMember[] = [
             {/* Grid de staff */}
             <ScaleContainer>
             <div className="staff-grid">
-              {filteredMembers.map(member => (
-                <div 
-                  key={member.id}
-                  className="staff-card"
-                  onClick={() => openModal(member)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      openModal(member);
-                    }
-                  }}
-                  tabIndex={0}
-                  role="button"
-                  aria-label={`Ver perfil de ${member.name}`}
-                >
-                  <img 
-                    src={member.image} 
-                    alt={member.name}
-                    className="staff-image"
-                  />
-                  <div className="staff-info">
-                    <h3 className="staff-name">{member.name}</h3>
-                    <p className="staff-position">{member.position}</p>
-                    <p className="staff-department">{member.department}</p>
+              {isLoading ? (
+                // Mostrar skeleton cards mientras carga
+                Array.from({ length: 8 }).map((_, index) => (
+                  <SkeletonCard key={index} />
+                ))
+              ) : (
+                filteredMembers.map(member => (
+                  <div 
+                    key={member.id}
+                    className="staff-card"
+                    onClick={() => openModal(member)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        openModal(member);
+                      }
+                    }}
+                    tabIndex={0}
+                    role="button"
+                    aria-label={`Ver perfil de ${member.name}`}
+                  >
+                    <div className="staff-image-container">
+                      <div className={`staff-image skeleton ${imageLoadStates[member.id] ? 'hidden' : ''}`}></div>
+                      <img 
+                        src={member.image} 
+                        alt={member.name}
+                        className={`staff-image ${imageLoadStates[member.id] ? 'loaded' : ''}`}
+                        loading="eager" // Cambiar a eager para que cargue inmediatamente
+                        onLoad={() => handleImageLoad(member.id)}
+                        onError={() => handleImageLoad(member.id)}
+                      />
+                    </div>
+                    <div className="staff-info">
+                      <h3 className="staff-name">{member.name}</h3>
+                      <p className="staff-position">{member.position}</p>
+                      <p className="staff-department">{member.department}</p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))
+              )}
             </div>
             </ScaleContainer>
           </div>
@@ -496,11 +551,14 @@ const staffMembers: StaffMember[] = [
               
               <div className="staff-modal-body">
                 <div className="staff-modal-profile">
-                  <img 
-                    src={selectedMember.image} 
-                    alt={selectedMember.name}
-                    className="staff-modal-image"
-                  />
+                  <div className="staff-modal-image-container">
+                    <img 
+                      src={selectedMember.image} 
+                      alt={selectedMember.name}
+                      className="staff-modal-image"
+                      loading="lazy"
+                    />
+                  </div>
                   <div>
                     <h3 className="staff-modal-name">{selectedMember.name}</h3>
                     <p className="staff-modal-position">{selectedMember.position}</p>

@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import CupoBadge from "../common/CupoBadge";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
 const API_BASE = "/api";
@@ -16,6 +17,42 @@ const normalizeParticipante = (data: any) => ({
   categoria: data.categoria,
   programa: data.programa || null,
 });
+
+// Normalizador para workshops provenientes de v_workshop_stats (snake_case)
+const normalizeWorkshop = (ws: any): Actividad => {
+  // Manejar fechas que pueden venir como strings MySQL ('YYYY-MM-DD HH:mm:ss') u objetos
+  const fechaInicio = ws.fechaInicio ?? ws.fecha_inicio;
+  const fechaFin = ws.fechaFin ?? ws.fecha_fin;
+  
+  // Función helper para convertir fecha MySQL a ISO
+  const convertToISO = (fecha: any): string => {
+    if (!fecha) return new Date().toISOString();
+    
+    if (typeof fecha === 'string') {
+      // Si es string MySQL format: '2025-09-25 16:00:00' -> ISO
+      return new Date(fecha.replace(' ', 'T') + 'Z').toISOString();
+    }
+    
+    // Si es objeto Date o cualquier otra cosa, intentar convertir
+    return new Date(fecha).toISOString();
+  };
+  
+  return {
+    id: ws.id,
+    titulo: ws.titulo,
+    ponente: ws.ponente ?? null,
+    tipo: 'Workshop',
+    fechaInicio: convertToISO(fechaInicio),
+    fechaFin: convertToISO(fechaFin),
+    lugar: ws.lugar ?? null,
+    cupoMaximo: ws.cupoMaximo ?? ws.cupo_maximo,
+    inscritos: ws.inscritos ?? ws.ocupados ?? 0,
+    disponibles: ws.disponibles ?? ws.cupo_disponible,
+    porcentajeOcupado: ws.porcentajeOcupado ?? ws.porcentaje_ocupado,
+    colorCupo: ws.colorCupo ?? ws.color_cupo,
+    estadoCupo: ws.estadoCupo ?? ws.estado_cupo,
+  };
+};
 
 type Participante = {
   id: number;
@@ -47,8 +84,11 @@ type Actividad = {
   fechaFin: string;
   lugar?: string | null;
   cupoMaximo?: number;
+  inscritos?: number;
   ocupados?: number;
   disponibles?: number;
+  porcentajeOcupado?: number;
+  colorCupo?: 'green' | 'yellow' | 'red';
   estadoCupo?: "DISPONIBLE" | "CASI_LLENO" | "LLENO" | "INACTIVA";
 };
 
@@ -82,31 +122,145 @@ const WorkshopComponent: React.FC<WorkshopComponentProps> = ({
   const [workshops, setWorkshops] = useState<Actividad[]>([]);
   const [inscripciones, setInscripciones] = useState<Record<number, Inscripcion>>({});
   const [loadingBtn, setLoadingBtn] = useState<Record<number, boolean>>({});
+  const [loadingWorkshops, setLoadingWorkshops] = useState(true);
 
   const placeholder = useMemo(() => "Correo electrónico", []);
 
+  // Función mejorada para formatear fechas desde la BD
+  function formatearFechaDesdeDB(fechaString: any): string {
+    console.log('🔍 formatearFechaDesdeDB llamada con:', fechaString, 'tipo:', typeof fechaString);
+    
+    // Primero, manejar casos nulos/undefined
+    if (!fechaString) {
+      console.log('❌ Fecha vacía, retornando fallback');
+      return "Fecha no disponible";
+    }
+
+    // Si es un objeto vacío, retornar mensaje específico (esto ya no debería pasar)
+    if (typeof fechaString === 'object' && fechaString !== null && Object.keys(fechaString).length === 0) {
+      console.error('❌ Objeto vacío recibido como fecha - problema en el servidor');
+      return "Fecha por confirmar";
+    }
+
+    try {
+      let fecha: Date;
+      
+      // Ahora que el servidor está arreglado, debería ser principalmente strings
+      if (typeof fechaString === 'string') {
+        console.log('✅ Es un string (esperado), convirtiendo a Date');
+        fecha = new Date(fechaString);
+      }
+      // Si ya es un objeto Date, usarlo directamente
+      else if (fechaString instanceof Date) {
+        console.log('✅ Es un objeto Date');
+        fecha = fechaString;
+      } 
+      // Si es un número (timestamp), convertir a Date
+      else if (typeof fechaString === 'number') {
+        console.log('✅ Es un número, convirtiendo a Date');
+        fecha = new Date(fechaString);
+      }
+      // Si es un objeto, intentar extraer la fecha (fallback para compatibilidad)
+      else if (typeof fechaString === 'object' && fechaString !== null) {
+        console.warn('⚠️ Objeto recibido, esto no debería pasar con el servidor arreglado');
+        console.log('🔍 Propiedades:', Object.keys(fechaString));
+        
+        // Intentar diferentes propiedades comunes para fechas
+        let possibleDate = fechaString.fechaInicio || 
+                          fechaString.fecha_inicio ||
+                          fechaString.fecha || 
+                          fechaString.date || 
+                          fechaString.value ||
+                          fechaString._value ||
+                          fechaString.iso ||
+                          fechaString.$date ||
+                          fechaString.datetime;
+        
+        if (!possibleDate) {
+          console.error('❌ No se pudo extraer fecha del objeto:', fechaString);
+          return "Fecha no disponible";
+        }
+        
+        fecha = new Date(possibleDate);
+      }
+      // Fallback: intentar convertir directamente
+      else {
+        console.log('🔍 Tipo desconocido, intentando conversión directa');
+        fecha = new Date(fechaString);
+      }
+      
+      // Verificar que la fecha sea válida
+      if (isNaN(fecha.getTime())) {
+        console.warn(`❌ Fecha inválida después de conversión:`, fechaString);
+        return "Fecha inválida";
+      }
+
+      // Formatear la fecha para mostrar en la interfaz
+      const formatted = fecha.toLocaleString("es-MX", {
+        weekday: "long",
+        year: "numeric",
+        month: "long", 
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true // Mostrar AM/PM
+      });
+      
+      console.log('✅ Fecha formateada exitosamente:', formatted);
+      return formatted;
+      
+    } catch (error) {
+      console.error(`❌ Error formateando fecha:`, fechaString, error);
+      return "Error en fecha";
+    }
+  }
+
+  // Cargar workshops desde la BD
   useEffect(() => {
     const cargarWorkshops = async () => {
+      setLoadingWorkshops(true);
       try {
-        const res = await fetch(`${API_BASE}/actividades?ventana=workshops`, { credentials: "include" });
+        const res = await fetch(`${API_BASE}/actividades?ventana=workshops`, { 
+          credentials: "include" 
+        });
         
         if (res.ok) {
-          const ws: Actividad[] = await res.json();
+          const response = await res.json();
+          console.log('🔍 API Response completa:', response);
+          // La API devuelve {message, data, total}, necesitamos el array data
+          const workshopsRaw = response.data || response;
+          const workshopsData: Actividad[] = Array.isArray(workshopsRaw)
+            ? workshopsRaw.map(normalizeWorkshop)
+            : [];
+          console.log('🔍 Workshops data extraída:', workshopsData);
           
-          setWorkshops(ws);
+          if (workshopsData.length > 0) {
+            console.log('🔍 Primer workshop completo:', JSON.stringify(workshopsData[0], null, 2));
+            console.log('🔍 fechaInicio del primer workshop:', workshopsData[0]?.fechaInicio);
+            console.log('🔍 Tipo de fechaInicio:', typeof workshopsData[0]?.fechaInicio);
+          }
+          
+          // Los workshops ya vienen normalizados con fechas correctas
+          setWorkshops(workshopsData);
         } else {
           const error = await res.text();
-          console.error("Error del servidor:", error);
+          console.error("Error del servidor al cargar workshops:", error);
+          setWorkshops([]); // Asegurar que tenemos un array vacío en caso de error
         }
-      } catch (e) {
-        console.error("Error cargando workshops:", e);
+      } catch (error) {
+        console.error("Error cargando workshops:", error);
+        setWorkshops([]); // Asegurar que tenemos un array vacío en caso de error
+      } finally {
+        setLoadingWorkshops(false);
       }
     };
+
     cargarWorkshops();
   }, []);
 
+  // Búsqueda de participante por email
   useEffect(() => {
-    const value = email.trim();
+    const value = email.trim().toLowerCase();
 
     if (!value) {
       setStatus("idle");
@@ -126,45 +280,69 @@ const WorkshopComponent: React.FC<WorkshopComponentProps> = ({
 
     setStatus("typing");
     setErrorMsg("");
-    const t = setTimeout(async () => {
+    
+    const timer = setTimeout(async () => {
       setStatus("checking");
       try {
-        const resP = await fetch(`${API_BASE}/participantes?email=${encodeURIComponent(value)}`, { credentials: "include" });
+        // Buscar participante
+        const resParticipante = await fetch(
+          `${API_BASE}/participantes/email/${encodeURIComponent(value)}`,
+          { credentials: "include" }
+        );
 
-        if (resP.status === 404) {
+        if (resParticipante.status === 404) {
           setParticipante(null);
           setInscripciones({});
           setStatus("notfound");
           return;
         }
-        if (!resP.ok) {
-          const msg = await resP.text().catch(() => "");
+        
+        if (!resParticipante.ok) {
+          const msg = await resParticipante.text().catch(() => "");
           setStatus("error");
           setErrorMsg(msg || "Error del servidor. Intenta nuevamente.");
           setParticipante(null);
           setInscripciones({});
           return;
         }
-
-        const p: Participante = normalizeParticipante(await resP.json());
-        setParticipante(p);
+        const participantePayload = await resParticipante.json();
+        const participanteData: Participante = normalizeParticipante(
+          participantePayload?.data ?? participantePayload
+        );
+        setParticipante(participanteData);
         setStatus("found");
 
-        const resI = await fetch(`${API_BASE}/workshops/inscripciones?email=${encodeURIComponent(value)}`, { credentials: "include" });
-        if (!resI.ok) {
-          const msg = await resI.text().catch(() => "");
+        // Buscar inscripciones del participante usando su ID (usar variable local para evitar estado stale)
+        const resInscripciones = await fetch(
+          `${API_BASE}/workshops/inscripciones/participante/${participanteData.id}`,
+          { credentials: "include" }
+        );
+
+        if (!resInscripciones.ok) {
+          const msg = await resInscripciones.text().catch(() => "");
           setStatus("error");
           setErrorMsg(msg || "No se pudieron consultar tus inscripciones.");
           setInscripciones({});
           return;
         }
 
-        const arr: Inscripcion[] = await resI.json();
-        const map: Record<number, Inscripcion> = {};
-        arr.forEach((i) => { map[i.actividadId] = i; });
-        setInscripciones(map);
-      } catch (e) {
-        console.error("Error en búsqueda:", e);
+        const inscripcionesResponse = await resInscripciones.json();
+        const inscripcionesArray: any[] = inscripcionesResponse.data || inscripcionesResponse;
+        const inscripcionesMap: Record<number, Inscripcion> = {};
+        inscripcionesArray.forEach((ins) => {
+          const actividadId = ins.actividadId ?? ins.actividad_id;
+          if (typeof actividadId === 'number') {
+            inscripcionesMap[actividadId] = {
+              actividadId,
+              estado: ins.estado,
+              creado: ins.creado,
+            } as Inscripcion;
+          }
+        });
+        setInscripciones(inscripcionesMap);
+
+      } catch (error) {
+        console.error("Error en búsqueda de participante:", error);
         setStatus("error");
         setErrorMsg("Error de red. Verifica tu conexión.");
         setParticipante(null);
@@ -172,13 +350,35 @@ const WorkshopComponent: React.FC<WorkshopComponentProps> = ({
       }
     }, 600);
 
-    return () => clearTimeout(t);
+    return () => clearTimeout(timer);
   }, [email]);
 
+  // Ordenar workshops por fecha (los más próximos primero)
+  // Función auxiliar para obtener timestamp de fecha de manera segura
+  function obtenerTimestamp(fecha: any): number {
+    try {
+      if (fecha instanceof Date) {
+        return fecha.getTime();
+      } else if (typeof fecha === 'string') {
+        return new Date(fecha).getTime();
+      } else if (typeof fecha === 'object' && fecha !== null) {
+        const possibleDate = fecha.fechaInicio || fecha.fecha || fecha.date || fecha.toString();
+        return new Date(possibleDate).getTime();
+      } else {
+        return new Date(fecha).getTime();
+      }
+    } catch (error) {
+      console.error('Error obteniendo timestamp:', fecha, error);
+      return 0; // Fallback para ordenamiento
+    }
+  }
+
   const sortedWorkshops = useMemo(() => {
-    return [...workshops].sort(
-      (a, b) => new Date(a.fechaInicio).getTime() - new Date(b.fechaInicio).getTime()
-    );
+    return [...workshops].sort((a, b) => {
+      const fechaA = obtenerTimestamp(a.fechaInicio);
+      const fechaB = obtenerTimestamp(b.fechaInicio);
+      return fechaA - fechaB;
+    });
   }, [workshops]);
 
   function isLleno(ws: Actividad) {
@@ -187,50 +387,87 @@ const WorkshopComponent: React.FC<WorkshopComponentProps> = ({
     return false;
   }
 
-  function fmtFecha(iso: string) {
+  // Función para recargar inscripciones del participante
+  const recargarInscripciones = async () => {
+    if (!participante) return;
+    
     try {
-      return new Date(iso).toLocaleString("es-MX", {
-        weekday: "long", year: "numeric", month: "long", day: "numeric",
-        hour: "2-digit", minute: "2-digit", timeZone: "America/Cancun",
-      });
-    } catch {
-      return new Date(iso).toLocaleString("es-MX", {
-        weekday: "long", year: "numeric", month: "long", day: "numeric",
-        hour: "2-digit", minute: "2-digit",
-      });
+      const resInscripciones = await fetch(
+        `${API_BASE}/workshops/inscripciones/participante/${participante.id}`, 
+        { credentials: "include" }
+      );
+
+      if (resInscripciones.ok) {
+        const inscripcionesResponse = await resInscripciones.json();
+        const inscripcionesArray: any[] = inscripcionesResponse.data || inscripcionesResponse;
+        const inscripcionesMap: Record<number, Inscripcion> = {};
+        inscripcionesArray.forEach((ins) => {
+          const actividadId = ins.actividadId ?? ins.actividad_id;
+          if (typeof actividadId === 'number') {
+            inscripcionesMap[actividadId] = {
+              actividadId,
+              estado: ins.estado,
+              creado: ins.creado,
+            } as Inscripcion;
+          }
+        });
+        setInscripciones(inscripcionesMap);
+      }
+    } catch (error) {
+      console.error("Error recargando inscripciones:", error);
     }
-  }
+  };
 
   async function inscribirme(actividadId: number) {
     if (!participante) return;
-    setLoadingBtn((s) => ({ ...s, [actividadId]: true }));
+    
+    setLoadingBtn((estado) => ({ ...estado, [actividadId]: true }));
     try {
       const res = await fetch(`${API_BASE}/workshops/inscripciones`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ email: participante.email.trim(), actividadId }),
+        body: JSON.stringify({ 
+          participante_id: participante.id,
+          actividad_id: actividadId
+        }),
       });
 
-      const j = await res.json().catch(() => ({} as any));
+      const respuesta = await res.json().catch(() => ({} as any));
 
       if (res.status === 409 || res.status === 422 || !res.ok) {
-        if (j?.code === 'WS_FUERA_HORARIO') {
-          alert("Fuera de horario de inscripción");
-        } else {
-          alert(j?.error || "No fue posible inscribirte.");
-        }
+        // Extraer mensaje de error de diferentes formatos
+        const err = respuesta?.error;
+        const msg = typeof err === 'string' 
+          ? err 
+          : (err?.message || respuesta?.message || 'No fue posible inscribirte.');
+        alert(msg);
         return;
       }
 
-      const { data } = j.ok ? j : { data: j }; // soporta ambos formateos
-      const nuevo: Inscripcion = (data ?? j) as Inscripcion;
-      setInscripciones((m) => ({ ...m, [actividadId]: nuevo }));
-    } catch (e) {
-      console.error(e);
+      // Recargar workshops para actualizar cupos
+      const resWorkshops = await fetch(`${API_BASE}/actividades?ventana=workshops`, { 
+        credentials: "include" 
+      });
+      if (resWorkshops.ok) {
+        const response = await resWorkshops.json();
+        const workshopsRaw = response.data || response;
+        const workshopsActualizados: Actividad[] = Array.isArray(workshopsRaw)
+          ? workshopsRaw.map(normalizeWorkshop)
+          : [];
+        setWorkshops(workshopsActualizados);
+      }
+
+      // Recargar inscripciones del participante
+      await recargarInscripciones();
+
+      alert("¡Inscripción exitosa!");
+
+    } catch (error) {
+      console.error("Error inscribiendo a workshop:", error);
       alert("Error de red. Inténtalo de nuevo.");
     } finally {
-      setLoadingBtn((s) => ({ ...s, [actividadId]: false }));
+      setLoadingBtn((estado) => ({ ...estado, [actividadId]: false }));
     }
   }
 
@@ -238,30 +475,50 @@ const WorkshopComponent: React.FC<WorkshopComponentProps> = ({
     if (!participante) return;
     if (!confirm("¿Seguro que deseas cancelar tu inscripción?")) return;
 
-    setLoadingBtn((s) => ({ ...s, [actividadId]: true }));
+    setLoadingBtn((estado) => ({ ...estado, [actividadId]: true }));
     try {
-      const res = await fetch(`${API_BASE}/workshops/inscripciones`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ email: participante.email.trim(), actividadId }),
-      });
+      const res = await fetch(
+        `${API_BASE}/workshops/inscripciones/${participante.id}/${actividadId}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        }
+      );
 
-      const j = await res.json().catch(() => ({} as any));
+      const respuesta = await res.json().catch(() => ({} as any));
       if (!res.ok) {
-        alert(j?.error || "No fue posible cancelar.");
+        const err = respuesta?.error;
+        const msg = typeof err === 'string' ? err : (err?.message || respuesta?.message || 'No fue posible cancelar.');
+        alert(msg);
         return;
       }
 
-      setInscripciones((m) => {
-        const { [actividadId]: _omit, ...rest } = m;
-        return rest;
+      setInscripciones((mapa) => {
+        const { [actividadId]: _omitir, ...resto } = mapa;
+        return resto;
       });
-    } catch (e) {
-      console.error(e);
+
+      // Recargar workshops para actualizar cupos
+      const resWorkshops = await fetch(`${API_BASE}/actividades?ventana=workshops`, { 
+        credentials: "include" 
+      });
+      if (resWorkshops.ok) {
+        const response = await resWorkshops.json();
+        const workshopsRaw = response.data || response;
+        const workshopsActualizados: Actividad[] = Array.isArray(workshopsRaw)
+          ? workshopsRaw.map(normalizeWorkshop)
+          : [];
+        setWorkshops(workshopsActualizados);
+      }
+
+      // Recargar inscripciones para reflejar estado
+      await recargarInscripciones();
+
+    } catch (error) {
+      console.error("Error cancelando inscripción:", error);
       alert("Error de red. Inténtalo de nuevo.");
     } finally {
-      setLoadingBtn((s) => ({ ...s, [actividadId]: false }));
+      setLoadingBtn((estado) => ({ ...estado, [actividadId]: false }));
     }
   }
 
@@ -276,7 +533,7 @@ const WorkshopComponent: React.FC<WorkshopComponentProps> = ({
         </div>
 
         <div className="registro-form">
-          {/* Email */}
+          {/* Campo de email */}
           <div className="form-group" style={{ marginBottom: "2rem" }}>
             <label htmlFor="emailLookup" className="form-label">Correo electrónico</label>
             <input
@@ -313,51 +570,62 @@ const WorkshopComponent: React.FC<WorkshopComponentProps> = ({
           )}
 
           {/* Lista de workshops */}
-          {participante && workshops.length > 0 && (
+          {participante && !loadingWorkshops && workshops.length > 0 && (
             <div className="conference-list">
-              {sortedWorkshops.map((ws) => {
-                const insc = inscripciones[ws.id];
-                const cargando = !!loadingBtn[ws.id];
-                const lleno = isLleno(ws);
+              {sortedWorkshops.map((workshop) => {
+                const inscripcion = inscripciones[workshop.id];
+                const cargando = !!loadingBtn[workshop.id];
+                const lleno = isLleno(workshop);
 
-                const cardClasses = ["conference-card", insc ? "is-registered" : ""].join(" ");
+                const cardClasses = ["conference-card", inscripcion ? "is-registered" : ""].join(" ");
 
                 return (
-                  <div key={ws.id} className={cardClasses}>
-                    {insc && (
+                  <div key={workshop.id} className={cardClasses}>
+                    {inscripcion && (
                       <div className="badge-success">
-                        {insc.estado === "inscrito" ? "✓ Inscrito" : "🕒 Lista de espera"}
+                        {inscripcion.estado === "inscrito" ? "✓ Inscrito" : "🕒 Lista de espera"}
                       </div>
                     )}
-                    <h4>{ws.titulo}</h4>
+                    
+                    {/* Badge de cupo en tiempo real */}
+                    {workshop.cupoMaximo && workshop.cupoMaximo > 0 && (
+                      <CupoBadge 
+                        inscritos={workshop.inscritos || workshop.ocupados || 0}
+                        cupoMaximo={workshop.cupoMaximo}
+                        className="cupo-badge--compact"
+                      />
+                    )}
+                    
+                    <h4>{workshop.titulo}</h4>
+                    {workshop.ponente && <p className="ponente">👨‍🏫 {workshop.ponente}</p>}
                     <div className="fecha-lugar">
-                      📅 {fmtFecha(ws.fechaInicio)}
-                      {ws.lugar && <span> • 📍 {ws.lugar}</span>}
+                      📅 {formatearFechaDesdeDB(workshop.fechaInicio)}
+                      {workshop.lugar && <span> • 📍 {workshop.lugar}</span>}
                     </div>
 
-                    {!insc ? (
+                    {!inscripcion ? (
                       <>
                         <button
                           type="button"
-                          onClick={() => inscribirme(ws.id)}
+                          onClick={() => inscribirme(workshop.id)}
                           disabled={cargando}
                           className="submit-button"
                         >
                           {cargando ? "⏳ Procesando..." : (lleno ? "📝 Entrar a lista de espera" : "✅ Inscribirme")}
                         </button>
-                        {typeof ws.disponibles === "number" && (
+                        {typeof workshop.disponibles === "number" && (
                           <small className="email-status">
-                            {ws.disponibles} lugares disponibles
+                            {workshop.disponibles} lugares disponibles
                           </small>
                         )}
-                        {ws.estadoCupo === "LLENO" && (
+                        {workshop.estadoCupo === "LLENO" && (
                           <small className="email-status error">Cupo lleno</small>
                         )}
                       </>
                     ) : (
                       <button
                         type="button"
-                        onClick={() => cancelar(ws.id)}
+                        onClick={() => cancelar(workshop.id)}
                         disabled={cargando}
                         className="submit-button"
                       >
@@ -370,8 +638,17 @@ const WorkshopComponent: React.FC<WorkshopComponentProps> = ({
             </div>
           )}
 
-          {/* Estado inicial */}
-          {((participante && workshops.length === 0) || (!participante && status === "idle")) && (
+          {/* Estado de carga de workshops */}
+          {loadingWorkshops && (
+            <div className="initial-state-message">
+              <div className="icon">⏳</div>
+              <h3>Cargando workshops...</h3>
+              <p>Obteniendo información desde la base de datos.</p>
+            </div>
+          )}
+
+          {/* Estado inicial y cuando no hay workshops */}
+          {!loadingWorkshops && ((participante && workshops.length === 0) || (!participante && status === "idle")) && (
             <div className="initial-state-message">
               {participante ? (
                 <>

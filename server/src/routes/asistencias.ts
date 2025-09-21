@@ -1,114 +1,128 @@
-import { Router } from 'express';
-import { pool } from '../db/pool.js';
-import { asistenciaCreateSchema } from '../schemas/asistencias.js';
-import { ok, fail } from '../utils/reply.js';
-import { limiterAsistencias } from '../middleware/rateLimit.js';
+import { Router, Request, Response } from 'express';
+import { AsistenciaService } from '../services/asistencias.service.js';
+import { asyncHandler } from '../middleware/errors.js';
+import { createApiResponse, createErrorResponse } from '../utils/helpers.js';
+import type { AsistenciaCreateDTO } from '../types/database.js';
 
-export const asistencias = Router();
+const router = Router();
+const asistenciaService = new AsistenciaService();
 
-asistencias.use(limiterAsistencias);
+// POST /api/asistencias - Registrar asistencia (endpoint simplificado para frontend)
+router.post('/', asyncHandler(async (req: Request, res: Response) => {
+  const { email, actividadId } = req.body;
+  
+  if (!email || !actividadId) {
+    return res.status(400).json(createErrorResponse('email y actividadId son requeridos'));
+  }
 
-/** GET /api/asistencias?email=... */
-asistencias.get('/', async (req, res, next) => {
-  try {
-    const email = String(req.query.email || '').toLowerCase();
-    if (!email) return res.status(400).json(fail('Email requerido'));
-    const [pRows] = await pool.query("SELECT id FROM participantes WHERE email = ?", [email]);
-    if (!(pRows as any[]).length) return res.status(404).json(fail('Participante no encontrado'));
-    const pid = (pRows as any[])[0].id;
+  const asistencia = await asistenciaService.registrarAsistenciaPorEmail(email, actividadId);
+  res.status(201).json(createApiResponse(asistencia, 'Asistencia registrada exitosamente'));
+}));
 
-    const [rows] = await pool.query(
-      "SELECT actividad_id AS actividadId, fecha_registro AS creado, modo FROM asistencias WHERE participante_id = ?",
-      [pid]
-    );
-    res.json(rows);
-  } catch (err) { next(err); }
-});
+// POST /api/asistencias/marcar - Marcar asistencia (requiere brazalete y ventana de tiempo)
+router.post('/marcar', asyncHandler(async (req: Request, res: Response) => {
+  const data: AsistenciaCreateDTO = req.body;
+  
+  if (!data.participante_id || !data.actividad_id) {
+    return res.status(400).json(createErrorResponse('participante_id y actividad_id son requeridos'));
+  }
 
-/** POST /api/asistencias { email, actividadId } */
-asistencias.post('/', async (req, res, next) => {
-  try {
-    const parse = asistenciaCreateSchema.safeParse(req.body);
-    if (!parse.success) return res.status(422).json(fail('Datos inválidos','VALIDATION_ERROR', undefined, parse.error.issues));
-    const { email, actividadId } = parse.data;
+  const asistencia = await asistenciaService.marcarAsistencia(data);
+  res.status(201).json(createApiResponse(asistencia, 'Asistencia marcada exitosamente'));
+}));
 
-    const conn = await pool.getConnection();
-    try {
-      await conn.beginTransaction();
+// POST /api/asistencias/registrar - Registrar asistencia (sin restricciones de tiempo)
+router.post('/registrar', asyncHandler(async (req: Request, res: Response) => {
+  const data: AsistenciaCreateDTO = req.body;
+  
+  if (!data.participante_id || !data.actividad_id) {
+    return res.status(400).json(createErrorResponse('participante_id y actividad_id son requeridos'));
+  }
 
-      // participante
-      const [pRows] = await conn.query("SELECT id, brazalete FROM participantes WHERE email = ? FOR UPDATE", [email.toLowerCase()]);
-      if (!(pRows as any[]).length) { await conn.rollback(); conn.release(); return res.status(404).json(fail('Participante no encontrado')); }
-      const participante = (pRows as any[])[0];
-      if (!participante.brazalete) {
-        await conn.rollback(); conn.release();
-        return res.status(400).json(fail('Debe registrar su brazalete antes de marcar asistencia', 'BRAZALETE_REQUERIDO'));
-      }
+  const asistencia = await asistenciaService.registrarAsistencia(data);
+  res.status(201).json(createApiResponse(asistencia, 'Asistencia registrada exitosamente'));
+}));
 
-      // actividad
-      const [aRows] = await conn.query("SELECT * FROM actividades WHERE id = ? FOR UPDATE", [actividadId]);
-      if (!(aRows as any[]).length) { await conn.rollback(); conn.release(); return res.status(404).json(fail('Actividad no encontrada')); }
-      const act = (aRows as any[])[0];
+// GET /api/asistencias/participante/:id - Obtener asistencias de un participante
+router.get('/participante/:id', asyncHandler(async (req: Request, res: Response) => {
+  const participanteId = parseInt(req.params.id);
+  if (isNaN(participanteId)) {
+    return res.status(400).json(createErrorResponse('ID de participante inválido'));
+  }
 
-      // Ventana (-15, +30) desde inicio
-      const [winRows] = await conn.query(
-        `SELECT TIMESTAMPDIFF(
-            MINUTE,
-            a.fecha_inicio,
-            CONVERT_TZ(UTC_TIMESTAMP(), '+00:00', '-05:00')
-        ) AS diff
-        FROM actividades a WHERE a.id = ?`,
-        [actividadId]
-        );
+  const asistencias = await asistenciaService.getAsistenciasByParticipante(participanteId);
+  res.json(createApiResponse(asistencias));
+}));
 
-      const diff = Number((winRows as any[])[0]?.diff ?? 9999);
-      if (diff < -15 || diff > 30) {
-        await conn.rollback(); conn.release();
-        return res.status(403).json(fail('Fuera de horario de marcaje', 'FUERA_DE_HORARIO'));
-      }
+// GET /api/asistencias/actividad/:id - Obtener asistencias de una actividad
+router.get('/actividad/:id', asyncHandler(async (req: Request, res: Response) => {
+  const actividadId = parseInt(req.params.id);
+  if (isNaN(actividadId)) {
+    return res.status(400).json(createErrorResponse('ID de actividad inválido'));
+  }
 
-      // Si es Workshop: debe estar inscrito (no en espera)
-      if (act.tipo_evento === 'Workshop') {
-        const [wRows] = await conn.query(
-          "SELECT 1 FROM inscripciones_workshop WHERE participante_id=? AND actividad_id=? AND estado='inscrito' LIMIT 1",
-          [participante.id, actividadId]
-        );
-        if (!(wRows as any[]).length) {
-          await conn.rollback(); conn.release();
-          return res.status(403).json(fail('Debes estar inscrito en el workshop para marcar asistencia', 'WS_NO_INSCRITO'));
-        }
-      }
+  const asistencias = await asistenciaService.getAsistenciasByActividad(actividadId);
+  res.json(createApiResponse(asistencias));
+}));
 
-      // Para Conferencia/Foro: limitar a cupo_maximo por 'presentes'
-      if (act.tipo_evento === 'Conferencia' || act.tipo_evento === 'Foro') {
-        const [cRows] = await conn.query(
-          "SELECT COUNT(*) AS c FROM asistencias WHERE actividad_id=? AND estado='presente'",
-          [actividadId]
-        );
-        const presentes = Number((cRows as any[])[0]?.c ?? 0);
-        if (presentes >= act.cupo_maximo) {
-          await conn.rollback(); conn.release();
-          return res.status(403).json(fail('Cupo lleno para esta actividad', 'CUPO_LLENO'));
-        }
-      }
+// GET /api/asistencias/estado/:participanteId/:actividadId - Obtener estado de asistencia específica
+router.get('/estado/:participanteId/:actividadId', asyncHandler(async (req: Request, res: Response) => {
+  const participanteId = parseInt(req.params.participanteId);
+  const actividadId = parseInt(req.params.actividadId);
+  
+  if (isNaN(participanteId) || isNaN(actividadId)) {
+    return res.status(400).json(createErrorResponse('IDs inválidos'));
+  }
 
-      // Upsert de asistencia
-      try {
-        await conn.query(
-          "INSERT INTO asistencias (participante_id, actividad_id, estado, modo) VALUES (?,?, 'presente', 'self')",
-          [participante.id, actividadId]
-        );
-      } catch (e: any) {
-        // Duplicado => ya tenía asistencia
-        if (e?.code === 'ER_DUP_ENTRY') {
-          await conn.rollback(); conn.release();
-          return res.status(409).json(fail('Ya tienes registrada la asistencia para esta actividad'));
-        }
-        throw e;
-      }
+  const estado = await asistenciaService.getEstadoAsistencia(participanteId, actividadId);
+  if (!estado) {
+    return res.status(404).json(createErrorResponse('Asistencia no encontrada'));
+  }
 
-      await conn.commit(); conn.release();
-      res.json(ok({ actividadId, creado: new Date().toISOString(), modo: 'self' }));
-    } catch (e) { await conn.rollback(); conn.release(); throw e; }
-  } catch (err) { next(err); }
-});
+  res.json(createApiResponse(estado));
+}));
+
+// GET /api/asistencias/constancia/:participanteId - Obtener asistencias para constancia
+router.get('/constancia/:participanteId', asyncHandler(async (req: Request, res: Response) => {
+  const participanteId = parseInt(req.params.participanteId);
+  if (isNaN(participanteId)) {
+    return res.status(400).json(createErrorResponse('ID de participante inválido'));
+  }
+
+  const asistencias = await asistenciaService.getAsistenciasParaConstancia(participanteId);
+  res.json(createApiResponse(asistencias));
+}));
+
+// GET /api/asistencias/elegibilidad/:participanteId - Verificar elegibilidad para constancia
+router.get('/elegibilidad/:participanteId', asyncHandler(async (req: Request, res: Response) => {
+  const participanteId = parseInt(req.params.participanteId);
+  if (isNaN(participanteId)) {
+    return res.status(400).json(createErrorResponse('ID de participante inválido'));
+  }
+
+  const elegibilidad = await asistenciaService.verificarElegibilidadConstancia(participanteId);
+  res.json(createApiResponse(elegibilidad));
+}));
+
+// GET /api/asistencias/stats - Obtener estadísticas de asistencias
+router.get('/stats', asyncHandler(async (req: Request, res: Response) => {
+  const stats = await asistenciaService.getAsistenciasStats();
+  res.json(createApiResponse(stats));
+}));
+
+// GET /api/asistencias/:id - Obtener asistencia por ID
+router.get('/:id', asyncHandler(async (req: Request, res: Response) => {
+  const id = parseInt(req.params.id);
+  if (isNaN(id)) {
+    return res.status(400).json(createErrorResponse('ID inválido'));
+  }
+
+  const asistencia = await asistenciaService.getAsistenciaById(id);
+  if (!asistencia) {
+    return res.status(404).json(createErrorResponse('Asistencia no encontrada'));
+  }
+
+  res.json(createApiResponse(asistencia));
+}));
+
+export { router as asistenciasRoutes };

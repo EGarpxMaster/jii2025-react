@@ -11,8 +11,9 @@ import Navbar from "./components/navbar/navbar";
 import Footer from './components/footer/footer';
 import Galeria from './pages/historia/GaleriaCompleta';
 
-// Configuración para GitHub Pages
-const basename = import.meta.env.PROD ? '/jii2025-react' : '';
+// Configuración para deployment
+const isGitHubPages = import.meta.env.VITE_DEPLOY_TARGET === 'github';
+const basename = import.meta.env.PROD && isGitHubPages ? '/jii2025-react' : '';
 
 function App() {
   return (

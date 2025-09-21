@@ -1,90 +1,133 @@
-import { Router } from 'express';
-import PDFDocument from 'pdfkit';
-import { pool } from '../db/pool.js';
-import { fail } from '../utils/reply.js';
+import { Router, Request, Response } from 'express';
+import { ConstanciaService } from '../services/constancias.service.js';
+import { asyncHandler } from '../middleware/errors.js';
+import { createApiResponse, createErrorResponse } from '../utils/helpers.js';
 
-export const constancias = Router();
+const router = Router();
+const constanciaService = new ConstanciaService();
 
-/** GET /api/constancias/general?email=...  (>=2 presentes en C/F/W) */
-constancias.get('/general', async (req, res, next) => {
+// GET /api/constancias/test-db - Endpoint temporal para verificar la base de datos
+router.get('/test-db', asyncHandler(async (req: Request, res: Response) => {
+  console.log('🧪 Probando conexión a base de datos...');
+  
   try {
-    const email = String(req.query.email || '').toLowerCase();
-    if (!email) return res.status(400).json(fail('Email requerido'));
-    const [pRows] = await pool.query("SELECT * FROM participantes WHERE email = ?", [email]);
-    if (!(pRows as any[]).length) return res.status(404).json(fail('Participante no encontrado'));
-    const p = (pRows as any[])[0];
+    const { executeQuery } = await import('../config/database.js');
+    
+    // Verificar que existen participantes
+    const participantes = await executeQuery('SELECT COUNT(*) as total FROM participantes');
+    console.log('📊 Total participantes:', participantes);
+    
+    // Verificar específicamente el email de Leslye
+    const leslye = await executeQuery(
+      'SELECT * FROM participantes WHERE email = ?', 
+      ['lramirez@ucaribe.edu.mx']
+    );
+    console.log('👤 Datos de Leslye:', leslye);
+    
+    res.json({
+      success: true,
+      totalParticipantes: participantes[0],
+      leslyeData: leslye[0] || null,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error: any) {
+    console.error('❌ Error en test-db:', error);
+    res.status(500).json({ error: error.message });
+  }
+}));
 
-    const [aRows] = await pool.query(`
-      SELECT COUNT(*) AS c
-      FROM asistencias s
-      INNER JOIN actividades a ON a.id = s.actividad_id
-      WHERE s.participante_id = ? AND s.estado='presente'
-    `, [p.id]);
-    const total = Number((aRows as any[])[0]?.c ?? 0);
-    if (total < 2) return res.status(403).json(fail('No cumple con el mínimo de asistencias (2)', 'REQUISITOS_INSUFICIENTES'));
+// GET /api/constancias/verificar?email=xxx - Verificar participante por email
+router.get('/verificar', asyncHandler(async (req: Request, res: Response) => {
+  console.log('🔍 Ruta /verificar llamada con query:', req.query);
+  
+  const { email } = req.query;
+  
+  if (!email || typeof email !== 'string') {
+    console.log('❌ Email no válido:', email);
+    return res.status(400).json(createErrorResponse('Email requerido'));
+  }
 
-    const nombre = `${p.primer_nombre} ${p.segundo_nombre ?? ''} ${p.apellido_paterno} ${p.apellido_materno}`.replace(/\s+/g,' ').trim();
-    const filename = `Constancia_Gral_${nombre.replace(/[^A-Za-z0-9]/g,'')}.pdf`;
+  console.log('📧 Verificando email:', email);
 
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `inline; filename="${filename}"`);
-
-    const doc = new PDFDocument({ size: 'A4', margin: 50 });
-    doc.fontSize(20).text('CONSTANCIA DE PARTICIPACIÓN', { align: 'center' });
-    doc.moveDown();
-    doc.fontSize(12).text(`Se otorga la presente constancia a:`, { align: 'center' });
-    doc.moveDown(0.5);
-    doc.fontSize(18).text(nombre, { align: 'center' });
-    doc.moveDown();
-    doc.fontSize(12).text(`Por su participación en la Jornada Académica.`, { align: 'center' });
-    doc.moveDown(2);
-    doc.fontSize(10).text(`Emitida automáticamente.`, { align: 'center' });
-    doc.end();
-    doc.pipe(res);
-  } catch (err) { next(err); }
-});
-
-/** GET /api/constancias/workshop?email=...&actividadId=... (presente en ese workshop) */
-constancias.get('/workshop', async (req, res, next) => {
   try {
-    const email = String(req.query.email || '').toLowerCase();
-    const actividadId = Number(req.query.actividadId || 0);
-    if (!email || !actividadId) return res.status(400).json(fail('Parámetros inválidos'));
+    const resultado = await constanciaService.verificarParticipantePorEmail(email);
+    console.log('✅ Resultado encontrado:', resultado);
+    res.json(resultado); // Devolver directamente sin wrapper de API
+  } catch (error: any) {
+    console.log('❌ Error en verificación:', error.message, error.name);
+    if (error.name === 'NotFoundError') {
+      return res.status(404).json(createErrorResponse('Participante no encontrado'));
+    }
+    throw error;
+  }
+}));
 
-    const [pRows] = await pool.query("SELECT * FROM participantes WHERE email = ?", [email]);
-    if (!(pRows as any[]).length) return res.status(404).json(fail('Participante no encontrado'));
-    const p = (pRows as any[])[0];
+// GET /api/constancias/elegibilidad/:participanteId - Verificar elegibilidad para constancia
+router.get('/elegibilidad/:participanteId', asyncHandler(async (req: Request, res: Response) => {
+  const participanteId = parseInt(req.params.participanteId);
+  if (isNaN(participanteId)) {
+    return res.status(400).json(createErrorResponse('ID de participante inválido'));
+  }
 
-    const [aRows] = await pool.query(`
-      SELECT a.titulo
-      FROM asistencias s
-      INNER JOIN actividades a ON a.id = s.actividad_id
-      WHERE s.participante_id = ? AND s.actividad_id = ? AND s.estado='presente' AND a.tipo_evento='Workshop'
-      LIMIT 1
-    `, [p.id, actividadId]);
-    if (!(aRows as any[]).length) return res.status(403).json(fail('No cumple con asistencia al workshop', 'WS_SIN_ASISTENCIA'));
+  const elegibilidad = await constanciaService.verificarElegibilidad(participanteId);
+  res.json(createApiResponse(elegibilidad));
+}));
 
-    const titulo: string = (aRows as any[])[0].titulo;
-    const nombre = `${p.primer_nombre} ${p.segundo_nombre ?? ''} ${p.apellido_paterno} ${p.apellido_materno}`.replace(/\s+/g,' ').trim();
-    const tipo = `Workshop_${titulo}`.replace(/[^A-Za-z0-9]/g,'');
-    const filename = `Constancia_${tipo}_${nombre.replace(/[^A-Za-z0-9]/g,'')}.pdf`;
+// GET /api/constancias/generar/:participanteId - Generar y descargar constancia PDF
+router.get('/generar/:participanteId', asyncHandler(async (req: Request, res: Response) => {
+  const participanteId = parseInt(req.params.participanteId);
+  if (isNaN(participanteId)) {
+    return res.status(400).json(createErrorResponse('ID de participante inválido'));
+  }
 
+  const pdfBuffer = await constanciaService.generarConstancia(participanteId);
+  
+  const fileName = `constancia_jii2025_${participanteId}_${Date.now()}.pdf`;
+  
+  res.setHeader('Content-Type', 'application/pdf');
+  res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+  res.setHeader('Content-Length', pdfBuffer.length.toString());
+  
+  res.send(pdfBuffer);
+}));
+
+// GET /api/constancias/generar-por-email?email=xxx - Generar constancia por email
+router.get('/generar-por-email', asyncHandler(async (req: Request, res: Response) => {
+  const { email } = req.query;
+  
+  if (!email || typeof email !== 'string') {
+    return res.status(400).json(createErrorResponse('Email requerido'));
+  }
+
+  try {
+    // Primero verificar el participante
+    const verificacion = await constanciaService.verificarParticipantePorEmail(email);
+    
+    // Generar constancia usando el ID del participante
+    const pdfBuffer = await constanciaService.generarConstancia(verificacion.participante.id);
+    
+    const fileName = `constancia_jii2025_${verificacion.participante.id}_${Date.now()}.pdf`;
+    
     res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `inline; filename="${filename}"`);
+    res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+    res.setHeader('Content-Length', pdfBuffer.length.toString());
+    
+    res.send(pdfBuffer);
+  } catch (error: any) {
+    if (error.name === 'NotFoundError') {
+      return res.status(404).json(createErrorResponse('Participante no encontrado'));
+    }
+    if (error.name === 'BusinessLogicError') {
+      return res.status(400).json(createErrorResponse(error.message));
+    }
+    throw error;
+  }
+}));
 
-    const doc = new PDFDocument({ size: 'A4', margin: 50 });
-    doc.fontSize(20).text('CONSTANCIA DE WORKSHOP', { align: 'center' });
-    doc.moveDown();
-    doc.fontSize(12).text(`Se otorga la presente constancia a:`, { align: 'center' });
-    doc.moveDown(0.5);
-    doc.fontSize(18).text(nombre, { align: 'center' });
-    doc.moveDown();
-    doc.fontSize(12).text(`Por su participación en el workshop:`, { align: 'center' });
-    doc.moveDown(0.5);
-    doc.fontSize(14).text(titulo, { align: 'center' });
-    doc.moveDown(2);
-    doc.fontSize(10).text(`Emitida automáticamente.`, { align: 'center' });
-    doc.end();
-    doc.pipe(res);
-  } catch (err) { next(err); }
-});
+// GET /api/constancias/stats - Obtener estadísticas de constancias
+router.get('/stats', asyncHandler(async (req: Request, res: Response) => {
+  const stats = await constanciaService.getConstanciasStats();
+  res.json(createApiResponse(stats));
+}));
+
+export { router as constanciasRoutes };

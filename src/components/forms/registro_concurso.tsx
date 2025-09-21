@@ -1,11 +1,21 @@
 import React, { useState, useCallback, useEffect } from "react";
 
-const API_URL = "/api/equipos";
+const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:3001";
+const API_URL = `${API_BASE}/api/equipos`;
 
 type FormData = {
   nombreEquipo: string;
+  estadoId: string;
   emailCapitan: string;
   emailsMiembros: string[];
+};
+
+type EstadoMexico = {
+  id: number;
+  nombre: string;
+  codigo: string;
+  region: string;
+  disponible: boolean;
 };
 
 type ParticipanteInfo = {
@@ -33,6 +43,7 @@ const RegistroConcursoComponent: React.FC<RegistroConcursoProps> = ({
 }) => {
   const [data, setData] = useState<FormData>({
     nombreEquipo: "",
+    estadoId: "",
     emailCapitan: "",
     emailsMiembros: ["", "", "", "", ""],
   });
@@ -42,8 +53,13 @@ const RegistroConcursoComponent: React.FC<RegistroConcursoProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
+  // Variables comentadas - ya no se usan con auto-naming
+  // const [equipoNameStatus, setEquipoNameStatus] =
+  //   useState<"idle" | "checking" | "available" | "taken">("idle");
   const [equipoNameStatus, setEquipoNameStatus] =
     useState<"idle" | "checking" | "available" | "taken">("idle");
+  const [estadosDisponibles, setEstadosDisponibles] = useState<EstadoMexico[]>([]);
+  const [loadingEstados, setLoadingEstados] = useState(false);
   const [participantStatuses, setParticipantStatuses] = useState<
     Record<string, ParticipantStatus>
   >({});
@@ -53,28 +69,51 @@ const RegistroConcursoComponent: React.FC<RegistroConcursoProps> = ({
 
   // Banner de ventana
   const ventanaTexto =
-    "Registro abierto del 19/09 09:00 al 20/09 23:59 (hora Cancún).";
+    "Registro abierto del 22/09 09:00 al 23/09 23:59 (hora Cancún). ¡Elige tu estado de México!";
 
-  const checkEquipoName = useCallback(async (nombre: string) => {
-    if (!nombre.trim()) {
-      setEquipoNameStatus("idle");
-      return;
-    }
-    setEquipoNameStatus("checking");
+  // Cargar estados disponibles
+  const loadEstadosDisponibles = useCallback(async () => {
+    setLoadingEstados(true);
     try {
-      const response = await fetch(
-        `${API_URL}/check-name?nombre=${encodeURIComponent(nombre)}`
-      );
-      const result = await response.json();
+      const response = await fetch(`${API_BASE}/api/estados-disponibles`);
       if (response.ok) {
-        setEquipoNameStatus(result.available ? "available" : "taken");
-      } else {
-        setEquipoNameStatus("idle");
+        const result = await response.json();
+        // Si viene con wrapper de API, extraer los datos
+        const estados = result.data || result;
+        setEstadosDisponibles(estados);
       }
-    } catch {
-      setEquipoNameStatus("idle");
+    } catch (error) {
+      console.error('Error cargando estados:', error);
+    } finally {
+      setLoadingEstados(false);
     }
   }, []);
+
+  useEffect(() => {
+    loadEstadosDisponibles();
+  }, [loadEstadosDisponibles]);
+
+  // Función comentada - ya no necesaria con auto-naming
+  // const checkEquipoName = useCallback(async (nombre: string) => {
+  //   if (!nombre.trim()) {
+  //     setEquipoNameStatus("idle");
+  //     return;
+  //   }
+  //   setEquipoNameStatus("checking");
+  //   try {
+  //     const response = await fetch(
+  //       `${API_URL}/check-name?nombre=${encodeURIComponent(nombre)}`
+  //     );
+  //     const result = await response.json();
+  //     if (response.ok) {
+  //       setEquipoNameStatus(result.available ? "available" : "taken");
+  //     } else {
+  //       setEquipoNameStatus("idle");
+  //     }
+  //   } catch {
+  //     setEquipoNameStatus("idle");
+  //   }
+  // }, []);
 
   const checkParticipant = useCallback(async (email: string, field: string) => {
     if (!email.trim()) {
@@ -87,34 +126,62 @@ const RegistroConcursoComponent: React.FC<RegistroConcursoProps> = ({
       const response = await fetch(
         `${API_URL}/check-participant?email=${encodeURIComponent(email)}`
       );
-      const result = await response.json();
+      const apiResult = await response.json();
+      
       if (response.ok) {
+        // Extraer datos del wrapper de API
+        const result = apiResult.data || apiResult;
+        
         if (result.valid) {
           setParticipantStatuses((prev) => ({ ...prev, [field]: "valid" }));
           setParticipantInfos((prev) => ({ ...prev, [field]: result.participante }));
+          setErrors((prev) => ({ ...prev, [field]: undefined }));
         } else {
           setParticipantStatuses((prev) => ({ ...prev, [field]: "invalid" }));
-          setParticipantInfos((prev) => ({ ...prev, [field]: result.participante }));
-          setErrors((prev) => ({ ...prev, [field]: result.error }));
+          setParticipantInfos((prev) => ({ ...prev, [field]: null }));
+          setErrors((prev) => ({ ...prev, [field]: result.error || "Participante no válido" }));
         }
       } else {
         setParticipantStatuses((prev) => ({ ...prev, [field]: "error" }));
         setParticipantInfos((prev) => ({ ...prev, [field]: null }));
+        setErrors((prev) => ({ ...prev, [field]: apiResult.error || "Error verificando participante" }));
       }
-    } catch {
+    } catch (error) {
+      console.error('Error verificando participante:', error);
       setParticipantStatuses((prev) => ({ ...prev, [field]: "error" }));
       setParticipantInfos((prev) => ({ ...prev, [field]: null }));
+      setErrors((prev) => ({ ...prev, [field]: "Error de conexión" }));
     }
   }, []);
 
+  // Auto-generar nombre del equipo cuando se selecciona un estado
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (data.nombreEquipo.trim()) {
-        checkEquipoName(data.nombreEquipo.trim());
+    if (data.estadoId) {
+      const estadoSeleccionado = estadosDisponibles.find(
+        estado => estado.id === parseInt(data.estadoId)
+      );
+      if (estadoSeleccionado) {
+        setData(prev => ({
+          ...prev,
+          nombreEquipo: `Equipo ${estadoSeleccionado.nombre}`
+        }));
+        setEquipoNameStatus("available"); // Se considera siempre disponible
       }
-    }, 500);
-    return () => clearTimeout(timer);
-  }, [data.nombreEquipo, checkEquipoName]);
+    } else {
+      setData(prev => ({ ...prev, nombreEquipo: "" }));
+      setEquipoNameStatus("idle");
+    }
+  }, [data.estadoId, estadosDisponibles]);
+
+  // Comentado: Ya no necesitamos verificar nombres únicos
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     if (data.nombreEquipo.trim()) {
+  //       checkEquipoName(data.nombreEquipo.trim());
+  //     }
+  //   }, 500);
+  //   return () => clearTimeout(timer);
+  // }, [data.nombreEquipo, checkEquipoName]);
 
   const handleChange = (field: keyof FormData, value: string | string[]) => {
     setData((prev) => ({ ...prev, [field]: value }));
@@ -156,29 +223,34 @@ const RegistroConcursoComponent: React.FC<RegistroConcursoProps> = ({
   const validate = (): boolean => {
     const newErrors: Errors = {};
 
-    if (!data.nombreEquipo.trim()) {
-      newErrors.nombreEquipo = "Nombre del equipo obligatorio";
-    } else if (equipoNameStatus === "taken") {
-      newErrors.nombreEquipo = "Este nombre ya está en uso";
+    // VALIDACIÓN DE NOMBRE DESHABILITADA - SE AUTO-GENERA
+    // if (!data.nombreEquipo.trim()) {
+    //   newErrors.nombreEquipo = "Nombre del equipo obligatorio";
+    // } else if (equipoNameStatus === "taken") {
+    //   newErrors.nombreEquipo = "Este nombre ya está en uso";
+    // }
+
+    if (!data.estadoId) {
+      newErrors.estadoId = "Debes seleccionar un estado de México";
     }
 
     const basic = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!data.emailCapitan.trim()) {
-      newErrors.emailCapitan = "Email del capitán obligatorio";
+      newErrors.emailCapitan = "Correo del capitán obligatorio";
     } else if (!basic.test(data.emailCapitan)) {
-      newErrors.emailCapitan = "Formato de email inválido";
+      newErrors.emailCapitan = "Formato de correo inválido";
     }
 
     const allEmails = [data.emailCapitan, ...data.emailsMiembros.filter((e) => e.trim())];
     const unique = new Set(allEmails);
     if (unique.size !== allEmails.length) {
-      newErrors.emailCapitan = "No pueden haber emails duplicados";
+      newErrors.emailCapitan = "No pueden haber correos duplicados";
     }
 
     data.emailsMiembros.forEach((email, index) => {
       const key = `miembro${index}` as keyof Errors;
-      if (!email.trim()) newErrors[key] = "Email de miembro obligatorio";
-      else if (!basic.test(email)) newErrors[key] = "Formato de email inválido";
+      if (!email.trim()) newErrors[key] = "Correo de miembro obligatorio";
+      else if (!basic.test(email)) newErrors[key] = "Formato de correo inválido";
     });
 
     setErrors(newErrors);
@@ -189,7 +261,8 @@ const RegistroConcursoComponent: React.FC<RegistroConcursoProps> = ({
     ev.preventDefault();
 
     const touchedFields: Record<string, boolean> = {
-      nombreEquipo: true,
+      // nombreEquipo: true, // Ya no necesario, se auto-genera
+      estadoId: true,
       emailCapitan: true,
     };
     data.emailsMiembros.forEach((_, i) => {
@@ -200,15 +273,14 @@ const RegistroConcursoComponent: React.FC<RegistroConcursoProps> = ({
     if (!validate()) return;
 
     const allValid =
-      equipoNameStatus === "available" &&
+      // equipoNameStatus === "available" && // Ya no necesario, siempre válido
       participantStatuses.emailCapitan === "valid" &&
       data.emailsMiembros.every((_, i) => participantStatuses[`miembro${i}`] === "valid");
 
     if (!allValid) {
       setErrors((prev) => ({
         ...prev,
-        nombreEquipo:
-          equipoNameStatus !== "available" ? "Verifica el nombre del equipo" : prev.nombreEquipo,
+        // nombreEquipo: Ya no necesario validar
         emailCapitan:
           participantStatuses.emailCapitan !== "valid" ? "Verifica el email del capitán" : prev.emailCapitan,
       }));
@@ -217,15 +289,23 @@ const RegistroConcursoComponent: React.FC<RegistroConcursoProps> = ({
 
     setIsSubmitting(true);
     try {
+      // Transformar datos al formato esperado por el backend (snake_case)
+      const requestBody = {
+        nombre_equipo: data.nombreEquipo.trim(),
+        estado_id: parseInt(data.estadoId),
+        email_capitan: data.emailCapitan.trim(),
+        email_miembro_1: data.emailsMiembros[0]?.trim() || '',
+        email_miembro_2: data.emailsMiembros[1]?.trim() || '',
+        email_miembro_3: data.emailsMiembros[2]?.trim() || '',
+        email_miembro_4: data.emailsMiembros[3]?.trim() || '',
+        email_miembro_5: data.emailsMiembros[4]?.trim() || '',
+      };
+
       const response = await fetch(API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({
-          nombreEquipo: data.nombreEquipo.trim(),
-          emailCapitan: data.emailCapitan.trim(),
-          emailsMiembros: data.emailsMiembros.map((e) => e.trim()),
-        }),
+        body: JSON.stringify(requestBody),
       });
 
       const result = await response.json().catch(() => ({}));
@@ -300,7 +380,7 @@ const RegistroConcursoComponent: React.FC<RegistroConcursoProps> = ({
                 <legend className="registro-legend">Información del Equipo</legend>
 
                 <div className="registro-grid">
-                  {/* Nombre del equipo */}
+                  {/* Nombre del equipo - Auto-generado */}
                   <div className="form-group" style={{ gridColumn: "1 / -1" }}>
                     <label htmlFor="nombreEquipo" className="form-label">
                       Nombre del Equipo *
@@ -309,27 +389,63 @@ const RegistroConcursoComponent: React.FC<RegistroConcursoProps> = ({
                       id="nombreEquipo"
                       name="nombreEquipo"
                       type="text"
-                      placeholder="Ingresa un nombre único para tu equipo"
+                      placeholder="Selecciona un estado para generar el nombre automáticamente"
                       value={data.nombreEquipo}
-                      onChange={(e) => handleChange("nombreEquipo", e.target.value)}
-                      onBlur={() => setTouched((prev) => ({ ...prev, nombreEquipo: true }))}
-                      className={`form-input ${errors.nombreEquipo ? "input-error" : ""}`}
-                      required
+                      readOnly
+                      className={`form-input readonly-input ${errors.nombreEquipo ? "input-error" : ""}`}
+                      style={{ 
+                        backgroundColor: '#f8f9fa', 
+                        cursor: 'not-allowed',
+                        color: '#6c757d'
+                      }}
                     />
                     <div className="equipo-name-status">
-                      {equipoNameStatus === "checking" && (
-                        <small className="checking">Verificando disponibilidad...</small>
+                      {data.nombreEquipo && (
+                        <small className="success">✓ Nombre generado automáticamente</small>
                       )}
-                      {equipoNameStatus === "available" && data.nombreEquipo && (
-                        <small className="success">✓ Nombre disponible</small>
-                      )}
-                      {equipoNameStatus === "taken" && (
-                        <small className="error">Este nombre ya está en uso</small>
+                      {!data.nombreEquipo && (
+                        <small className="info">Selecciona un estado para generar el nombre</small>
                       )}
                     </div>
                     {touched.nombreEquipo && errors.nombreEquipo && (
                       <small role="alert" className="error-message">
                         {errors.nombreEquipo}
+                      </small>
+                    )}
+                  </div>
+
+                  {/* Selección de Estado */}
+                  <div className="form-group" style={{ gridColumn: "1 / -1" }}>
+                    <label htmlFor="estadoId" className="form-label">
+                      Estado de México que representarás *
+                    </label>
+                    <select
+                      id="estadoId"
+                      name="estadoId"
+                      value={data.estadoId}
+                      onChange={(e) => handleChange("estadoId", e.target.value)}
+                      onBlur={() => setTouched((prev) => ({ ...prev, estadoId: true }))}
+                      className={`form-input ${errors.estadoId ? "input-error" : ""}`}
+                      required
+                      disabled={loadingEstados}
+                    >
+                      <option value="">
+                        {loadingEstados ? "Cargando estados..." : "Selecciona un estado"}
+                      </option>
+                      {estadosDisponibles.map((estado) => (
+                        <option key={estado.id} value={estado.id.toString()}>
+                          {estado.nombre} ({estado.region})
+                        </option>
+                      ))}
+                    </select>
+                    {data.estadoId && (
+                      <small className="success">
+                        ✓ Representarás a {estadosDisponibles.find(e => e.id.toString() === data.estadoId)?.nombre}
+                      </small>
+                    )}
+                    {touched.estadoId && errors.estadoId && (
+                      <small role="alert" className="error-message">
+                        {errors.estadoId}
                       </small>
                     )}
                   </div>
@@ -342,13 +458,13 @@ const RegistroConcursoComponent: React.FC<RegistroConcursoProps> = ({
                 <div className="registro-grid">
                   <div className="form-group" style={{ gridColumn: "1 / -1" }}>
                     <label htmlFor="emailCapitan" className="form-label">
-                      Email del Capitán *
+                      Correo electrónico del Capitán *
                     </label>
                     <input
                       id="emailCapitan"
                       name="emailCapitan"
                       type="email"
-                      placeholder="correo.capitan@ejemplo.com"
+                      placeholder="Correo electrónico del capitán"
                       value={data.emailCapitan}
                       onChange={(e) => handleEmailChange(0, e.target.value, true)}
                       onBlur={(e) => handleBlur("emailCapitan", e.target.value)}
@@ -380,7 +496,7 @@ const RegistroConcursoComponent: React.FC<RegistroConcursoProps> = ({
                         id={`miembro${index}`}
                         name={`miembro${index}`}
                         type="email"
-                        placeholder={`correo.miembro${index + 1}@ejemplo.com`}
+                        placeholder="Correo electrónico del miembro"
                         value={email}
                         onChange={(e) => handleEmailChange(index, e.target.value)}
                         onBlur={(e) => handleBlur(`miembro${index}`, e.target.value)}

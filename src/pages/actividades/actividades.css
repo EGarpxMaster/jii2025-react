@@ -205,6 +205,17 @@
   overflow: hidden;
 }
 
+.activity-badges {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-end;
+}
+
 .activity-card:active {
   transform: scale(0.98);
 }
@@ -221,10 +232,10 @@
 }
 
 .activity-badge {
-  position: absolute;
-  top: 0.75rem;
-  right: 0.75rem;
-  z-index: 10;
+  position: relative;
+  top: auto;
+  right: auto;
+  z-index: auto;
   padding: 0.35rem 0.8rem;
   border-radius: 9999px;
   font-size: 0.75rem;
@@ -239,6 +250,15 @@
 .activity-badge-workshop {
   background-color: var(--primary-color);
   color: white;
+}
+
+.activity-badge-forum {
+  background-color: #8b5a2b;
+  color: white;
+}
+
+.activity-cupo-badge {
+  margin-top: 0.25rem;
 }
 
 .activity-card h3 {
@@ -793,5 +813,127 @@ button:focus {
   
   .actividades-hero-btn-secondary {
     border: 3px solid white;
+  }
+}
+
+/* Video Carousel Styles */
+.video-carousel {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: var(--light-color);
+  border-radius: var(--border-radius);
+  border: 1px solid #e0e0e0;
+}
+
+.video-carousel h5 {
+  margin: 0 0 1rem 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  text-align: center;
+}
+
+.video-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.carousel-btn {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.5rem;
+  transition: all var(--transition-speed);
+  box-shadow: var(--shadow);
+}
+
+.carousel-btn:hover:not(:disabled) {
+  background: var(--secondary-color);
+  transform: scale(1.1);
+  box-shadow: var(--shadow-hover);
+}
+
+.carousel-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.video-content {
+  flex: 1;
+  text-align: center;
+}
+
+.carousel-video {
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  margin-bottom: 1rem;
+}
+
+.video-info h6 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.video-info p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-color);
+  opacity: 0.8;
+}
+
+.video-indicators {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: none;
+  background: #ccc;
+  cursor: pointer;
+  transition: all var(--transition-speed);
+}
+
+.indicator.active {
+  background: var(--primary-color);
+  transform: scale(1.2);
+}
+
+.indicator:hover {
+  background: var(--secondary-color);
+}
+
+/* Responsive para video carousel */
+@media (max-width: 768px) {
+  .video-container {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .carousel-btn {
+    display: none;
+  }
+  
+  .video-carousel {
+    padding: 1rem;
+  }
+  
+  .carousel-video {
+    max-height: 200px;
   }
 }

@@ -8,7 +8,7 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [react()],
     // Configuración para GitHub Pages
-    base: mode === 'production' ? '/jii2025-react/' : '/',
+    base: mode === 'production' && process.env.VITE_DEPLOY_TARGET === 'github' ? '/jii2025-react/' : '/',
     server: {
       port: 5173,
       proxy: {

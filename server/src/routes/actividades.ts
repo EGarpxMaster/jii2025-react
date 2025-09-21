@@ -1,207 +1,140 @@
-import { Router } from 'express';
-import { pool } from '../db/pool.js';
-import { ok } from '../utils/reply.js';
+import { Router, Request, Response } from 'express';
+import { ActividadService } from '../services/actividades.service.js';
+import { asyncHandler } from '../middleware/errors.js';
+import { createApiResponse, createErrorResponse } from '../utils/helpers.js';
+import { authMiddleware, AuthRequest } from '../middleware/auth.js';
+import { InscripcionesService } from '../services/inscripciones.service.js';
 
-export const actividades = Router();
+const router = Router();
+const actividadService = new ActividadService();
 
-/** GET /api/actividades?tipo=Workshop&activa=true
- *  GET /api/actividades?ventana=ahora
- */
-actividades.get('/', async (req, res, next) => {
-  try {
-    const { tipo, activa, ventana } = req.query as any;
+// GET /api/actividades - Obtener todas las actividades
+router.get('/', asyncHandler(async (req: Request, res: Response) => {
+  const { tipo, ventana } = req.query;
 
-    if (ventana === 'ahora') {
-      // Actividades donde NOW() está entre (inicio-15m, inicio+30m) en TZ Cancún
-      const [rows] = await pool.query(`
-        SELECT a.*
-        FROM actividades a
-        WHERE a.activo = 1
-        AND TIMESTAMPDIFF(
-            MINUTE,
-            a.fecha_inicio,
-            CONVERT_TZ(UTC_TIMESTAMP(), '+00:00', '-05:00')
-        ) BETWEEN -15 AND 30
-        ORDER BY a.fecha_inicio ASC
-      `);
-      const mapped = (rows as any[]).map(r => ({
-        id: r.id,
-        titulo: r.titulo,
-        tipo: r.tipo_evento,
-        fechaInicio: r.fecha_inicio,
-        fechaFin: r.fecha_fin,
-        lugar: r.lugar
-      }));
-      return res.json(mapped);
+  // Si se solicitan workshops en ventana de inscripción
+  if (ventana === 'workshops') {
+    // Temporalmente obtener TODOS los workshops para debugging
+    const workshops = await actividadService.getWorkshopsWithStats();
+    console.log('🔍 Workshops encontrados:', workshops.length);
+    if (workshops.length > 0) {
+      console.log('🔍 Primer workshop:', JSON.stringify(workshops[0], null, 2));
     }
+    return res.json(createApiResponse(workshops));
+  }
 
-    if (ventana === 'disponibles') {
-      const { email } = req.query as any;
-      // Actividades disponibles para asistencia (del 25 al 27 de septiembre)
-      let baseQuery = `
-        SELECT a.*, 
-               CASE 
-                 WHEN a.tipo_evento IN ('Conferencia','Foro') THEN (
-                   SELECT COUNT(*) FROM asistencias ast 
-                   WHERE ast.actividad_id = a.id AND ast.estado = 'presente'
-                 )
-                 WHEN a.tipo_evento = 'Workshop' THEN (
-                   SELECT COUNT(*) FROM inscripciones_workshop iw 
-                   WHERE iw.actividad_id = a.id AND iw.estado = 'inscrito'
-                 )
-                 ELSE 0
-               END AS ocupados
-        FROM actividades a
-        WHERE a.activo = 1
-        AND a.fecha_inicio >= '2025-09-25 00:00:00'
-        AND a.fecha_inicio <= '2025-09-27 23:59:59'`;
+  // Si se especifica un tipo
+  if (tipo && typeof tipo === 'string') {
+    const actividades = await actividadService.getActividadesByTipo(tipo as any);
+    return res.json(createApiResponse(actividades));
+  }
 
-      // Si se proporciona email, filtrar workshops solo para los que está inscrito o en espera
-      if (email) {
-        baseQuery += `
-        AND (
-          a.tipo_evento IN ('Conferencia', 'Foro')
-          OR (
-            a.tipo_evento = 'Workshop' 
-            AND EXISTS (
-              SELECT 1 FROM inscripciones_workshop iw 
-              JOIN participantes p ON p.id = iw.participante_id 
-              WHERE iw.actividad_id = a.id 
-              AND p.email = ?
-              AND iw.estado IN ('inscrito', 'espera')
-            )
-          )
-        )`;
-      }
+  // Obtener todas las actividades
+  const actividades = await actividadService.getAllActividades();
+  res.json(createApiResponse(actividades));
+}));
 
-      baseQuery += ` ORDER BY a.fecha_inicio ASC`;
 
-      const params = email ? [email.toLowerCase()] : [];
-      const [rows] = await pool.query(baseQuery, params);
-      
-      const mapped = (rows as any[]).map(r => {
-        const ocupados = Number(r.ocupados || 0);
-        const disponibles = Math.max(0, r.cupo_maximo - ocupados);
-        let estadoCupo = 'DISPONIBLE';
-        if (disponibles <= 0) {
-          estadoCupo = 'LLENO';
-        } else if (disponibles <= Math.ceil(r.cupo_maximo * 0.2)) {
-          estadoCupo = 'CASI_LLENO';
-        }
-        
+// GET /api/actividades/workshops - Obtener workshops con estadísticas y estado de inscripción
+router.get('/workshops', authMiddleware, asyncHandler(async (req: AuthRequest, res: Response) => {
+  const workshops = await actividadService.getWorkshopsWithStats();
+  const inscripcionesService = new InscripcionesService();
+  const participanteId = req.participanteId;
+
+  // Si hay participante autenticado, agregar estado de inscripción a cada workshop
+  if (participanteId) {
+    const workshopsWithStatus = await Promise.all(
+      workshops.map(async (ws) => {
+        const estado = await inscripcionesService.getEstadoInscripcion(participanteId, ws.id);
         return {
-          id: r.id,
-          titulo: r.titulo,
-          ponente: r.ponente_id, // Necesitamos obtener el nombre del ponente
-          tipo: r.tipo_evento,
-          fechaInicio: r.fecha_inicio,
-          fechaFin: r.fecha_fin,
-          lugar: r.lugar,
-          cupoMaximo: r.cupo_maximo,
-          ocupados,
-          disponibles,
-          estadoCupo
+          ...ws,
+          inscrito: estado.inscrito,
+          enCola: estado.enCola
         };
-      });
-      return res.json(mapped);
-    }
+      })
+    );
+    return res.json(createApiResponse(workshopsWithStatus));
+  }
+  // Si no hay participante autenticado, devolver workshops normales
+  res.json(createApiResponse(workshops));
+}));
 
-    if (ventana === 'workshops') {
-      // Vista completa de workshops para la sección de workshops (sin filtrar por inscripción)
-      const [rows] = await pool.query(`
-        SELECT a.*, 
-               (SELECT COUNT(*) FROM inscripciones_workshop iw 
-                WHERE iw.actividad_id = a.id AND iw.estado = 'inscrito') AS ocupados
-        FROM actividades a
-        WHERE a.activo = 1
-        AND a.tipo_evento = 'Workshop'
-        AND a.fecha_inicio >= '2025-09-25 00:00:00'
-        AND a.fecha_inicio <= '2025-09-27 23:59:59'
-        ORDER BY a.fecha_inicio ASC
-      `);
-      const mapped = (rows as any[]).map(r => {
-        const ocupados = Number(r.ocupados || 0);
-        const disponibles = Math.max(0, r.cupo_maximo - ocupados);
-        let estadoCupo = 'DISPONIBLE';
-        if (disponibles <= 0) {
-          estadoCupo = 'LLENO';
-        } else if (disponibles <= Math.ceil(r.cupo_maximo * 0.2)) {
-          estadoCupo = 'CASI_LLENO';
-        }
-        
-        return {
-          id: r.id,
-          titulo: r.titulo,
-          ponente: r.ponente_id,
-          tipo: r.tipo_evento,
-          fechaInicio: r.fecha_inicio,
-          fechaFin: r.fecha_fin,
-          lugar: r.lugar,
-          cupoMaximo: r.cupo_maximo,
-          ocupados,
-          disponibles,
-          estadoCupo
-        };
-      });
-      return res.json(mapped);
-    }
+// GET /api/actividades/conferencias-foros - Obtener conferencias y foros con estadísticas
+router.get('/conferencias-foros', asyncHandler(async (req: Request, res: Response) => {
+  const actividades = await actividadService.getConferenciasForosWithStats();
+  res.json(createApiResponse(actividades));
+}));
 
-    // Ventana de inscripción para workshops: 22 septiembre 9:00 a 23 septiembre 23:59
-    // Pero los workshops se realizan del 25-27 septiembre
-    const eventInicio = '2025-09-25 00:00:00';
-    const eventFin = '2025-09-27 23:59:59';
+// GET /api/actividades/asistencia - Obtener actividades para marcaje de asistencia
+router.get('/asistencia', asyncHandler(async (req: Request, res: Response) => {
+  const { participante_id } = req.query;
+  const participanteId = participante_id ? parseInt(participante_id as string) : undefined;
+  
+  const actividades = await actividadService.getActividadesParaAsistencia(participanteId);
+  res.json(createApiResponse(actividades));
+}));
 
-    // Filtro general (workshops list)
-    let sql = `
-      SELECT a.*
-      FROM actividades a
-      WHERE a.activo = 1
-      AND a.tipo_evento = 'Workshop'
-      AND a.fecha_inicio >= ? 
-      AND a.fecha_inicio <= ? 
-      ORDER BY a.fecha_inicio ASC
-    `;
-    const params = [eventInicio, eventFin];
+// GET /api/actividades/stats - Obtener estadísticas de actividades
+router.get('/stats', asyncHandler(async (req: Request, res: Response) => {
+  const stats = await actividadService.getActividadesStats();
+  res.json(createApiResponse(stats));
+}));
 
-    const [rows] = await pool.query(sql, params);
+// GET /api/actividades/:id - Obtener actividad por ID
+router.get('/:id', asyncHandler(async (req: Request, res: Response) => {
+  const id = parseInt(req.params.id);
+  if (isNaN(id)) {
+    return res.status(400).json(createErrorResponse('ID inválido'));
+  }
 
-    const ids = (rows as any[]).map(r => r.id);
-    let inscritosMap: Record<number, number> = {};
-    if (ids.length) {
-      const [insRows] = await pool.query(`
-        SELECT actividad_id, COUNT(*) c
-        FROM inscripciones_workshop
-        WHERE actividad_id IN (${ids.map(() => '?').join(',')}) AND estado='inscrito'
-        GROUP BY actividad_id
-      `, ids);
-      inscritosMap = Object.fromEntries((insRows as any[]).map(r => [r.actividad_id, Number(r.c)]));
-    }
+  const actividad = await actividadService.getActividadById(id);
+  if (!actividad) {
+    return res.status(404).json(createErrorResponse('Actividad no encontrada'));
+  }
 
-    const mapped = (rows as any[]).map(r => {
-      const inscritos = inscritosMap[r.id] || 0;
-      const disponibles = Math.max(0, r.cupo_maximo - inscritos);
-      let estadoCupo = 'DISPONIBLE';
-      if (disponibles <= 0) {
-        estadoCupo = 'LLENO';
-      } else if (disponibles <= Math.ceil(r.cupo_maximo * 0.2)) {
-        estadoCupo = 'CASI_LLENO';
-      }
-      
-      return {
-        id: r.id,
-        titulo: r.titulo,
-        ponente: r.ponente_id,
-        tipo: r.tipo_evento,
-        fechaInicio: r.fecha_inicio,
-        fechaFin: r.fecha_fin,
-        lugar: r.lugar,
-        cupoMaximo: r.cupo_maximo,
-        ocupados: inscritos,
-        disponibles,
-        estadoCupo
-      };
-    });
+  res.json(createApiResponse(actividad));
+}));
 
-    res.json(mapped);
-  } catch (err) { next(err); }
-});
+// GET /api/actividades/codigo/:codigo - Obtener actividad por código
+router.get('/codigo/:codigo', asyncHandler(async (req: Request, res: Response) => {
+  const codigo = req.params.codigo;
+  const actividad = await actividadService.getActividadByCodigo(codigo);
+  
+  if (!actividad) {
+    return res.status(404).json(createErrorResponse('Actividad no encontrada'));
+  }
+
+  res.json(createApiResponse(actividad));
+}));
+
+// GET /api/actividades/:id/workshop-stats - Obtener estadísticas de workshop por ID
+router.get('/:id/workshop-stats', asyncHandler(async (req: Request, res: Response) => {
+  const id = parseInt(req.params.id);
+  if (isNaN(id)) {
+    return res.status(400).json(createErrorResponse('ID inválido'));
+  }
+
+  const stats = await actividadService.getWorkshopStatsById(id);
+  if (!stats) {
+    return res.status(404).json(createErrorResponse('Workshop no encontrado'));
+  }
+
+  res.json(createApiResponse(stats));
+}));
+
+// GET /api/actividades/:id/asistencias-stats - Obtener estadísticas de asistencias por ID
+router.get('/:id/asistencias-stats', asyncHandler(async (req: Request, res: Response) => {
+  const id = parseInt(req.params.id);
+  if (isNaN(id)) {
+    return res.status(400).json(createErrorResponse('ID inválido'));
+  }
+
+  const stats = await actividadService.getAsistenciasStatsById(id);
+  if (!stats) {
+    return res.status(404).json(createErrorResponse('Actividad no encontrada'));
+  }
+
+  res.json(createApiResponse(stats));
+}));
+
+export { router as actividadesRoutes };

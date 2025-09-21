@@ -1,9 +1,14 @@
 import React, { useMemo, useState } from "react";
 
-const API_BASE = "/api";
-const API_URL = `${API_BASE}/participantes`;
+const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:3001";
+const API_URL = `${API_BASE}/api/participantes`;
 
-type Categoria = "Estudiante" | "Ponente" | "Asistente externo";
+type Categoria =
+  | "Estudiante de Ingeniería Industrial"
+  | "Estudiante Invitado"
+  | "Docente"
+  | "Ponente"
+  | "Asistente externo";
 type Programa =
   | "Ingeniería Industrial"
   | "Ingeniería Ambiental"
@@ -18,7 +23,7 @@ type FormData = {
   primerNombre: string;
   segundoNombre?: string;
   email: string;
-  telefono: string; // OPCIONAL
+  telefono: string;
   categoria: Categoria | "";
   programa?: Programa | "";
 };
@@ -26,6 +31,15 @@ type FormData = {
 type Errors = Partial<Record<keyof FormData, string>>;
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+
+// Programas disponibles para estudiantes invitados (excluyendo Ingeniería Industrial)
+const programasInvitados: Programa[] = [
+  "Ingeniería Ambiental",
+  "Ingeniería en Datos e Inteligencia Organizacional",
+  "Ingeniería en Logística y Cadena de Suministro",
+  "Ingeniería en Inteligencia Artificial",
+  "Ingeniería en Industrias Alimentarias",
+];
 
 const programas: Programa[] = [
   "Ingeniería Industrial",
@@ -64,7 +78,9 @@ const RegistroComponent: React.FC<RegistroComponentProps> = ({
   >("idle");
   const [submitted, setSubmitted] = useState(false);
 
-  const isEstudiante = data.categoria === "Estudiante";
+  const isEstudianteIndustrial = data.categoria === "Estudiante de Ingeniería Industrial";
+  const isEstudianteInvitado = data.categoria === "Estudiante Invitado";
+  const mostrarPrograma = isEstudianteInvitado; // Solo estudiantes invitados eligen programa
 
   const placeholders = useMemo(
     () => ({
@@ -73,7 +89,7 @@ const RegistroComponent: React.FC<RegistroComponentProps> = ({
       primerNombre: "Ingresa tu primer nombre",
       segundoNombre: "Ingresa tu segundo nombre",
       email: "Correo electrónico",
-      telefono: "Teléfono (10 dígitos, opcional)",
+      telefono: "Teléfono",
     }),
     []
   );
@@ -85,8 +101,8 @@ const RegistroComponent: React.FC<RegistroComponentProps> = ({
     setData((prev) => {
       const next = { ...prev, [field]: value } as FormData;
 
-      // Si cambia la categoría, limpiar programa cuando no sea Estudiante
-      if (field === "categoria" && value !== "Estudiante") {
+      // Si cambia la categoría, limpiar programa cuando no sea Estudiante Invitado
+      if (field === "categoria" && value !== "Estudiante Invitado") {
         next.programa = "";
       }
       // Sanitizar teléfono: solo dígitos y máx. 10
@@ -115,7 +131,7 @@ const RegistroComponent: React.FC<RegistroComponentProps> = ({
       const res = await fetch(url, { credentials: "include" });
       if (!res.ok) return true; // No bloquear si backend no responde
       const json = await res.json();
-      return !!json.unique;
+      return !!json.data?.unique;
     } catch {
       return true;
     }
@@ -143,11 +159,11 @@ const RegistroComponent: React.FC<RegistroComponentProps> = ({
     else if (!emailRegex.test(email)) e.email = "";
 
     const tel = values.telefono.trim();
-    // Teléfono ahora es OPCIONAL. Si viene, debe ser 10 dígitos:
-    if (tel && !/^\d{10}$/.test(tel)) e.telefono = "Deben ser 10 dígitos";
+    if (!tel) e.telefono = "Campo obligatorio";
+    else if (!/^\d{10}$/.test(tel)) e.telefono = "Deben ser 10 dígitos";
 
     if (!values.categoria) e.categoria = "Selecciona una categoría";
-    if (values.categoria === "Estudiante") {
+    if (values.categoria === "Estudiante Invitado") {
       if (!values.programa) e.programa = "Selecciona un programa";
     }
     return e;
@@ -165,7 +181,7 @@ const RegistroComponent: React.FC<RegistroComponentProps> = ({
       telefono: true,
       categoria: true,
     };
-    if (data.categoria === "Estudiante") touchedFields.programa = true;
+    if (data.categoria === "Estudiante Invitado") touchedFields.programa = true;
     setTouched(touchedFields);
 
     const newErrors = validate(data);
@@ -181,9 +197,35 @@ const RegistroComponent: React.FC<RegistroComponentProps> = ({
 
     setIsSubmitting(true);
     try {
-      // Payload limpio (sin programa cuando no es estudiante)
-      const payload =
-        data.categoria === "Estudiante" ? data : { ...data, programa: undefined };
+      // Mapear categorías al formato del backend
+      let backendCategoria: string;
+      let backendPrograma: string | undefined;
+
+      switch (data.categoria) {
+        case "Estudiante de Ingeniería Industrial":
+          backendCategoria = "Estudiante";
+          backendPrograma = "Ingeniería Industrial";
+          break;
+        case "Estudiante Invitado":
+          backendCategoria = "Estudiante";
+          backendPrograma = data.programa;
+          break;
+        default:
+          backendCategoria = data.categoria;
+          backendPrograma = undefined;
+          break;
+      }
+
+      const payload = {
+        apellido_paterno: data.apellidoPaterno,
+        apellido_materno: data.apellidoMaterno,
+        primer_nombre: data.primerNombre,
+        segundo_nombre: data.segundoNombre || null,
+        email: data.email,
+        telefono: data.telefono || null,
+        categoria: backendCategoria,
+        programa: backendPrograma || null,
+      };
 
       const res = await fetch(API_URL, {
         method: "POST",
@@ -395,7 +437,7 @@ const RegistroComponent: React.FC<RegistroComponentProps> = ({
                   {/* Teléfono (opcional) */}
                   <div className="form-group">
                     <label htmlFor="telefono" className="form-label">
-                      Teléfono (opcional)
+                      Teléfono *
                     </label>
                     <input
                       id="telefono"
@@ -441,7 +483,9 @@ const RegistroComponent: React.FC<RegistroComponentProps> = ({
                       required
                     >
                       <option value="">Selecciona una categoría</option>
-                      <option value="Estudiante">Estudiante</option>
+                      <option value="Estudiante de Ingeniería Industrial">Estudiante de Ingeniería Industrial</option>
+                      <option value="Estudiante Invitado">Estudiante Invitado</option>
+                      <option value="Docente">Docente</option>
                       <option value="Ponente">Ponente</option>
                       <option value="Asistente externo">Asistente externo</option>
                     </select>
@@ -452,8 +496,8 @@ const RegistroComponent: React.FC<RegistroComponentProps> = ({
                     )}
                   </div>
 
-                  {/* Programa educativo (solo Estudiante) */}
-                  {isEstudiante && (
+                  {/* Programa educativo (solo Estudiante Invitado) */}
+                  {mostrarPrograma && (
                     <div className="form-group">
                       <label htmlFor="programa" className="form-label">
                         Programa Educativo *
@@ -468,10 +512,10 @@ const RegistroComponent: React.FC<RegistroComponentProps> = ({
                         onBlur={() => handleBlur("programa")}
                         aria-invalid={!!errors.programa}
                         className={`form-select ${errors.programa ? "input-error" : ""}`}
-                        required={isEstudiante}
+                        required={mostrarPrograma}
                       >
                         <option value="">Selecciona un programa</option>
-                        {programas.map((p) => (
+                        {programasInvitados.map((p) => (
                           <option key={p} value={p}>
                             {p}
                           </option>

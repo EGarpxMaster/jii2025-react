@@ -1,109 +1,142 @@
-import 'dotenv/config';
-import express from 'express';
+import express, { Request, Response } from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
 import pino from 'pino';
-import { corsMw } from './middleware/cors.js';
-import { errorHandler } from './middleware/errors.js';
-import { rateLimitMw } from './middleware/rateLimit.js';
+// import rateLimit from 'express-rate-limit'; // REMOVIDO PARA JII2025
 
-import { participantes } from './routes/participantes.js';
-import { actividades } from './routes/actividades.js';
-import { asistencias } from './routes/asistencias.js';
-import { workshops } from './routes/workshops.js';
-import { equipos } from './routes/equipos.js';
-import { constancias } from './routes/constancias.js';
+// Importar configuración
+import { dbConfig } from './config/database.js';
 
-// Configurar logger basado en el ambiente
-const isProduction = process.env.NODE_ENV === 'production';
-const logger = pino({ 
-  name: 'jii2025-api',
-  level: process.env.LOG_LEVEL || (isProduction ? 'info' : 'debug'),
-  ...(isProduction && {
-    redact: ['req.headers.authorization'],
-    serializers: {
-      req: pino.stdSerializers.req,
-      res: pino.stdSerializers.res,
+// Importar middleware
+import { corsMiddleware } from './middleware/cors.js';
+import { errorMiddleware, asyncHandler } from './middleware/errors.js';
+// import { rateLimitMiddleware } from './middleware/rateLimit.js'; // REMOVIDO PARA JII2025
+
+// Importar rutas
+import { participantesRoutes } from './routes/participantes.js';
+import { actividadesRoutes } from './routes/actividades.js';
+import { workshopsRoutes } from './routes/workshops.js';
+import { asistenciasRoutes } from './routes/asistencias.js';
+import { equiposRoutes } from './routes/equipos.js';
+import { constanciasRoutes } from './routes/constancias.js';
+
+// Cargar variables de entorno
+dotenv.config();
+
+const app = express();
+const PORT = process.env.PORT || 3001;
+
+// Logger
+const logger = pino({
+  level: process.env.LOG_LEVEL || 'info',
+  ...(process.env.NODE_ENV === 'development' && {
+    transport: {
+      target: 'pino-pretty',
+      options: {
+        colorize: true
+      }
     }
   })
 });
 
-const app = express();
+// Middleware básico
+app.use(express.json({ limit: process.env.MAX_FILE_SIZE || '5mb' }));
+app.use(express.urlencoded({ extended: true }));
 
-// Configuraciones de seguridad para producción
-if (isProduction) {
-  app.set('trust proxy', 1); // Confiar en el primer proxy
-  app.disable('x-powered-by'); // Ocultar el header X-Powered-By
-}
+// Middleware personalizado
+app.use(corsMiddleware);
+// app.use(rateLimitMiddleware); // DESHABILITADO PARA EL EVENTO JII2025
 
-// Middleware de logging
+// Logging de requests
 app.use((req, res, next) => {
-  logger.info({
-    method: req.method,
-    url: req.url,
-    ip: req.ip,
-    userAgent: req.get('User-Agent')
-  }, 'Incoming request');
+  logger.info(`${req.method} ${req.path}`);
   next();
 });
 
-// Middleware básico
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
-
-// CORS
-app.use(corsMw);
-
-// Rate limiting
-app.use(rateLimitMw);
-
-// Health check mejorado
-app.get('/health', (_req, res) => {
-  const healthCheck = {
-    status: 'ok',
+// Ruta raíz - información de la API
+app.get('/', (req, res) => {
+  res.json({
+    name: 'Jornada de Ingeniería Industrial 2025 - API',
+    version: '1.0.0',
+    description: 'API REST para el manejo de participantes, actividades, workshops, asistencias y constancias',
+    endpoints: {
+      health: '/health',
+      participantes: '/api/participantes',
+      actividades: '/api/actividades',
+      workshops: '/api/workshops',
+      asistencias: '/api/asistencias',
+      equipos: '/api/equipos',
+      constancias: '/api/constancias',
+      'estados-disponibles': '/api/estados-disponibles'
+    },
     timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV || 'development',
-    version: process.env.npm_package_version || '1.0.0',
-    uptime: process.uptime()
-  };
-  
-  logger.info('Health check requested');
-  res.json(healthCheck);
-});
-
-// API Routes
-app.use('/api/participantes', participantes);
-app.use('/api/actividades', actividades);
-app.use('/api/asistencias', asistencias);
-app.use('/api/workshops', workshops);
-app.use('/api/equipos', equipos);
-app.use('/api/constancias', constancias);
-
-// 404 handler - debe ir al final de todas las rutas
-app.use((req, res, next) => {
-  logger.warn(`404 - Route not found: ${req.method} ${req.originalUrl}`);
-  res.status(404).json({ 
-    error: 'Route not found',
-    method: req.method,
-    path: req.originalUrl
+    environment: process.env.NODE_ENV || 'development'
   });
 });
 
-// Error handler
-app.use(errorHandler);
-
-// Graceful shutdown
-const gracefulShutdown = (signal: string) => {
-  logger.info(`Received ${signal}, shutting down gracefully`);
-  process.exit(0);
-};
-
-process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
-process.on('SIGINT', () => gracefulShutdown('SIGINT'));
-
-const port = Number(process.env.PORT || 3001);
-const host = process.env.HOST || '0.0.0.0';
-
-app.listen(port, host, () => {
-  logger.info(`🚀 JII 2025 API listening on http://${host}:${port}`);
-  logger.info(`Environment: ${process.env.NODE_ENV || 'development'}`);
-  logger.info(`Database: ${process.env.DB_HOST || 'localhost'}:${process.env.DB_PORT || 3306}`);
+// Health check
+app.get('/health', (req, res) => {
+  res.json({ 
+    status: 'ok', 
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development'
+  });
 });
+
+// Rutas API
+app.use('/api/participantes', participantesRoutes);
+app.use('/api/actividades', actividadesRoutes);
+app.use('/api/workshops', workshopsRoutes);
+app.use('/api/asistencias', asistenciasRoutes);
+app.use('/api/equipos', equiposRoutes);
+app.use('/api/constancias', constanciasRoutes);
+
+// Ruta específica para estados disponibles del concurso
+app.get('/api/estados-disponibles', async (req: Request, res: Response) => {
+  console.log('🗺️ Llamada a /api/estados-disponibles');
+  try {
+    // Importar y usar el servicio de equipos directamente
+    const { EquipoService } = await import('./services/equipos.service.js');
+    const { createApiResponse } = await import('./utils/helpers.js');
+    
+    const equipoService = new EquipoService();
+    const estados = await equipoService.getEstadosDisponibles();
+    console.log('📊 Estados obtenidos:', estados?.length || 0, 'estados');
+    
+    res.json(createApiResponse(estados));
+  } catch (error) {
+    console.error('❌ Error en estados-disponibles:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+});
+
+// Middleware de manejo de errores (debe ir al final)
+app.use(errorMiddleware);
+
+// Ruta 404 - capturar todas las rutas no definidas
+app.use((req, res) => {
+  res.status(404).json({ 
+    error: 'Ruta no encontrada',
+    path: req.originalUrl 
+  });
+});
+
+// Iniciar servidor
+app.listen(PORT, () => {
+  logger.info(`Servidor corriendo en puerto ${PORT}`);
+  logger.info(`Entorno: ${process.env.NODE_ENV || 'development'}`);
+  logger.info(`Base de datos: ${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME || process.env.DB_DATABASE || 'jornada_ii'}`);
+});
+
+// Manejo de errores no capturados
+process.on('uncaughtException', (error) => {
+  logger.error({ error: error.message, stack: error.stack }, 'Uncaught Exception');
+  process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  logger.error({ reason, promise }, 'Unhandled Rejection');
+  process.exit(1);
+});
+
+export default app;

@@ -1,6 +1,50 @@
 import React, { useEffect, useState } from "react";
 
-const API_BASE = "/api";
+const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:3001";
+
+// Función auxiliar para formatear fechas de manera segura
+function formatearFechaSegura(fechaInput: any, options?: Intl.DateTimeFormatOptions): string {
+  if (!fechaInput) return 'Fecha no disponible';
+  
+  // Si es un objeto vacío, retornar mensaje específico
+  if (typeof fechaInput === 'object' && fechaInput !== null && Object.keys(fechaInput).length === 0) {
+    console.error('❌ Objeto vacío recibido como fecha - problema en el servidor');
+    return "Fecha por confirmar";
+  }
+  
+  try {
+    let fecha: Date;
+    
+    if (fechaInput instanceof Date) {
+      fecha = fechaInput;
+    } else if (typeof fechaInput === 'string') {
+      fecha = new Date(fechaInput);
+    } else if (typeof fechaInput === 'number') {
+      fecha = new Date(fechaInput);
+    } else if (typeof fechaInput === 'object' && fechaInput !== null) {
+      console.warn('⚠️ Objeto recibido en constancias, intentando extraer fecha');
+      const possibleDate = fechaInput.fecha || fechaInput.fechaAsistencia || fechaInput.date || fechaInput.toString();
+      fecha = new Date(possibleDate);
+    } else {
+      fecha = new Date(fechaInput);
+    }
+    
+    if (isNaN(fecha.getTime())) {
+      console.warn('❌ Fecha inválida en constancias:', fechaInput);
+      return 'Fecha inválida';
+    }
+    
+    return fecha.toLocaleDateString("es-MX", options || {
+      weekday: "long",
+      year: "numeric", 
+      month: "long",
+      day: "numeric"
+    });
+  } catch (error) {
+    console.error('Error formateando fecha en constancias:', fechaInput, error);
+    return 'Error en fecha';
+  }
+}
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
 
 type Participante = {
@@ -61,7 +105,7 @@ const ConstanciaComponent: React.FC<ConstanciaComponentProps> = ({
       setStatus("checking");
       try {
         const res = await fetch(
-          `${API_BASE}/constancia/verificar?email=${encodeURIComponent(email)}`,
+          `${API_BASE}/api/constancias/verificar?email=${encodeURIComponent(email)}`,
           { credentials: "include" }
         );
 
@@ -90,7 +134,7 @@ const ConstanciaComponent: React.FC<ConstanciaComponentProps> = ({
     setDescargando(true);
     try {
       const res = await fetch(
-        `${API_BASE}/constancia/generar?email=${encodeURIComponent(email)}`,
+        `${API_BASE}/api/constancias/generar-por-email?email=${encodeURIComponent(email)}`,
         { credentials: "include" }
       );
       if (!res.ok) {
@@ -227,16 +271,11 @@ const ConstanciaComponent: React.FC<ConstanciaComponentProps> = ({
                           <div className="asistencia-title">{asistencia.titulo}</div>
                           <div className="asistencia-details">
                             {asistencia.ponente && <span>👨‍🏫 {asistencia.ponente} • </span>}
-                            <span>📅 {new Date(asistencia.fecha).toLocaleDateString("es-MX", {
-                              weekday: "long",
-                              year: "numeric",
-                              month: "long",
-                              day: "numeric",
-                            })}</span>
+                            <span>📅 {formatearFechaSegura(asistencia.fecha)}</span>
                             {asistencia.lugar && <span> • 📍 {asistencia.lugar}</span>}
                           </div>
                           <div className="asistencia-registered">
-                            ✅ Registrada el {new Date(asistencia.fechaAsistencia).toLocaleDateString("es-MX")}
+                            ✅ Registrada el {formatearFechaSegura(asistencia.fechaAsistencia, { year: "numeric", month: "2-digit", day: "2-digit" })}
                           </div>
                         </div>
                       </div>

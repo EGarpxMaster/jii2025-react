@@ -44,20 +44,41 @@ const alliesData: Ally[] = [
   },
   {
     id: "P5",
+    name: "El Sarape Cancún",
+    logo: getAliadosImagePath("Sarape.png"),
+    description: "Auténtico restaurante mexicano que ofrece una amplia variedad de platillos tradicionales y antojitos en un ambiente familiar.",
+    website: "https://www.facebook.com/elsarapecancun/",
+  },
+  {
+    id: "P6",
+    name: "Ford Riviera Maya",
+    logo: getAliadosImagePath("Ford.png"),
+    description: "Concesionaria autorizada Ford, especializada en la venta de vehículos nuevos y seminuevos, así como servicios de mantenimiento y refacciones.",
+    website: "https://www.fordrivieramaya.mx/", // Nota: Verifiqué y actualicé el sitio web a la URL correcta.
+  },
+  {
+    id: "P7",
+    name: "Giro180 A.C",
+    logo: getAliadosImagePath("Giro180AC.jpg"),
+    description: "Asociación civil sin fines de lucro dedicada a apoyar la educación de niños de escasos recursos y la alimentación de familias en estado vulnerable.",
+    website: "https://www.facebook.com/Giro180.AC/",
+  },
+  {
+    id: "P8",
     name: "GOmart",
     logo: getAliadosImagePath("GOmart.png"),
     description: "Cadena de tiendas de conveniencia que ofrece una amplia variedad de productos y servicios rápidos para clientes en movimiento.",
     website: "https://gomart.com.mx/",
   },
   {
-    id: "P6",
+    id: "P9",
     name: "Pink",
     logo: getAliadosImagePath("Pink.png"),
     description: "Empresa local que plasma tus diseños e ideas en una gran variedad de artículos, creando regalos únicos y personalizados para cualquier evento.",
     website: "https://www.facebook.com/profile.php?id=61567258522023",
   },
   {
-  id: "P7",
+  id: "P10",
   name: "RECREATIVO",
   logo: getAliadosImagePath("RECREATIVO.png"),
   description: "Fabricante de soluciones de identificación y seguridad para eventos, especializado en brazaletes, etiquetas y uniformes para el control de acceso.",

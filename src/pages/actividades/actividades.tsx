@@ -1,8 +1,97 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { getJWT } from '../../utils/jwt';
 import { motion, AnimatePresence } from 'framer-motion';
 import "./actividades.css";
 import { AnimatedH1, AnimatedParagraph, AnimatedButtonPrimary, AnimatedButtonSecondary } from '../../components/animations';
-// Tipos
+import CupoBadge from '../../components/common/CupoBadge';
+
+const API_BASE = "/api";
+
+// Componente VideoCarousel
+const VideoCarousel: React.FC<{ videos: Video[] }> = ({ videos }) => {
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+
+  const nextVideo = () => {
+    setCurrentVideoIndex((prev) => (prev + 1) % videos.length);
+  };
+
+  const prevVideo = () => {
+    setCurrentVideoIndex((prev) => (prev - 1 + videos.length) % videos.length);
+  };
+
+  if (!videos || videos.length === 0) return null;
+
+  return (
+    <div className="video-carousel">
+      <h5>Presentación de Egresados:</h5>
+      <div className="video-container">
+        <button className="carousel-btn prev" onClick={prevVideo} disabled={videos.length <= 1}>
+          ‹
+        </button>
+        <div className="video-content">
+          <video
+            key={currentVideoIndex}
+            controls
+            className="carousel-video"
+            style={{ width: '100%', maxHeight: '300px' }}
+          >
+            <source src={videos[currentVideoIndex].src} type="video/mp4" />
+            Tu navegador no soporta videos HTML5.
+          </video>
+          <div className="video-info">
+            <h6>{videos[currentVideoIndex].title}</h6>
+            <p>{videos[currentVideoIndex].description}</p>
+          </div>
+        </div>
+        <button className="carousel-btn next" onClick={nextVideo} disabled={videos.length <= 1}>
+          ›
+        </button>
+      </div>
+      {videos.length > 1 && (
+        <div className="video-indicators">
+          {videos.map((_, index) => (
+            <button
+              key={index}
+              className={`indicator ${index === currentVideoIndex ? 'active' : ''}`}
+              onClick={() => setCurrentVideoIndex(index)}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+// Tipos para datos de API
+type ApiActivity = {
+  id: number;
+  codigo: string;
+  titulo: string;
+  ponente: string;
+  institucion: string;
+  bioPonente?: string;
+  descripcion: string;
+  imagenPonente?: string;
+  banner?: string;
+  fecha_inicio?: string;
+  fecha_fin?: string;
+  fechaInicio?: string;
+  fechaFin?: string;
+  lugar: string;
+  tipo: 'Workshop' | 'Conferencia' | 'Foro';
+  cupoMaximo?: number;
+  inscritos?: number;
+  activa: boolean;
+  inscrito?: boolean;
+  enCola?: boolean;
+};
+
+// Tipos para componentes UI
+type Video = {
+  src: string;
+  title: string;
+  description: string;
+};
+
 type Speaker = {
   name: string;
   image: string;
@@ -17,11 +106,18 @@ type Activity = {
   title: string;
   description: string;
   speakers: Speaker[];
+  cupoMaximo?: number;
+  inscritos?: number;
+  fechaInicio?: string;
+  fechaFin?: string;
+  inscrito?: boolean;
+  enCola?: boolean;
   modal: {
     title: string;
     paragraphs?: string[]; // párrafos sueltos
     bullets?: string[]; // lista con viñetas
     numbered?: string[]; // lista numerada
+    videos?: Video[]; // videos carousel
   };
 };
 
@@ -300,19 +396,46 @@ const activitiesData: Activity[] = [
     banner: "/assets/images/actividades/banners/P1.png",
     title: "Panel de egresados: “de Industrial a Industrial”",
     description:
-      "La Evolución del Ingeniero Industrial: Experiencias y Lecciones Aprendidas.",
+      "Un encuentro inspirador donde egresados destacados de nuestra carrera de Ingeniería Industrial dialogan sobre los desafíos y oportunidades que encontraron en el mundo laboral. Compartirán cómo aplicaron los conocimientos adquiridos y qué habilidades fueron clave para su desarrollo profesional.",
     speakers: [
       {
-        name: "Ing. Sofía Reyes",
+        name: "Dr. Juan Felipe Pérez Vázquez",
         image: "/assets/images/actividades/ponentes/ponente_placeholder_1.png",
         bio: "Gerente de Proyectos en Tech Solutions, egresada de la generación 2015.",
       },
+      {
+        name: "Ing. Luis Melesio García Juárez",
+        image: "/assets/images/actividades/ponentes/ponente_placeholder_1.png",
+        bio: "Gerente de Proyectos en Tech Solutions, egresada de la generación 2015.",
+      },
+      {
+        name: "Ing. Manuel Alejandro Hoil Pech",
+        image: "/assets/images/actividades/ponentes/ponente_placeholder_1.png",
+        bio: "Gerente de Proyectos en Tech Solutions, egresada de la generación 2015.",
+      },
+      // {
+      //   name: "Ing. Stephany Paola Cerón Olvera",
+      //   image: "/assets/images/actividades/ponentes/ponente_placeholder_1.png",
+      //   bio: "Gerente de Proyectos en Tech Solutions, egresada de la generación 2015.",
+      // },
     ],
     modal: {
       title: "Panel de egresados: “de Industrial a Industrial”",
       paragraphs: [
-        "Un encuentro inspirador donde egresados destacados de nuestra carrera de Ingeniería Industrial dialogan sobre los desafíos y oportunidades que encontraron en el mundo laboral. Compartirán cómo aplicaron los conocimientos adquiridos y qué habilidades fueron clave para su desarrollo profesional.",
+        "Conectamos el aula con el mundo laboral. Conoce de primera mano las diversas oportunidades y caminos profesionales que te esperan al graduarte. Tres egresados exitosos compartirán su experiencia, su trayectoria y en qué se desempeñan actualmente. Una oportunidad única para resolver todas tus dudas e inspirar tu futuro profesional.",
       ],
+      videos: [
+        {
+          src: "/assets/videos/LuisGarcia.mp4",
+          title: "Testimonio de Luis García",
+          description: "Experiencia profesional en el sector industrial"
+        },
+        {
+          src: "/assets/videos/AlexHoil.mp4", 
+          title: "Testimonio de Alex Hoil",
+          description: "Trayectoria profesional y consejos para estudiantes"
+        }
+      ]
     },
   },
   {
@@ -600,9 +723,18 @@ function ActivityCard({
           whileHover={{ scale: 1.05 }}
           transition={{ duration: 0.2 }}
         />
-        <span className={`activity-badge ${badge.className}`}>
-          {badge.label}
-        </span>
+        <div className="activity-badges">
+          <span className={`activity-badge ${badge.className}`}>
+            {badge.label}
+          </span>
+          {activity.kind === 'workshop' && activity.cupoMaximo && (
+            <CupoBadge 
+              inscritos={activity.inscritos || 0}
+              cupoMaximo={activity.cupoMaximo}
+              className="activity-cupo-badge"
+            />
+          )}
+        </div>
       </div>
 
       <h3>{activity.title}</h3>
@@ -616,40 +748,111 @@ function ActivityCard({
   );
 }
 
-// Componente principal - CORREGIDO Y ACTUALIZADO mas animaciones
+// Componente principal - ACTUALIZADO para usar API
 export default function Activities() {
   const [openId, setOpenId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [apiActivities, setApiActivities] = useState<ApiActivity[]>([]);
+
+  // Cargar actividades desde API
+  useEffect(() => {
+    const loadActivities = async () => {
+      try {
+        setIsLoading(true);
+        // Cargar conferencias y foros (sin JWT)
+        const response = await fetch(`${API_BASE}/actividades`, { credentials: "include" });
+        const result = await response.json();
+        let actividades = result.success && result.data ? result.data : [];
+
+        // Cargar workshops con JWT si existe
+        let workshops: any[] = [];
+        const token = getJWT();
+        if (token) {
+          const wsResp = await fetch(`${API_BASE}/actividades/workshops`, {
+            headers: { 'Authorization': `Bearer ${token}` },
+            credentials: "include"
+          });
+          const wsResult = await wsResp.json();
+          if (wsResult.success && wsResult.data) {
+            workshops = wsResult.data;
+          }
+        }
+        // Unir workshops y actividades (evitar duplicados)
+        const all = [
+          ...actividades.filter((a: any) => a.tipo !== 'Workshop'),
+          ...workshops
+        ];
+        setApiActivities(all);
+      } catch (err) {
+        console.error('Error loading activities:', err);
+        setApiActivities([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    loadActivities();
+  }, []);
+
+  // Convertir datos de API al formato usado en UI (mantener compatibilidad con componentes existentes)
+  const combinedActivities = useMemo(() => {
+    // Combinar datos de API con datos estáticos, priorizando API
+    const staticByCode = new Map(activitiesData.map(act => [act.id, act]));
+    
+    const apiConverted = apiActivities.map((api): Activity => {
+      const staticMatch = staticByCode.get(api.codigo);
+      // Usar fechas reales y estado de inscripción si existen
+      return {
+        id: api.codigo,
+        kind: api.tipo === 'Workshop' ? 'workshop' : api.tipo === 'Conferencia' ? 'conference' : 'forum',
+        banner: api.banner || staticMatch?.banner || '',
+        title: api.titulo,
+        description: api.descripcion,
+        cupoMaximo: api.cupoMaximo,
+        inscritos: api.inscritos || 0,
+        speakers: [{
+          name: api.ponente,
+          institution: api.institucion,
+          image: api.imagenPonente || '',
+          bio: api.bioPonente || ''
+        }],
+  fechaInicio: api.fecha_inicio || api.fechaInicio,
+  fechaFin: api.fecha_fin || api.fechaFin,
+  inscrito: api.inscrito ?? false,
+  enCola: api.enCola ?? false,
+        modal: staticMatch?.modal || {
+          title: api.titulo,
+          paragraphs: [api.descripcion]
+        }
+      };
+    });
+
+    // Agregar actividades estáticas que no están en la API
+    const apiCodes = new Set(apiActivities.map(a => a.codigo));
+    const staticOnly = activitiesData.filter(a => !apiCodes.has(a.id));
+    
+    return [...apiConverted, ...staticOnly];
+  }, [apiActivities]);
 
   const conferences = useMemo(
-    () => activitiesData.filter((a) => a.kind === "conference"),
-    []
+    () => combinedActivities.filter((a) => a.kind === "conference"),
+    [combinedActivities]
   );
 
   const workshops = useMemo(
-    () => activitiesData.filter((a) => a.kind === "workshop"),
-    []
+    () => combinedActivities.filter((a) => a.kind === "workshop"),
+    [combinedActivities]
   );
 
   const forums = useMemo(
-    () => activitiesData.filter((a) => a.kind === "forum"),
-    []
+    () => combinedActivities.filter((a) => a.kind === "forum"),
+    [combinedActivities]
   );
 
   const current = useMemo(
-    () => activitiesData.find((a) => a.id === openId) || null,
-    [openId]
+    () => combinedActivities.find((a) => a.id === openId) || null,
+    [openId, combinedActivities]
   );
-
-  // Simular carga de datos
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, []);
 
   // Efecto para la barra de progreso de scroll
   useEffect(() => {
@@ -966,6 +1169,10 @@ export default function Activities() {
                 ))}
               </ol>
             </>
+          )}
+
+          {current.modal.videos && current.modal.videos.length > 0 && (
+            <VideoCarousel videos={current.modal.videos} />
           )}
         </Modal>
       )}
