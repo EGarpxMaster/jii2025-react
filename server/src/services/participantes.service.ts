@@ -68,11 +68,11 @@ export class ParticipanteService {
   }
 
   async createParticipante(data: ParticipanteCreateDTO): Promise<Participante> {
-    // VALIDACIÓN DE VENTANA DESHABILITADA PARA PRUEBAS
-    // const inWindow = await isInRegistrationWindow();
-    // if (!inWindow) {
-    //   throw new BusinessLogicError('Fuera de la ventana de registro');
-    // }
+    // Validar ventana de inscripción
+    const inWindow = await isInRegistrationWindow();
+    if (!inWindow) {
+      throw new BusinessLogicError('El período de inscripción ha finalizado o aún no ha comenzado');
+    }
 
     // Validaciones básicas
     this.validateParticipanteData(data);

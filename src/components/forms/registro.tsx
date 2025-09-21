@@ -247,7 +247,16 @@ const RegistroComponent: React.FC<RegistroComponentProps> = ({
 
       if (res.status === 422) {
         const err = await res.json().catch(() => ({}));
-        setErrors(err.errors || {});
+        // Si es un error de validación con campos específicos
+        if (err.errors) {
+          setErrors(err.errors);
+        } else {
+          // Si es un error de lógica de negocio (como ventana de inscripción)
+          const errorMsg = typeof err.error === 'string' 
+            ? err.error 
+            : (err.error?.message || err.message || 'Error de validación');
+          alert(errorMsg);
+        }
         return;
       }
 
