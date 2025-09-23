@@ -347,6 +347,16 @@ body {
     display: flex;
     align-items: center;
     }
+    /* Etiqueta centrada tipo “chip” */
+    .form-label--chip {
+    align-self: center;
+    background: rgba(0, 0, 0, 0.06);
+    padding: 0.25rem 0.75rem;
+    border-radius: 6px;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+    }
 
     .form-input,
     .form-select {
@@ -796,20 +806,36 @@ body {
 
     .input-button-group {
         display: flex;
+        flex-direction: column;   /* ← clave para mantener el acomodo en todas las resoluciones */
+        align-items: stretch;
         gap: 0.75rem;
-        align-items: end;
+        width: 100%;
     }
 
     .input-button-group .form-input {
-        flex: 1;
+        width: 100%;
+        height: 44px;             /* tamaño cómodo y consistente */
+        font-size: 1rem;
         margin-bottom: 0;
     }
 
     .input-button-group .submit-button {
-        white-space: nowrap;
-        min-width: auto;
+        width: 100%;              /* botón full-width como en la imagen */
+        min-width: auto;          /* “ancho automático” pero ocupando el contenedor */
         padding: 0.75rem 1.25rem;
-        margin-bottom: 0;
+        margin: 0;
+    }
+
+        /* Mensajes de ayuda / error */
+    .field-help {
+        margin-top: -0.25rem;
+        color: var(--light-text);
+        font-size: 0.85rem;
+    }
+    .field-error {
+        color: var(--error-color);
+        font-weight: 600;
+        font-size: 0.85rem;
     }
 
 
@@ -1084,7 +1110,6 @@ body {
     
     .input-button-group {
         flex-direction: column;
-        gap: 0.5rem;
     }
     
     .input-button-group .submit-button {
@@ -1148,6 +1173,10 @@ body {
     
     .scroll-arrow {
         display: none !important;
+    }
+    
+    .input-button-group { 
+        flex-direction: column; 
     }
 }
 

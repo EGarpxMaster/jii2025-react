@@ -25,6 +25,9 @@ type Participante = {
     | ""
     | null;
 };
+// Constantes (pueden ir arriba del componente)
+const BRAZA_MIN = 1;
+const BRAZA_MAX = 500;
 
 type Actividad = {
   id: number;
@@ -323,14 +326,21 @@ const AsistenciaComponent: React.FC<AsistenciaComponentProps> = ({ className = "
                 </div>
               </div>
 
-              {!participante.brazalete && (
+              {!participante?.brazalete && (
                 <div className="brazalete-section brazalete-section--mobile">
                   <div className="warning-header">
                     <h4>⚠️ Brazalete requerido</h4>
-                    <p>Necesitas registrar tu número de brazalete para poder marcar asistencia a las actividades.</p>
+                    <p>
+                      Necesitas registrar tu número de brazalete para poder marcar asistencia a las actividades.
+                    </p>
                   </div>
+
                   <div className="form-group">
-                    <label htmlFor="brazalete" className="form-label">Número de brazalete</label>
+                    {/* Etiqueta centrada estilo “chip” como en la imagen */}
+                    <label htmlFor="brazalete" className="form-label form-label--chip">
+                      Número de brazalete
+                    </label>
+
                     <div className="input-button-group">
                       <input
                         id="brazalete"
@@ -338,17 +348,60 @@ const AsistenciaComponent: React.FC<AsistenciaComponentProps> = ({ className = "
                         inputMode="numeric"
                         pattern="\d*"
                         maxLength={3}
-                        placeholder="Número de brazalete (1-500)"
+                        placeholder={`Número de brazalete (${BRAZA_MIN}-${BRAZA_MAX})`}
                         value={brazalete}
-                        onChange={(e) => setBrazalete(e.target.value.replace(/\D/g, ""))}
-                        className="form-input w-100"
+                        onChange={(e) => {
+                          // Solo dígitos; aceptamos ceros a la izquierda para escritura,
+                          // pero al guardar se normaliza a entero.
+                          const digits = e.target.value.replace(/\D/g, "");
+                          setBrazalete(digits);
+                        }}
+                        className={`form-input w-100 ${
+                          brazalete && (Number(brazalete) < BRAZA_MIN || Number(brazalete) > BRAZA_MAX)
+                            ? "input-error"
+                            : ""
+                        }`}
                         aria-label="Número de brazalete"
+                        aria-invalid={
+                          !!brazalete && (Number(brazalete) < BRAZA_MIN || Number(brazalete) > BRAZA_MAX)
+                        }
+                        aria-describedby="brazalete-help brazalete-error"
                       />
+
+                      {/* Mensajes de ayuda / error */}
+                      <small id="brazalete-help" className="field-help">
+                        Solo números del {BRAZA_MIN} al {BRAZA_MAX}.
+                      </small>
+                      {brazalete && (Number(brazalete) < BRAZA_MIN || Number(brazalete) > BRAZA_MAX) && (
+                        <small id="brazalete-error" className="field-error">
+                          Valor fuera de rango ({BRAZA_MIN}–{BRAZA_MAX}).
+                        </small>
+                      )}
+
                       <button
                         type="button"
-                        onClick={guardarBrazalete}
-                        disabled={savingBrazalete || !brazalete.trim()}
-                        className={`submit-button ${(savingBrazalete || !brazalete.trim()) ? 'disabled' : ''}`}
+                        onClick={async () => {
+                          // Validación defensiva antes de guardar
+                          const n = Number(brazalete);
+                          if (!brazalete || isNaN(n) || n < BRAZA_MIN || n > BRAZA_MAX) return;
+                          await guardarBrazalete();
+                        }}
+                        disabled={
+                          savingBrazalete ||
+                          !brazalete.trim() ||
+                          isNaN(Number(brazalete)) ||
+                          Number(brazalete) < BRAZA_MIN ||
+                          Number(brazalete) > BRAZA_MAX
+                        }
+                        className={`submit-button ${
+                          savingBrazalete ||
+                          !brazalete.trim() ||
+                          isNaN(Number(brazalete)) ||
+                          Number(brazalete) < BRAZA_MIN ||
+                          Number(brazalete) > BRAZA_MAX
+                            ? "disabled"
+                            : ""
+                        }`}
                       >
                         {savingBrazalete ? "💾 Guardando..." : "💾 Guardar"}
                       </button>
@@ -356,6 +409,7 @@ const AsistenciaComponent: React.FC<AsistenciaComponentProps> = ({ className = "
                   </div>
                 </div>
               )}
+
             </div>
           )}
 
