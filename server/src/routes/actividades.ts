@@ -137,4 +137,10 @@ router.get('/:id/asistencias-stats', asyncHandler(async (req: Request, res: Resp
   res.json(createApiResponse(stats));
 }));
 
+// GET /api/actividades/dashboard-stats - Obtener estadísticas completas para el dashboard
+router.get('/dashboard-stats', asyncHandler(async (req: Request, res: Response) => {
+  const dashboardStats = await actividadService.getDashboardStats();
+  res.json(createApiResponse(dashboardStats));
+}));
+
 export { router as actividadesRoutes };

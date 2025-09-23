@@ -53,9 +53,6 @@ const RegistroConcursoComponent: React.FC<RegistroConcursoProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  // Variables comentadas - ya no se usan con auto-naming
-  // const [equipoNameStatus, setEquipoNameStatus] =
-  //   useState<"idle" | "checking" | "available" | "taken">("idle");
   const [equipoNameStatus, setEquipoNameStatus] =
     useState<"idle" | "checking" | "available" | "taken">("idle");
   const [estadosDisponibles, setEstadosDisponibles] = useState<EstadoMexico[]>([]);
@@ -81,39 +78,44 @@ const RegistroConcursoComponent: React.FC<RegistroConcursoProps> = ({
         // Si viene con wrapper de API, extraer los datos
         const estados = result.data || result;
         setEstadosDisponibles(estados);
+        
+        // Si el estado seleccionado ya no está disponible, limpiarlo
+        if (data.estadoId) {
+          const estadoSeleccionado = estados.find((e: EstadoMexico) => e.id.toString() === data.estadoId);
+          if (!estadoSeleccionado || !estadoSeleccionado.disponible) {
+            setData(prev => ({
+              ...prev,
+              estadoId: "",
+              nombreEquipo: ""
+            }));
+            setEquipoNameStatus("idle");
+            setErrors(prev => ({
+              ...prev,
+              estadoId: "El estado seleccionado ya no está disponible"
+            }));
+          }
+        }
       }
     } catch (error) {
       console.error('Error cargando estados:', error);
+      setErrors(prev => ({
+        ...prev,
+        estadoId: "Error cargando estados disponibles"
+      }));
     } finally {
       setLoadingEstados(false);
     }
-  }, []);
+  }, [data.estadoId]);
 
   useEffect(() => {
     loadEstadosDisponibles();
-  }, [loadEstadosDisponibles]);
+  }, []);
 
-  // Función comentada - ya no necesaria con auto-naming
-  // const checkEquipoName = useCallback(async (nombre: string) => {
-  //   if (!nombre.trim()) {
-  //     setEquipoNameStatus("idle");
-  //     return;
-  //   }
-  //   setEquipoNameStatus("checking");
-  //   try {
-  //     const response = await fetch(
-  //       `${API_URL}/check-name?nombre=${encodeURIComponent(nombre)}`
-  //     );
-  //     const result = await response.json();
-  //     if (response.ok) {
-  //       setEquipoNameStatus(result.available ? "available" : "taken");
-  //     } else {
-  //       setEquipoNameStatus("idle");
-  //     }
-  //   } catch {
-  //     setEquipoNameStatus("idle");
-  //   }
-  // }, []);
+  // Recargar estados cada 30 segundos para mantener actualizada la lista
+  useEffect(() => {
+    const interval = setInterval(loadEstadosDisponibles, 30000);
+    return () => clearInterval(interval);
+  }, [loadEstadosDisponibles]);
 
   const checkParticipant = useCallback(async (email: string, field: string) => {
     if (!email.trim()) {
@@ -165,23 +167,19 @@ const RegistroConcursoComponent: React.FC<RegistroConcursoProps> = ({
           ...prev,
           nombreEquipo: `Equipo ${estadoSeleccionado.nombre}`
         }));
-        setEquipoNameStatus("available"); // Se considera siempre disponible
+        setEquipoNameStatus("available");
+        // Limpiar error de estado si existía
+        setErrors(prev => {
+          const newErrors = { ...prev };
+          delete newErrors.estadoId;
+          return newErrors;
+        });
       }
     } else {
       setData(prev => ({ ...prev, nombreEquipo: "" }));
       setEquipoNameStatus("idle");
     }
   }, [data.estadoId, estadosDisponibles]);
-
-  // Comentado: Ya no necesitamos verificar nombres únicos
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     if (data.nombreEquipo.trim()) {
-  //       checkEquipoName(data.nombreEquipo.trim());
-  //     }
-  //   }, 500);
-  //   return () => clearTimeout(timer);
-  // }, [data.nombreEquipo, checkEquipoName]);
 
   const handleChange = (field: keyof FormData, value: string | string[]) => {
     setData((prev) => ({ ...prev, [field]: value }));
@@ -223,15 +221,18 @@ const RegistroConcursoComponent: React.FC<RegistroConcursoProps> = ({
   const validate = (): boolean => {
     const newErrors: Errors = {};
 
-    // VALIDACIÓN DE NOMBRE DESHABILITADA - SE AUTO-GENERA
-    // if (!data.nombreEquipo.trim()) {
-    //   newErrors.nombreEquipo = "Nombre del equipo obligatorio";
-    // } else if (equipoNameStatus === "taken") {
-    //   newErrors.nombreEquipo = "Este nombre ya está en uso";
-    // }
-
     if (!data.estadoId) {
       newErrors.estadoId = "Debes seleccionar un estado de México";
+    } else {
+      // Verificar que el estado seleccionado aún está disponible
+      const estadoSeleccionado = estadosDisponibles.find(
+        estado => estado.id.toString() === data.estadoId
+      );
+      if (!estadoSeleccionado) {
+        newErrors.estadoId = "Estado no encontrado";
+      } else if (!estadoSeleccionado.disponible) {
+        newErrors.estadoId = "El estado seleccionado ya no está disponible";
+      }
     }
 
     const basic = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -261,7 +262,6 @@ const RegistroConcursoComponent: React.FC<RegistroConcursoProps> = ({
     ev.preventDefault();
 
     const touchedFields: Record<string, boolean> = {
-      // nombreEquipo: true, // Ya no necesario, se auto-genera
       estadoId: true,
       emailCapitan: true,
     };
@@ -272,15 +272,26 @@ const RegistroConcursoComponent: React.FC<RegistroConcursoProps> = ({
 
     if (!validate()) return;
 
+    // Verificar una vez más que el estado esté disponible antes del envío
+    await loadEstadosDisponibles();
+    const estadoSeleccionado = estadosDisponibles.find(
+      estado => estado.id.toString() === data.estadoId
+    );
+    if (!estadoSeleccionado || !estadoSeleccionado.disponible) {
+      setErrors(prev => ({
+        ...prev,
+        estadoId: "El estado seleccionado ya no está disponible. Por favor, selecciona otro estado."
+      }));
+      return;
+    }
+
     const allValid =
-      // equipoNameStatus === "available" && // Ya no necesario, siempre válido
       participantStatuses.emailCapitan === "valid" &&
       data.emailsMiembros.every((_, i) => participantStatuses[`miembro${i}`] === "valid");
 
     if (!allValid) {
       setErrors((prev) => ({
         ...prev,
-        // nombreEquipo: Ya no necesario validar
         emailCapitan:
           participantStatuses.emailCapitan !== "valid" ? "Verifica el email del capitán" : prev.emailCapitan,
       }));
@@ -317,7 +328,12 @@ const RegistroConcursoComponent: React.FC<RegistroConcursoProps> = ({
         if (Array.isArray(result.details)) {
           alert(`Error en el registro:\n\n${result.details.join("\n")}`);
         } else {
-          alert(result.error || "Error en el registro del equipo");
+          const errorMessage = result.error || "Error en el registro del equipo";
+          alert(errorMessage);
+          // Si el error es por estado no disponible, recargar la lista
+          if (errorMessage.includes("disponible") || errorMessage.includes("estado")) {
+            await loadEstadosDisponibles();
+          }
         }
         return;
       }
@@ -418,6 +434,11 @@ const RegistroConcursoComponent: React.FC<RegistroConcursoProps> = ({
                   <div className="form-group" style={{ gridColumn: "1 / -1" }}>
                     <label htmlFor="estadoId" className="form-label">
                       Estado de México que representarás *
+                      {estadosDisponibles.length > 0 && (
+                        <small style={{ marginLeft: '0.5rem', fontWeight: 'normal', color: '#666' }}>
+                          ({estadosDisponibles.length} estados disponibles)
+                        </small>
+                      )}
                     </label>
                     <select
                       id="estadoId"
@@ -438,9 +459,14 @@ const RegistroConcursoComponent: React.FC<RegistroConcursoProps> = ({
                         </option>
                       ))}
                     </select>
-                    {data.estadoId && (
+                    {data.estadoId && !errors.estadoId && (
                       <small className="success">
                         ✓ Representarás a {estadosDisponibles.find(e => e.id.toString() === data.estadoId)?.nombre}
+                      </small>
+                    )}
+                    {estadosDisponibles.length === 0 && !loadingEstados && (
+                      <small className="error">
+                        ⚠️ No hay estados disponibles en este momento
                       </small>
                     )}
                     {touched.estadoId && errors.estadoId && (
@@ -526,17 +552,24 @@ const RegistroConcursoComponent: React.FC<RegistroConcursoProps> = ({
                 <button
                   type="submit"
                   className={`submit-button ${isSubmitting ? "submitting" : ""}`}
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || estadosDisponibles.length === 0}
                 >
                   {isSubmitting ? (
                     <>
                       <span className="spinner"></span>
                       Registrando Equipo...
                     </>
+                  ) : estadosDisponibles.length === 0 ? (
+                    "No hay estados disponibles"
                   ) : (
                     "Registrar Equipo"
                   )}
                 </button>
+                {estadosDisponibles.length === 0 && (
+                  <small className="error" style={{ marginTop: '0.5rem', display: 'block' }}>
+                    Todos los estados han sido ocupados por otros equipos
+                  </small>
+                )}
               </div>
             </form>
           </>

@@ -70,61 +70,91 @@ export class EquipoService {
     // Validaciones básicas
     this.validateEquipoData(data);
 
-    // Verificar que el estado existe y está disponible
-    const estado = await this.getEstadoById(data.estado_id);
-    if (!estado) {
-      throw new NotFoundError('Estado no encontrado');
-    }
-    if (!estado.disponible) {
-      throw new BusinessLogicError('El estado seleccionado ya no está disponible');
-    }
-
-    // NOTA: Ya no validamos nombre único porque se auto-genera en la BD
-    // El nombre será automáticamente "Equipo {estado}" mediante trigger
-
-    // Verificar que todos los emails existen en participantes
-    const emails = [
-      data.email_capitan,
-      data.email_miembro_1,
-      data.email_miembro_2,
-      data.email_miembro_3,
-      data.email_miembro_4,
-      data.email_miembro_5
-    ];
-
-    await this.validateEmailsExist(emails);
-    await this.validateEmailsNotInOtherTeams(emails);
-
-    const query = `
-      INSERT INTO equipos_concurso (
-        nombre_equipo, estado_id,
-        email_capitan, email_miembro_1, email_miembro_2,
-        email_miembro_3, email_miembro_4, email_miembro_5,
-        estado_registro
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pendiente')
-    `;
-
-    const params = [
-      'TEMP', // El trigger DB auto-generará el nombre real basado en el estado
-      data.estado_id,
-      data.email_capitan.toLowerCase().trim(),
-      data.email_miembro_1.toLowerCase().trim(),
-      data.email_miembro_2.toLowerCase().trim(),
-      data.email_miembro_3.toLowerCase().trim(),
-      data.email_miembro_4.toLowerCase().trim(),
-      data.email_miembro_5.toLowerCase().trim()
-    ];
-
     return executeTransaction(async (connection) => {
-      const [result] = await connection.execute(query, params);
-      const insertId = (result as any).insertId;
+      // Verificar que el estado existe y está disponible DENTRO de la transacción
+      const [estadoRows] = await connection.execute(
+        'SELECT * FROM estados_mexico WHERE id = ? FOR UPDATE',
+        [data.estado_id]
+      );
+      const estado = (estadoRows as any[])[0];
       
-      // Buscar el equipo recién creado usando la misma conexión de la transacción
-      const [rows] = await connection.execute(
+      if (!estado) {
+        throw new NotFoundError('Estado no encontrado');
+      }
+      if (!estado.disponible) {
+        throw new BusinessLogicError('El estado seleccionado ya no está disponible');
+      }
+
+      // Verificar que no existe otro equipo con este estado (doble verificación)
+      const [equipoExistenteRows] = await connection.execute(
+        'SELECT COUNT(*) as count FROM equipos_concurso WHERE estado_id = ? AND estado_registro IN (?, ?)',
+        [data.estado_id, 'pendiente', 'confirmado']
+      );
+      const equipoExistente = (equipoExistenteRows as any[])[0];
+      
+      if (equipoExistente.count > 0) {
+        throw new BusinessLogicError('Ya existe un equipo registrado para este estado');
+      }
+
+      // Verificar que todos los emails existen en participantes
+      const emails = [
+        data.email_capitan,
+        data.email_miembro_1,
+        data.email_miembro_2,
+        data.email_miembro_3,
+        data.email_miembro_4,
+        data.email_miembro_5
+      ];
+
+      await this.validateEmailsExistInTransaction(connection, emails);
+      await this.validateEmailsNotInOtherTeamsInTransaction(connection, emails);
+
+      // Crear el equipo
+      const equipoQuery = `
+        INSERT INTO equipos_concurso (
+          estado_id,
+          email_capitan, email_miembro_1, email_miembro_2,
+          email_miembro_3, email_miembro_4, email_miembro_5,
+          estado_registro
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, 'pendiente')
+      `;
+
+      const equipoParams = [
+        data.estado_id,
+        data.email_capitan.toLowerCase().trim(),
+        data.email_miembro_1.toLowerCase().trim(),
+        data.email_miembro_2.toLowerCase().trim(),
+        data.email_miembro_3.toLowerCase().trim(),
+        data.email_miembro_4.toLowerCase().trim(),
+        data.email_miembro_5.toLowerCase().trim()
+      ];
+
+      const [equipoResult] = await connection.execute(equipoQuery, equipoParams);
+      const insertId = (equipoResult as any).insertId;
+
+      // Generar nombre del equipo
+      const nombreEquipo = `Equipo ${estado.nombre}`;
+      
+      // Actualizar el nombre del equipo
+      await connection.execute(
+        'UPDATE equipos_concurso SET nombre_equipo = ? WHERE id = ?',
+        [nombreEquipo, insertId]
+      );
+
+      // Marcar el estado como no disponible inmediatamente
+      const updateResult = await connection.execute(
+        'UPDATE estados_mexico SET disponible = FALSE WHERE id = ?',
+        [data.estado_id]
+      );
+
+      console.log(`Estado ${data.estado_id} marcado como no disponible. Filas afectadas:`, (updateResult[0] as any).affectedRows);
+      
+      // Buscar el equipo recién creado
+      const [equipoRows] = await connection.execute(
         'SELECT * FROM equipos_concurso WHERE id = ?',
         [insertId]
       );
-      const equipo = (rows as any[])[0];
+      const equipo = (equipoRows as any[])[0];
       
       if (!equipo) {
         throw new Error('Error al recuperar el equipo creado');
@@ -159,13 +189,19 @@ export class EquipoService {
     `;
 
     return executeTransaction(async (connection) => {
-      const [result] = await connection.execute(query, [id]);
-      // El trigger se encarga de marcar el estado como no disponible
+      await connection.execute(query, [id]);
       
-      const equipoActualizado = await executeQuerySingle<EquipoConcurso>(
+      // Asegurar que el estado esté marcado como no disponible
+      await connection.execute(
+        'UPDATE estados_mexico SET disponible = FALSE WHERE id = ?',
+        [equipo.estado_id]
+      );
+      
+      const [equipoRows] = await connection.execute(
         'SELECT * FROM equipos_concurso WHERE id = ?',
         [id]
       );
+      const equipoActualizado = (equipoRows as any[])[0];
       
       if (!equipoActualizado) {
         throw new Error('Error al recuperar el equipo actualizado');
@@ -196,13 +232,19 @@ export class EquipoService {
     `;
 
     return executeTransaction(async (connection) => {
-      const [result] = await connection.execute(query, [id]);
-      // El trigger se encarga de liberar el estado si estaba confirmado
+      await connection.execute(query, [id]);
       
-      const equipoActualizado = await executeQuerySingle<EquipoConcurso>(
+      // Liberar el estado para que vuelva a estar disponible
+      await connection.execute(
+        'UPDATE estados_mexico SET disponible = TRUE WHERE id = ?',
+        [equipo.estado_id]
+      );
+      
+      const [equipoRows] = await connection.execute(
         'SELECT * FROM equipos_concurso WHERE id = ?',
         [id]
       );
+      const equipoActualizado = (equipoRows as any[])[0];
       
       if (!equipoActualizado) {
         throw new Error('Error al recuperar el equipo actualizado');
@@ -210,6 +252,44 @@ export class EquipoService {
       
       return equipoActualizado;
     });
+  }
+
+  // Método auxiliar para validar emails en transacción
+  private async validateEmailsExistInTransaction(connection: any, emails: string[]): Promise<void> {
+    const placeholders = emails.map(() => '?').join(',');
+    const query = `SELECT COUNT(*) as count FROM participantes WHERE email IN (${placeholders})`;
+    
+    const [rows] = await connection.execute(query, emails);
+    const result = (rows as any[])[0];
+    
+    if (result?.count !== emails.length) {
+      throw new ValidationError('Todos los correos deben existir como participantes registrados');
+    }
+  }
+
+  // Método auxiliar para validar que emails no estén en otros equipos en transacción
+  private async validateEmailsNotInOtherTeamsInTransaction(connection: any, emails: string[]): Promise<void> {
+    const query = `
+      SELECT COUNT(*) as count 
+      FROM equipos_concurso 
+      WHERE estado_registro IN ('pendiente', 'confirmado')
+        AND (
+          email_capitan IN (${emails.map(() => '?').join(',')}) OR
+          email_miembro_1 IN (${emails.map(() => '?').join(',')}) OR
+          email_miembro_2 IN (${emails.map(() => '?').join(',')}) OR
+          email_miembro_3 IN (${emails.map(() => '?').join(',')}) OR
+          email_miembro_4 IN (${emails.map(() => '?').join(',')}) OR
+          email_miembro_5 IN (${emails.map(() => '?').join(',')})
+        )
+    `;
+    
+    const params = Array(6).fill(emails).flat();
+    const [rows] = await connection.execute(query, params);
+    const result = (rows as any[])[0];
+    
+    if (result && result.count > 0) {
+      throw new ValidationError('Uno o más correos ya están registrados en otro equipo');
+    }
   }
 
   private async validateEmailsExist(emails: string[]): Promise<void> {
@@ -247,14 +327,6 @@ export class EquipoService {
   }
 
   private validateEquipoData(data: EquipoConcursoCreateDTO): void {
-    // VALIDACIÓN DE NOMBRE DESHABILITADA - SE AUTO-GENERA EN BD
-    // if (!data.nombre_equipo?.trim()) {
-    //   throw new ValidationError('Nombre del equipo es requerido');
-    // }
-    // if (data.nombre_equipo.trim().length < 3 || data.nombre_equipo.trim().length > 100) {
-    //   throw new ValidationError('El nombre del equipo debe tener entre 3 y 100 caracteres');
-    // }
-    
     if (!data.estado_id) {
       throw new ValidationError('Estado es requerido');
     }

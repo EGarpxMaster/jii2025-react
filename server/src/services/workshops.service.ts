@@ -97,26 +97,55 @@ export class WorkshopService {
       throw new BusinessLogicError('Ya estás inscrito en este workshop');
     }
 
-    const query = `
+    const insertQuery = `
       INSERT INTO inscripciones_workshop (participante_id, actividad_id, estado)
       VALUES (?, ?, 'inscrito')
     `;
 
     return executeTransaction(async (connection) => {
-      // El trigger se encarga de validar el cupo y cambiar a lista_espera si es necesario
-      const [result] = await connection.execute(query, [data.participante_id, data.actividad_id]);
-      const insertId = (result as any).insertId;
-      
-      const inscripcion = await executeQuerySingle<InscripcionWorkshop>(
-        'SELECT * FROM inscripciones_workshop WHERE id = ?',
-        [insertId]
-      );
-      
-      if (!inscripcion) {
-        throw new Error('Error al recuperar la inscripción creada');
+      try {
+        // Insertar la inscripción
+        const [result] = await connection.execute(insertQuery, [data.participante_id, data.actividad_id]);
+        const insertId = (result as any).insertId;
+        
+        if (!insertId) {
+          throw new Error('No se pudo obtener el ID de la inscripción creada');
+        }
+
+        // Recuperar la inscripción usando la misma conexión de transacción
+        const [rows] = await connection.execute(
+          'SELECT * FROM inscripciones_workshop WHERE id = ?',
+          [insertId]
+        );
+        
+        const inscripcion = (rows as any[])[0] as InscripcionWorkshop;
+        
+        if (!inscripcion) {
+          throw new Error(`Inscripción con ID ${insertId} no encontrada después de la inserción`);
+        }
+        
+        return inscripcion;
+        
+      } catch (error) {
+        // Log más detallado del error
+        if (error instanceof Error) {
+          console.error('Error en inscribirParticipante:', {
+            error: error.message,
+            participante_id: data.participante_id,
+            actividad_id: data.actividad_id,
+            stack: error.stack
+          });
+        } else {
+          console.error('Error en inscribirParticipante:', {
+            error,
+            participante_id: data.participante_id,
+            actividad_id: data.actividad_id
+          });
+        }
+        
+        // Re-lanzar el error para que la transacción se revierta
+        throw error;
       }
-      
-      return inscripcion;
     });
   }
 

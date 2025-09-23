@@ -152,4 +152,185 @@ export class ActividadService {
     
     return executeQuerySingle(query);
   }
+
+  async getDashboardStats(): Promise<any> {
+    // Estadísticas generales
+    const generalStats = await this.getActividadesStats();
+    
+    // Ocupación por actividad
+    const ocupacionQuery = `
+      SELECT 
+        a.id,
+        a.nombre,
+        a.tipo,
+        a.cupo_maximo,
+        a.fecha_inicio,
+        COALESCE(w.inscritos, 0) as inscritos,
+        COALESCE(ast.asistentes, 0) as asistentes,
+        CASE 
+          WHEN a.tipo = 'Workshop' THEN COALESCE(w.inscritos, 0)
+          ELSE COALESCE(ast.asistentes, 0)
+        END as ocupacion_actual,
+        CASE 
+          WHEN a.cupo_maximo > 0 THEN 
+            ROUND(
+              (CASE 
+                WHEN a.tipo = 'Workshop' THEN COALESCE(w.inscritos, 0)
+                ELSE COALESCE(ast.asistentes, 0)
+              END * 100.0) / a.cupo_maximo, 2
+            )
+          ELSE 0
+        END as porcentaje_ocupacion
+      FROM actividades a
+      LEFT JOIN (
+        SELECT 
+          actividad_id,
+          COUNT(*) as inscritos
+        FROM inscripciones_workshop 
+        WHERE estado = 'inscrito'
+        GROUP BY actividad_id
+      ) w ON a.id = w.actividad_id AND a.tipo = 'Workshop'
+      LEFT JOIN (
+        SELECT 
+          actividad_id,
+          COUNT(*) as asistentes
+        FROM asistencias 
+        WHERE estado IN ('registrado', 'presente')
+        GROUP BY actividad_id
+      ) ast ON a.id = ast.actividad_id AND a.tipo IN ('Conferencia', 'Foro')
+      WHERE a.activa = TRUE
+      ORDER BY a.fecha_inicio ASC
+    `;
+    
+    const ocupacionPorActividad = await executeQuery(ocupacionQuery);
+    
+    // Estadísticas por tipo de actividad
+    const estadisticasPorTipoQuery = `
+      SELECT 
+        a.tipo,
+        COUNT(*) as total_actividades,
+        SUM(a.cupo_maximo) as cupo_total,
+        SUM(
+          CASE 
+            WHEN a.tipo = 'Workshop' THEN COALESCE(w.inscritos, 0)
+            ELSE COALESCE(ast.asistentes, 0)
+          END
+        ) as ocupacion_total,
+        AVG(
+          CASE 
+            WHEN a.cupo_maximo > 0 THEN 
+              (CASE 
+                WHEN a.tipo = 'Workshop' THEN COALESCE(w.inscritos, 0)
+                ELSE COALESCE(ast.asistentes, 0)
+              END * 100.0) / a.cupo_maximo
+            ELSE 0
+          END
+        ) as promedio_ocupacion
+      FROM actividades a
+      LEFT JOIN (
+        SELECT 
+          actividad_id,
+          COUNT(*) as inscritos
+        FROM inscripciones_workshop 
+        WHERE estado = 'inscrito'
+        GROUP BY actividad_id
+      ) w ON a.id = w.actividad_id AND a.tipo = 'Workshop'
+      LEFT JOIN (
+        SELECT 
+          actividad_id,
+          COUNT(*) as asistentes
+        FROM asistencias 
+        WHERE estado IN ('registrado', 'presente')
+        GROUP BY actividad_id
+      ) ast ON a.id = ast.actividad_id AND a.tipo IN ('Conferencia', 'Foro')
+      WHERE a.activa = TRUE
+      GROUP BY a.tipo
+    `;
+    
+    const estadisticasPorTipo = await executeQuery(estadisticasPorTipoQuery);
+    
+    // Actividades con mayor y menor ocupación
+    const actividadesExtremosQuery = `
+      SELECT 
+        'mayor_ocupacion' as categoria,
+        a.nombre,
+        a.tipo,
+        a.cupo_maximo,
+        CASE 
+          WHEN a.tipo = 'Workshop' THEN COALESCE(w.inscritos, 0)
+          ELSE COALESCE(ast.asistentes, 0)
+        END as ocupacion_actual,
+        CASE 
+          WHEN a.cupo_maximo > 0 THEN 
+            ROUND(
+              (CASE 
+                WHEN a.tipo = 'Workshop' THEN COALESCE(w.inscritos, 0)
+                ELSE COALESCE(ast.asistentes, 0)
+              END * 100.0) / a.cupo_maximo, 2
+            )
+          ELSE 0
+        END as porcentaje_ocupacion
+      FROM actividades a
+      LEFT JOIN (
+        SELECT actividad_id, COUNT(*) as inscritos
+        FROM inscripciones_workshop WHERE estado = 'inscrito'
+        GROUP BY actividad_id
+      ) w ON a.id = w.actividad_id AND a.tipo = 'Workshop'
+      LEFT JOIN (
+        SELECT actividad_id, COUNT(*) as asistentes
+        FROM asistencias WHERE estado IN ('registrado', 'presente')
+        GROUP BY actividad_id
+      ) ast ON a.id = ast.actividad_id AND a.tipo IN ('Conferencia', 'Foro')
+      WHERE a.activa = TRUE AND a.cupo_maximo > 0
+      ORDER BY porcentaje_ocupacion DESC
+      LIMIT 5
+      
+      UNION ALL
+      
+      SELECT 
+        'menor_ocupacion' as categoria,
+        a.nombre,
+        a.tipo,
+        a.cupo_maximo,
+        CASE 
+          WHEN a.tipo = 'Workshop' THEN COALESCE(w.inscritos, 0)
+          ELSE COALESCE(ast.asistentes, 0)
+        END as ocupacion_actual,
+        CASE 
+          WHEN a.cupo_maximo > 0 THEN 
+            ROUND(
+              (CASE 
+                WHEN a.tipo = 'Workshop' THEN COALESCE(w.inscritos, 0)
+                ELSE COALESCE(ast.asistentes, 0)
+              END * 100.0) / a.cupo_maximo, 2
+            )
+          ELSE 0
+        END as porcentaje_ocupacion
+      FROM actividades a
+      LEFT JOIN (
+        SELECT actividad_id, COUNT(*) as inscritos
+        FROM inscripciones_workshop WHERE estado = 'inscrito'
+        GROUP BY actividad_id
+      ) w ON a.id = w.actividad_id AND a.tipo = 'Workshop'
+      LEFT JOIN (
+        SELECT actividad_id, COUNT(*) as asistentes
+        FROM asistencias WHERE estado IN ('registrado', 'presente')
+        GROUP BY actividad_id
+      ) ast ON a.id = ast.actividad_id AND a.tipo IN ('Conferencia', 'Foro')
+      WHERE a.activa = TRUE AND a.cupo_maximo > 0
+      ORDER BY porcentaje_ocupacion ASC
+      LIMIT 5
+    `;
+    
+    const actividadesExtremos = await executeQuery(actividadesExtremosQuery);
+    
+    return {
+      estadisticas_generales: generalStats,
+      ocupacion_por_actividad: ocupacionPorActividad,
+      estadisticas_por_tipo: estadisticasPorTipo,
+      actividades_mayor_ocupacion: actividadesExtremos.filter((a: any) => a.categoria === 'mayor_ocupacion'),
+      actividades_menor_ocupacion: actividadesExtremos.filter((a: any) => a.categoria === 'menor_ocupacion'),
+      ultima_actualizacion: new Date().toISOString()
+    };
+  }
 }

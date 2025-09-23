@@ -7,6 +7,7 @@ type Categoria =
   | "Estudiante de Ingeniería Industrial"
   | "Estudiante Invitado"
   | "Docente"
+  | "Staff"
   | "Ponente"
   | "Asistente externo";
 type Programa =
@@ -495,6 +496,7 @@ const RegistroComponent: React.FC<RegistroComponentProps> = ({
                       <option value="Estudiante de Ingeniería Industrial">Estudiante de Ingeniería Industrial</option>
                       <option value="Estudiante Invitado">Estudiante Invitado</option>
                       <option value="Docente">Docente</option>
+                      <option value="Staff">Staff</option>
                       <option value="Ponente">Ponente</option>
                       <option value="Asistente externo">Asistente externo</option>
                     </select>

@@ -4,10 +4,10 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export const dbConfig = {
-  host: process.env.DB_HOST || 'localhost',
+  host: process.env.DB_HOST || '192.168.200.212',
   port: parseInt(process.env.DB_PORT || '3306'),
-  user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || '',
+  user: process.env.DB_USER || 'industrial',
+  password: process.env.DB_PASSWORD || 'p@ss4DB',
   database: process.env.DB_NAME || process.env.DB_DATABASE || 'jornada_ii',
   charset: 'utf8mb4',
   timezone: 'Z', // UTC para evitar problemas de serialización

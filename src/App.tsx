@@ -7,6 +7,7 @@ import Concurso from './pages/concurso/concurso';
 import Registro from './pages/registro/registro';
 import Aliados from './pages/aliados/aliados';
 import Staff from './pages/staff/staff';
+import Dashboard from './pages/dashboard/dashboard';
 import Navbar from "./components/navbar/navbar";
 import Footer from './components/footer/footer';
 import Galeria from './pages/historia/GaleriaCompleta';
@@ -18,7 +19,8 @@ const basename = import.meta.env.PROD && isGitHubPages ? '/jii2025-react' : '';
 function App() {
   return (
     <>
-      <Navbar />
+      {/* Solo mostrar Navbar y Footer si no es el dashboard */}
+      {window.location.pathname !== '/dashboard' && <Navbar />}
       <BrowserRouter basename={basename}>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -29,9 +31,10 @@ function App() {
           <Route path="/staff" element={<Staff />} />
           <Route path="/aliados" element={<Aliados />} />
           <Route path="/registro" element={<Registro />} />
+          <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
       </BrowserRouter>
-      <Footer />
+      {window.location.pathname !== '/dashboard' && <Footer />}
     </>
   )
 }

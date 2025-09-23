@@ -94,7 +94,7 @@ type Actividad = {
 
 type Inscripcion = {
   actividadId: number;
-  estado: "inscrito" | "lista_espera";
+  estado: "inscrito" | "lista_espera" | "cancelado";
   creado: string;
 };
 
@@ -573,9 +573,14 @@ const WorkshopComponent: React.FC<WorkshopComponentProps> = ({
           {participante && !loadingWorkshops && workshops.length > 0 && (
             <div className="conference-list">
               {sortedWorkshops.map((workshop) => {
-                const inscripcion = inscripciones[workshop.id];
+                let inscripcion: Inscripcion | undefined = inscripciones[workshop.id];
                 const cargando = !!loadingBtn[workshop.id];
                 const lleno = isLleno(workshop);
+
+                // Si la inscripción está cancelada, la tratamos como si no existiera
+                if (inscripcion && inscripcion.estado === 'cancelado') {
+                  inscripcion = undefined;
+                }
 
                 const cardClasses = ["conference-card", inscripcion ? "is-registered" : ""].join(" ");
 
@@ -586,7 +591,6 @@ const WorkshopComponent: React.FC<WorkshopComponentProps> = ({
                         {inscripcion.estado === "inscrito" ? "✓ Inscrito" : "🕒 Lista de espera"}
                       </div>
                     )}
-                    
                     {/* Badge de cupo en tiempo real */}
                     {workshop.cupoMaximo && workshop.cupoMaximo > 0 && (
                       <CupoBadge 
@@ -595,7 +599,6 @@ const WorkshopComponent: React.FC<WorkshopComponentProps> = ({
                         className="cupo-badge--compact"
                       />
                     )}
-                    
                     <h4>{workshop.titulo}</h4>
                     {workshop.ponente && <p className="ponente">👨‍🏫 {workshop.ponente}</p>}
                     <div className="fecha-lugar">

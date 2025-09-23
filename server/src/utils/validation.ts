@@ -66,12 +66,23 @@ export async function isInContestWindow(): Promise<boolean> {
   }
 }
 
+// Convierte un Date JS a string 'YYYY-MM-DD HH:MM:SS' en hora local
+function formatDateToMySQL(date: Date): string {
+  const pad = (n: number) => n.toString().padStart(2, '0');
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ` +
+         `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+}
+
 export async function isInAttendanceWindow(startDate: Date): Promise<boolean> {
   try {
+    // Asegura formato correcto y hora local
+    const formatted = formatDateToMySQL(startDate);
+    console.log('[isInAttendanceWindow] Fecha enviada a SQL:', formatted);
     const result = await executeQuerySingle<{ result: number }>(
       'SELECT fn_en_ventana_marcaje(?) as result',
-      [startDate]
+      [formatted]
     );
+    console.log('[isInAttendanceWindow] Resultado SQL:', result);
     return result?.result === 1;
   } catch (error) {
     console.error('Error verificando ventana de marcaje:', error);

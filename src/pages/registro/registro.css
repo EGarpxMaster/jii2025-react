@@ -334,12 +334,6 @@ body {
     gap: 1.5rem;
     }
 
-    @media (min-width: 640px) {
-    .registro-grid {
-    grid-template-columns: repeat(2, 1fr);
-    }
-    }
-
     .form-group {
     display: flex;
     flex-direction: column;
@@ -968,8 +962,6 @@ body {
 }
 
 
-
-
 /* 360px - 399px (móviles pequeños) */
 @media (min-width: 360px) {
     .tabs-wrapper{
@@ -1089,7 +1081,8 @@ body {
     .scroll-arrow .scroll-arrow-left{
         margin: 0;
     }
-        .input-button-group {
+    
+    .input-button-group {
         flex-direction: column;
         gap: 0.5rem;
     }
@@ -1099,6 +1092,8 @@ body {
     }
 
 }
+
+
 /* 768px - 1023px (tablets) */
 @media (min-width: 768px) {
     .tabs-container {

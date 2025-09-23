@@ -99,15 +99,15 @@ router.put('/:id/confirmar', asyncHandler(async (req: Request, res: Response) =>
 }));
 
 // PUT /api/equipos/:id/cancelar - Cancelar equipo
-router.put('/:id/cancelar', asyncHandler(async (req: Request, res: Response) => {
-  const id = parseInt(req.params.id);
-  if (isNaN(id)) {
-    return res.status(400).json(createErrorResponse('ID inválido'));
-  }
+// router.put('/:id/cancelar', asyncHandler(async (req: Request, res: Response) => {
+//   const id = parseInt(req.params.id);
+//   if (isNaN(id)) {
+//     return res.status(400).json(createErrorResponse('ID inválido'));
+//   }
 
-  const equipo = await equipoService.cancelarEquipo(id);
-  res.json(createApiResponse(equipo, 'Equipo cancelado exitosamente'));
-}));
+//   const equipo = await equipoService.cancelarEquipo(id);
+//   res.json(createApiResponse(equipo, 'Equipo cancelado exitosamente'));
+// }));
 
 // GET /api/equipos/estado/:estadoId - Obtener equipos por estado
 router.get('/estado/:estadoId', asyncHandler(async (req: Request, res: Response) => {

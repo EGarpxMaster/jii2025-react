@@ -21,7 +21,7 @@ import { equiposRoutes } from './routes/equipos.js';
 import { constanciasRoutes } from './routes/constancias.js';
 
 // Cargar variables de entorno
-dotenv.config();
+dotenv.config({ path: process.env.NODE_ENV === 'production' ? '.env.production' : '.env' });
 
 const app = express();
 const PORT = process.env.PORT || 3001;
