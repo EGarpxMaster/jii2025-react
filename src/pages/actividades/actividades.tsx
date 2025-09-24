@@ -400,17 +400,17 @@ const activitiesData: Activity[] = [
     speakers: [
       {
         name: "Dr. Juan Felipe Pérez Vázquez",
-        image: "/assets/images/actividades/ponentes/ponente_placeholder_1.png",
+        image: "/assets/images/actividades/ponentes/FelipePerez.jpg",
         bio: "Gerente de Proyectos en Tech Solutions, egresada de la generación 2015.",
       },
       {
         name: "Ing. Luis Melesio García Juárez",
-        image: "/assets/images/actividades/ponentes/ponente_placeholder_1.png",
+        image: "/assets/images/usuario.png",
         bio: "Gerente de Proyectos en Tech Solutions, egresada de la generación 2015.",
       },
       {
         name: "Ing. Manuel Alejandro Hoil Pech",
-        image: "/assets/images/actividades/ponentes/ponente_placeholder_1.png",
+        image: "/assets/images/usuario.png",
         bio: "Gerente de Proyectos en Tech Solutions, egresada de la generación 2015.",
       },
       // {
@@ -448,25 +448,25 @@ const activitiesData: Activity[] = [
     speakers: [
       {
         name: "Jorge Castro",
-        image: "/assets/images/actividades/ponentes/ponente_placeholder_3.png",
+        image: "/assets/images/usuario.png",
         bio: "",
         institution: "Universidad del Caribe",
       },
       {
         name: "Yoali Gutiérrez",
-        image: "/assets/images/actividades/ponentes/ponente_placeholder_1.png",
+        image: "/assets/images/usuario.png",
         bio: "",
         institution: "Universidad del Caribe",
       },
       {
         name: "Enrique Alamilla",
-        image: "/assets/images/actividades/ponentes/ponente_placeholder_2.png",
+        image: "/assets/images/usuario.png",
         bio: "",
         institution: "Universidad del Caribe",
       },
       {
         name: "Brenda Rico",
-        image: "/assets/images/actividades/ponentes/ponente_placeholder_2.png",
+        image: "/assets/images/usuario.png",
         bio: "",
         institution: "Universidad del Caribe",
       },
@@ -489,7 +489,7 @@ const activitiesData: Activity[] = [
     speakers: [
       {
         name: "Dr. Ricardo Morales",
-        image: "/assets/images/actividades/ponentes/ponente_placeholder_4.png",
+        image: "/assets/images/usuario.png",
         bio: "Director del Departamento de Posgrados en Ingeniería, enfocado en la investigación y desarrollo tecnológico.",
         institution: "Universidad del Caribe",
       },

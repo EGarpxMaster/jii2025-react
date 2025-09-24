@@ -178,6 +178,9 @@ const Navbar = () => {
                   }
                 }}
               >
+                  <a href="#programa" className="dropdown-item" onClick={closeNavbar} role="menuitem">
+                  Programa General
+                </a>
                 <a href="#acerca" className="dropdown-item" onClick={closeNavbar} role="menuitem">
                   Acerca de
                 </a>
