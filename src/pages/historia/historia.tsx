@@ -45,37 +45,37 @@ function GalleryMosaic({
 
   const GALLERY_IMAGES = [
     {
-      src: "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&q=80&w=1600",
+      src: "/assets/images/galeria/2024/G30_2024.jpg",
       alt: "Conferencia principal con expertos internacionales",
       title: "Conferencia Principal"
     },
     {
-      src: "https://images.unsplash.com/photo-1533750349088-cd871a92f312?auto=format&fit=crop&q=80&w=1600",
+      src: "/assets/images/galeria/2024/G4_2024.jpg",
       alt: "Taller práctico sobre innovación industrial",
       title: "Taller Práctico"
     },
     {
-      src: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=2000",
+      src: "/assets/images/galeria/2023/G22_2023.jpg",
       alt: "Networking entre participantes y profesionales",
       title: "Sesión de Networking"
     },
     {
-      src: "https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&q=80&w=2000",
+      src: "/assets/images/galeria/2023/G15_2023.jpg",
       alt: "Exposición de proyectos estudiantiles innovadores",
       title: "Exposición de Proyectos"
     },
     {
-      src: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80&w=2000",
+      src: "/assets/images/galeria/2023/G25_2023.jpg",
       alt: "Panel de expertos discutiendo tendencias industriales",
       title: "Panel de Expertos"
     },
     {
-      src: "https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?auto=format&fit=crop&q=80&w=2000",
+      src: "/assets/images/galeria/2024/G9_2024.jpg",
       alt: "Entrega de reconocimientos a los mejores proyectos",
       title: "Entrega de Reconocimientos"
     },
     {
-      src: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&q=80&w=1600", // Agrega una URL real
+      src: "/assets/images/galeria/2023/G21_2023.jpg", // Agrega una URL real
       alt: "Estudiantes presentando proyectos innovadores",
       title: "Presentación de Proyectos"
     },
@@ -252,7 +252,7 @@ export default function Historia() {
     {
       año: "2024",
       titulo: "II Jornada de Ingeniería Industrial",
-      imagen: "https://images.unsplash.com/photo-1581091226033-d5c48150dbaa?auto=format&fit=crop&q=80&w=1200",
+      imagen: "/assets/images/galeria/2024/G33_2024.jpg",
       descripcion: "La segunda edición de nuestra jornada se centró en la innovación tecnológica y su aplicación en los procesos industriales. Contamos con la participación de expertos internacionales y más de 500 asistentes.",
       logros: [
         "20 ponentes especializados",
@@ -266,7 +266,7 @@ export default function Historia() {
     {
       año: "2023",
       titulo: "I Jornada de Ingeniería Industrial",
-      imagen: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80&w=1200",
+      imagen: "/assets/images/galeria/2023/G25_2023.jpg",
       descripcion: "La primera jornada marcó el inicio de este evento anual, estableciendo las bases para el intercambio de conocimiento entre estudiantes, académicos y profesionales del sector industrial.",
       logros: [
         "Conferencias magistrales",
