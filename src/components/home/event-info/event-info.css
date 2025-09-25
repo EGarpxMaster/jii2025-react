@@ -168,6 +168,14 @@
     height: auto;
     object-fit: contain !important;
   }
+
+  .info-card:not(:first-child) .card-image {
+    flex: 1.4; /* antes era 1 */
+  }
+
+  .info-card:not(:first-child) .card-content {
+    flex: 1.2; /* antes era 1.5 */
+  }
 }
 
 /* =================== */

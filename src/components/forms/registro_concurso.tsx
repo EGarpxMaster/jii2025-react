@@ -66,7 +66,7 @@ const RegistroConcursoComponent: React.FC<RegistroConcursoProps> = ({
 
   // Banner de ventana
   const ventanaTexto =
-    "Registro abierto del 22/09 09:00 al 23/09 23:59 (hora Cancún). ¡Elige tu estado de México!";
+    "Registro abierto del 22/09 09:00 al 25/09 23:59 (hora Cancún). ¡Elige tu estado de México!";
 
   // Cargar estados disponibles
   const loadEstadosDisponibles = useCallback(async () => {

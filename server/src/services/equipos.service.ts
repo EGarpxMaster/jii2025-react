@@ -61,16 +61,31 @@ export class EquipoService {
   }
 
   async crearEquipo(data: EquipoConcursoCreateDTO): Promise<EquipoConcurso> {
-    // VALIDACIÓN DE VENTANA DESHABILITADA PARA PRUEBAS
-    // const inWindow = await isInContestWindow();
-    // if (!inWindow) {
-    //   throw new BusinessLogicError('Fuera de la ventana de inscripción al concurso');
-    // }
+  // VALIDACIÓN DE VENTANA HABILITADA
+  const inWindow = await isInContestWindow();
+  if (!inWindow) {
+    throw new BusinessLogicError('Fuera de la ventana de inscripción al concurso');
+  }
 
-    // Validaciones básicas
-    this.validateEquipoData(data);
+  // Validaciones básicas
+  this.validateEquipoData(data);
 
-    return executeTransaction(async (connection) => {
+  // Verificar cupo máximo antes de la transacción
+  const cupoRow = await executeQuerySingle<{ valor: string }>(
+    "SELECT valor FROM configuracion_sistema WHERE clave = 'max_equipos_concurso'"
+  );
+  const maxEquipos = parseInt(cupoRow?.valor ?? '0', 10);
+
+  const totalEquiposRow = await executeQuerySingle<{ total: number }>(
+    "SELECT COUNT(*) as total FROM equipos_concurso WHERE estado_registro IN ('pendiente', 'confirmado')"
+  );
+  const totalEquipos = totalEquiposRow?.total ?? 0;
+
+  if (totalEquipos >= maxEquipos) {
+    throw new BusinessLogicError('Se ha alcanzado el cupo máximo de equipos para el concurso');
+  }
+
+  return executeTransaction(async (connection) => {
       // Verificar que el estado existe y está disponible DENTRO de la transacción
       const [estadoRows] = await connection.execute(
         'SELECT * FROM estados_mexico WHERE id = ? FOR UPDATE',

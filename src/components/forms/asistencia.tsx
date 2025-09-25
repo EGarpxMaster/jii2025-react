@@ -27,7 +27,7 @@ type Participante = {
 };
 // Constantes (pueden ir arriba del componente)
 const BRAZA_MIN = 1;
-const BRAZA_MAX = 500;
+const BRAZA_MAX = 999;
 
 type Actividad = {
   id: number;

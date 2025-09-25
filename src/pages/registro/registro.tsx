@@ -211,9 +211,9 @@ useEffect(() => {
           {activeTab === "constancia" && (
             <ConstanciaComponent className="tab-component" showHeader={false} />
           )}
-          {activeTab === "concurso" && (
+          {/* {activeTab === "concurso" && (
             <RegistroConcursoComponent className="tab-component" />
-          )}
+          )} */}
         </div>
       </div>
     </main>

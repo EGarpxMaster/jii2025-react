@@ -84,6 +84,13 @@ const alliesData: Ally[] = [
   description: "Fabricante de soluciones de identificación y seguridad para eventos, especializado en brazaletes, etiquetas y uniformes para el control de acceso.",
   website: "https://www.recreativo.cloudsoftmx.com/",
   },
+  {
+  id: "P11",
+  name: "Xtreme World",
+  logo: getAliadosImagePath("XtremeWorld.png"),
+  description: "Empresa dedicada a la producción de contenido audiovisual aéreo mediante drones de vanguardia, ofreciendo soluciones visuales de alta calidad para proyectos profesionales y eventos.",
+  website: "https://www.facebook.com/profile.php?id=100085706611388#",
+  },
 ];
 
 // Hook para controlar el scroll progress

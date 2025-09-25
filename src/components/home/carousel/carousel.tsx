@@ -34,6 +34,11 @@ const Carousel = () => {
       description: 'Para el cierre de la Jornada se realizan concursos y sorteos con diversos premios',
     },
     {
+      image: '/assets/images/carousel/staff.jpg',
+      title: 'Staff de la JII2025',
+      description: 'Equipo comprometido con la organización y éxito de la Jornada de Ingeniería Industrial 2025',
+    },
+    {
       image: '/assets/images/carousel/img4.jpg',
       title: 'Conoce nuestra historia',
       description: 'Historia de la Jornada de Ingenieria Industrial',

@@ -63,18 +63,17 @@ const rallySteps: Seccion[] = [
       sections: [
         { type: "paragraph", content: "Objetivo: Desarrollar la coordinación, el trabajo en equipo y la estrategia mediante un juego de lanzamiento y recepción con un jabón Zote como pelota." },
         { type: "paragraph", content: "Reglas específicas: " },
-        { type: "bullet", content: "Los jugadores del mismo equipo no pueden permanecer cerca de su cubeta para defenderla." },
+        { type: "bullet", content: "Cada equipo tendrá una cubeta de agua que será su portería y el jabón será su \"pelota\"" },
         { type: "bullet", content: "Está prohibido moverse mientras se tiene el jabón en las manos" },
-        { type: "bullet", content: "No se permite retener el jabón demasiado tiempo (máx. 5 segundos) para mantener la fluidez del juego." },
+        { type: "bullet", content: "No se permite retener el jabón demasiado tiempo (máx. 5 segundos) para mantener la fluidez del juego" },
+        { type: "bullet", content: "En caso de cometer alguna falta al reglamento, sonará un silbato, el cual detendrá el juego y el jabón se le otorgará al equipo contrario" },
         { type: "paragraph", content: "Desarrollo del juego / Reglas: " },
-        { type: "numbered", content: "Los jugadores se dividen en dos equipos con el mismo número de participantes" },
-        { type: "numbered", content: "Cada jugador recibe un número (del 1 al 6, según el número de integrantes)" },
-        { type: "numbered", content: "El staff se coloca en el centro con el paliacate en la mano" },
-        { type: "numbered", content: "En lugar de decir el número directamente, el staff anunciará una operación matemática (ejemplo: 4 x 4 - 10 = 6)" },
-        { type: "numbered", content: "Los jugadores que tengan ese número en ambos equipos deben correr hacia el centro para intentar agarrar el paliacate" },
-        { type: "numbered", content: "El jugador que tome el paliacate debe regresar a su base lo más rápido posible" },
-        { type: "numbered", content: "El jugador contrario puede robar el punto tocando la espalda del portador antes de que llegue a su base" },
-        { type: "numbered", content: "Cada vez que un jugador logra llevar el paliacate a su base sin ser tocado, su equipo gana 1 punto" },
+        { type: "numbered", content: "Cada equipo tendrá una cubeta de agua que será su portería y el jabón será su \"pelota\"" },
+        { type: "numbered", content: "Deberán pasar el jabón con las manos entre su mismo equipo para anotar en la cubeta del contrario" },
+        { type: "numbered", content: "No se permiten porteros, pero se puede defender interceptando o robando el jabón" },
+        { type: "numbered", content: "El jugador que tenga el jabón en las manos no se podrá desplazar con él hasta que lo pase a otro compañero" },
+        { type: "numbered", content: "No se puede sostener más de 5 segundos el jabón" },
+        { type: "numbered", content: "Gana el equipo con más puntos dentro del tiempo acordado" },
       ]
     }
   },
@@ -87,18 +86,17 @@ const rallySteps: Seccion[] = [
       sections: [
         { type: "paragraph", content: "Objetivo: Estimular la lógica, el trabajo en equipo y los conocimientos sobre Ingeniería Industrial y la Universidad del Caribe, a través de un recorrido con pistas y retos de preguntas." },
         { type: "paragraph", content: "Reglas específicas: " },
-        { type: "bullet", content: "No está  permitido cambiar el orden de las pistas; cada equipo debe seguir la secuencia asignada." },
+        { type: "bullet", content: "No está permitido cambiar el orden de las pistas; cada equipo debe seguir la secuencia asignada" },
         { type: "bullet", content: "Los equipos deben permanecer juntos durante todo el recorrido" },
-        { type: "bullet", content: "Las respuestas deben ser dadas por consenso del equipo, no por un solo jugador aislado." },
-        { type: "bullet", content: "No se permite interferir con el recorrido del otro equipo." },
-        { type: "paragraph", content: " " },
+        { type: "bullet", content: "Las respuestas deben ser dadas por consenso del equipo, no por un solo jugador aislado" },
+        { type: "bullet", content: "No se permite interferir con el recorrido de otro equipo" },
         { type: "paragraph", content: "Desarrollo del juego / Reglas: " },
         { type: "numbered", content: "A cada equipo se le entrega la primera pista en mano" },
-        { type: "numbered", content: "Una vez descifrada, los jugadores deberán correr a la ubicación indicada y buscar la siguiente pista." },
-        { type: "numbered", content: "Al llegar a cada punto de pista, un integrante del staff les hará una pregunta relacionada con Ingenieria Industrial, materias o profesores de la Universidad del Caribe." },
-        { type: "numbered", content: "Solo si responden correctamente podrán recibir la siguiente pista." },
-        { type: "numbered", content: "El recorrido continuará hasta que logren encontrar uno de los cofres escondidos." },
-        { type: "numbered", content: "Habrá 2 cofres ocultos, por lo que ganan los primeros 2 equipos en encontrarlos" },
+        { type: "numbered", content: "Una vez descifrada, los jugadores deberán correr a la ubicación indicada y buscar la siguiente pista" },
+        { type: "numbered", content: "Al llegar a cada punto de pista, un integrante del staff les hará una pregunta relacionada con Ingenieria Industrial, materias o profesores de la Universidad del Caribe" },
+        { type: "numbered", content: "Solo si responden correctamente podrán recibir la siguiente pista" },
+        { type: "numbered", content: "El recorrido continuará hasta que logren encontrar el cofre escondido" },
+        { type: "numbered", content: "Dentro tendrá 4 boletos con números del 1 al 6, los 2 primeros equipos que logren completar el código acomodando los números correctamente son los que pasan a la final" },
       ]
     }
   },
@@ -111,14 +109,14 @@ const rallySteps: Seccion[] = [
       sections: [
         { type: "paragraph", content: "Objetivo: Fomentar la coordinación, el trabajo en equipo y la comunicación entre compañeros mediante un partido de fútbol en el que los jugadores deben moverse de manera sincronizada." },
         { type: "paragraph", content: "Reglas específicas: " },
-        { type: "bullet", content: "Está prohibido desatarse durante el juego; las parejas deben permanecer unidas por un pie en todo momento." },
-        { type: "bullet", content: "No se permite contacto físico agresivo; solo se permite disputar el balón de manera segura." },
-        { type: "bullet", content: "Los jugadores deben respetar las áreas delimitadas y el tiempo de juego." },
+        { type: "bullet", content: "Las parejas deben permanecer atadas por un pie en todo momento" },
+        { type: "bullet", content: "No se permite el contacto físico agresivo" },
+        { type: "bullet", content: "Se debe respetar el campo delimitado y el tiempo de juego" },
         { type: "paragraph", content: "Desarrollo del juego / Reglas: " },
-        { type: "numbered", content: "Los jugadores se agrupan en parejas, cada una atada a un pie para que ambos se muevan de manera conjunta." },
-        { type: "numbered", content: "Se realiza un partido de fútbol normal, siguiendo las reglas básicas del deporte (excepto que no hay portero)." },
-        { type: "numbered", content: "Cada equipo intenta marcar goles en la portería contraria mientras coordina sus movimientos para avanzar con el balón." },
-        { type: "numbered", content: "Gana el equipo que consiga más goles al finalizar el tiempo." },
+        { type: "numbered", content: "Los jugadores forman parejas atadas por un pie" },
+        { type: "numbered", content: "La pareja de porteros tendrá un jugador con manos atadas y otro con ojos vendados" },
+        { type: "numbered", content: "Cada equipo busca anotar en la portería rival coordinando sus movimientos" },
+        { type: "numbered", content: "Gana el equipo con más goles al terminar el tiempo" },
       ]
     }
   },
@@ -273,13 +271,13 @@ export default function Concurso() {
         <div className="relative z-10 flex flex-col items-center justify-center min-h-[60vh] px-4 pb-10 text-center text-white">
           <div className="mb-8 mt-4 transform hover:scale-110 transition-transform duration-500">
             <ScaleContainer>
-            <div className="w-24 h-24 md:w-32 md:h-32 mx-auto rounded-full shadow-2xl border-4 border-white/30 bg-gradient-to-br from-blue-500 to-gray-500 flex items-center justify-center text-4xl">
-              <img src="assets/images/concurso/logorally.jpg " alt="Logo Mundialito Industrial" className="w-20 h-20 md:w-28 md:h-28 rounded-full object-cover" />
+            <div className="w-24 h-24 md:w-32 md:h-32 mx-auto rounded-full shadow-2xl border-4 border-white/30 bg-[#a84e36] flex items-center justify-center text-4xl">
+              <img src="assets/images/concurso/logomundialito.png" alt="Logo Mundialito Mexicano" className="w-20 h-20 md:w-28 md:h-28 rounded-full object-cover" />
             </div></ScaleContainer>
           </div>
           <AnimatedH1>
           <h1 className="text-4xl md:text-6xl lg:text-5xl font-bold mb-4">
-            Mundialito Industrial
+            Mundialito Mexicano
           </h1></AnimatedH1>
           <ScaleContainer>
             <div className="flex mb-6 justify-center">

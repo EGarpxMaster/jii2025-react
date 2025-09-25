@@ -316,8 +316,11 @@ export default function Historia() {
             <div className="lg:w-4/5 mx-auto">
             <AnimatedParagraph>
               <p className="text-lg leading-relaxed mb-6 text-center">
-                La Jornada de Ingeniería Industrial (JII) nació como un espacio académico innovador en la Universidad del Caribe, 
-                con el propósito fundamental de crear puentes entre el mundo académico y el sector productivo.
+                Este emblemático evento del Programa Educativo de Ingeniería Industrial surgió en el año 2012 como tema central de un proyecto terminal, 
+                cuyo objetivo era claro: Crear un foro especializado de aprendizaje e intercambio de conocimientos y experiencias entre ingenieros industriales. 
+                Aquella primera edición fue la semilla de una tradición que, con el paso del tiempo, se convirtió en una de las iniciativas más emblemáticas del 
+                Departamento de Ciencias Básicas e Ingenierías de la Universidad del Caribe, la Jornada de Ingeniería Industrial.
+
               </p>
             </AnimatedParagraph>
               <div className="grid md:grid-cols-2 gap-8 mt-10">
@@ -441,8 +444,8 @@ export default function Historia() {
             <div className="lg:w-4/5 mx-auto">
               <div className="bg-white p-8 rounded-lg shadow-sm">
                 <p className="text-lg leading-relaxed mb-6 text-center">
-                  La JII se ha consolidado como una de las actividades más esperadas dentro del calendario académico de la carrera, 
-                  estableciendo un estándar de excelencia en la formación integral de futuros ingenieros e ingenieras.
+                  La JII se ha consolidado como una de las actividades más esperadas dentro del calendario académico del Programa Educativo de Ingeniería 
+                  Industrial, estableciendo un estándar de excelencia en la formación integral de futuros ingenieros e ingenieras industriales.
                 </p>
                 <div className="grid md:grid-cols-2 gap-8 mt-8">
                   <div>
@@ -582,7 +585,7 @@ export default function Historia() {
         <GalleryMosaic variant="A" mobileMode="stack" />
 
         {/* Evolution Section */}
-        {/* <section className="text-gray-700 body-font py-16 bg-gradient-to-r from-[#1b1c39] to-[#2a2b4a]">
+        <section className="text-gray-700 body-font py-16 bg-gradient-to-r from-[#1b1c39] to-[#2a2b4a]">
           <div className="container px-5 py-12 mx-auto">
             <div className="text-center mb-12">
               <h2 className="historia-h2 font-bold title-font mb-4 text-white">Evolución de las Jornadas</h2>
@@ -621,7 +624,7 @@ export default function Historia() {
               </div>
             </div>
           </div>
-        </section> */}
+        </section>
 
         <ScrollSlideUp>
         {/* Call to Action */}

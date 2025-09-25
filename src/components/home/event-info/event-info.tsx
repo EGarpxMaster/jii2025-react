@@ -43,7 +43,7 @@ const EventInfo: FC = () => {
         de actividades académicas y de integración diseñadas con base en el perfil de egreso
         de este Programa Educativo, para favorecer el intercambio de conocimientos y experiencias
         entre los asistentes.`,
-      image: '/assets/images/carousel/comite.jpg'
+      image: '/assets/images/staff_comite.jpg'
     },
     {
       id: "objetivo",
@@ -51,7 +51,7 @@ const EventInfo: FC = () => {
       content: `Generar un espacio de encuentro entre estudiantes, académicos, egresados, empleadores,
         investigadores e interesados en el ejercicio de la Ingeniería Industrial para la difusión
         de su alcance, impacto y tendencias a nivel nacional e internacional.`,
-      image: '/assets/images/carousel/img1.jpg'
+      image: '/assets/images/objetivo.jpg'
     },
     {
       id: "publico",
@@ -158,7 +158,8 @@ const EventInfo: FC = () => {
               <div className="map-details">
                 <div className="map-info">
                   <h4>Dirección</h4>
-                  <p>Sm. 78, Mz. 1, Lt. 1, Carmen Puerto, 77528 Cancún, Q.R.</p>
+                  <p>SM. 78, Mza. 1, Lote 1, Esquina Fraccionamiento Tabachines. CP. 77528. Cancún, Quintana Roo, México.
+</p>
                 </div>
                 <div className="map-info">
                   <h4>Fecha</h4>
