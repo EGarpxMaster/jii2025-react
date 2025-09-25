@@ -8,6 +8,7 @@
     alt: string;
     title: string;
     category: string;
+    year: number;
     };
     
     import { motion } from 'framer-motion';
@@ -20,79 +21,460 @@
     
     // Todas las imágenes de la galería con categorías
     const ALL_IMAGES: GalleryImage[] = [
+    
+    //2023
+        //Conferencias 2023
         {
-        src: "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&q=80&w=1600",
+        src: "/assets/images/galeria/2023/G1_2023.jpeg",
         alt: "Conferencia principal con expertos internacionales",
         title: "Conferencia Principal",
-        category: "conferencias"
+        category: "conferencias",
+        year: 2023
         },
         {
-        src: "https://images.unsplash.com/photo-1533750349088-cd871a92f312?auto=format&fit=crop&q=80&w=1600",
-        alt: "Taller práctico sobre innovación industrial",
-        title: "Taller Práctico",
-        category: "talleres"
+        src: "/assets/images/galeria/2023/G3_2023.jpeg",
+        alt: "Conferencia principal con expertos internacionales",
+        title: "Conferencia Principal",
+        category: "conferencias",
+        year: 2023
         },
         {
-        src: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=2000",
-        alt: "Networking entre participantes y profesionales",
-        title: "Sesión de Networking",
-        category: "networking"
+        src: "/assets/images/galeria/2023/G13_2023.jpg",
+        alt: "Conferencia, charla entre expertos internacionales",
+        title: "Panel de Expertos",
+        category: "conferencias",
+        year: 2023
         },
         {
-        src: "https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&q=80&w=2000",
-        alt: "Exposición de proyectos estudiantiles innovadores",
-        title: "Exposición de Proyectos",
-        category: "proyectos"
-        },
+        src: "/assets/images/galeria/2023/G16_2023.jpg",
+        alt: "Conferencia presentada por un exponente invitado",
+        title: "Conferencia",
+        category: "conferencias",
+        year: 2023
+        }, 
         {
-        src: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80&w=2000",
+        src: "/assets/images/galeria/2023/G25_2023.jpg",
         alt: "Panel de expertos discutiendo tendencias industriales",
         title: "Panel de Expertos",
-        category: "conferencias"
+        category: "conferencias",
+        year: 2023
         },
         {
-        src: "https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?auto=format&fit=crop&q=80&w=2000",
+        src: "/assets/images/galeria/2023/G20_2023.jpg",
+        alt: "Conferencia presentada por una exponente invitada",
+        title: "Conferencia",
+        category: "conferencias",
+        year: 2023
+        },
+        {
+        src: "/assets/images/galeria/2023/G23_2023.jpg",
+        alt: "Conferencia presentada por exponentes invitados",
+        title: "Conferencia",
+        category: "conferencias",
+        year: 2023
+        },
+
+        //Talleres 2023
+        {
+        src: "/assets/images/galeria/2023/G4_2023.JPG",
+        alt: "Taller práctico sobre innovación industrial",
+        title: "Taller Práctico",
+        category: "talleres",
+        year: 2023
+        },
+        {
+        src: "/assets/images/galeria/2023/G22_2023.jpg",
+        alt: "Taller práctico sobre innovación industrial",
+        title: "Taller Práctico",
+        category: "talleres",
+        year: 2023
+        },
+        {
+        src: "/assets/images/galeria/2023/G24_2023.jpg",
+        alt: "Taller práctico sobre innovación industrial",
+        title: "Taller Práctico",
+        category: "talleres",
+        year: 2023
+        },
+
+        //Proyectos 2023
+        {
+        src: "/assets/images/galeria/2023/G15_2023.jpg",
+        alt: "Presentación de proyectos de estudiantes en el auditorio",
+        title: "Presentación de proyecto",
+        category: "proyectos",
+        year: 2023
+        },
+
+        //Networking 2023
+        {
+        src: "/assets/images/galeria/2023/G12_2023.JPG",
+        alt: "Momento de esparcimiento después de las actividades",
+        title: "Actividades en la explanada",
+        category: "networking",
+        year: 2023
+        },
+        {
+        src: "/assets/images/galeria/2023/G17_2023.jpg",
+        alt: "Momento de esparcimiento después de las actividades",
+        title: "Momento de esparcimiento",
+        category: "networking",
+        year: 2023
+        },
+        {
+        src: "/assets/images/galeria/2023/G18_2023.jpg",
+        alt: "Momento de esparcimiento en evento social",
+        title: "Evento social",
+        category: "networking",
+        year: 2023
+        },
+
+        //Premiaciones 2023
+        {
+        src: "/assets/images/galeria/2023/G2_2023.jpeg",
         alt: "Entrega de reconocimientos a los mejores proyectos",
         title: "Entrega de Reconocimientos",
-        category: "premiaciones"
+        category: "premiaciones",
+        year: 2023
         },
         {
-        src: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&q=80&w=1600",
-        alt: "Estudiantes presentando sus proyectos innovadores",
-        title: "Presentación de Proyectos",
-        category: "proyectos"
+        src: "/assets/images/galeria/2023/G5_2023.JPG",
+        alt: "Entrega de Reconocimiento por impartición de taller",
+        title: "Entrega de Reconocimiento",
+        category: "premiaciones",
+        year: 2023
         },
         {
-        src: "https://images.unsplash.com/photo-1568992687947-868a62a9f521?auto=format&fit=crop&q=80&w=1600",
-        alt: "Charla técnica sobre nuevas tecnologías industriales",
-        title: "Charla Técnica",
-        category: "conferencias"
+        src: "/assets/images/galeria/2023/G6_2023.JPG",
+        alt: "Entrega de Reconocimiento por impartición de taller",
+        title: "Entrega de Reconocimiento",
+        category: "premiaciones",
+        year: 2023
         },
         {
-        src: "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?auto=format&fit=crop&q=80&w=1600",
-        alt: "Demostración de equipos industriales de última generación",
-        title: "Demostración de Equipos",
-        category: "talleres"
+        src: "/assets/images/galeria/2023/G7_2023.JPG",
+        alt: "Entrega de Reconocimiento por impartición de taller",
+        title: "Entrega de Reconocimiento",
+        category: "premiaciones",
+        year: 2023
         },
         {
-        src: "https://images.unsplash.com/photo-1581092446325-71febe36d965?auto=format&fit=crop&q=80&w=1600",
-        alt: "Mesas redondas con expertos de la industria",
-        title: "Mesa Redonda",
-        category: "conferencias"
+        src: "/assets/images/galeria/2023/G8_2023.JPG",
+        alt: "Entrega de reconocimientos al exponente invitado",
+        title: "Entrega de Constancia",
+        category: "premiaciones",
+        year: 2023
         },
         {
-        src: "https://images.unsplash.com/photo-1581092581096-329cdbda7c5d?auto=format&fit=crop&q=80&w=1600",
-        alt: "Estudiantes recibiendo certificados de participación",
-        title: "Entrega de Certificados",
-        category: "premiaciones"
+        src: "/assets/images/galeria/2023/G9_2023.JPG",
+        alt: "Entrega de reconocimientos al exponente invitado",
+        title: "Entrega de Constancia",
+        category: "premiaciones",
+        year: 2023
         },
         {
-        src: "https://images.unsplash.com/photo-1581092921461-7d9c8ae3d5a8?auto=format&fit=crop&q=80&w=1600",
-        alt: "Momento de esparcimiento durante el coffee break",
-        title: "Coffee Break",
-        category: "networking"
-        }
+        src: "/assets/images/galeria/2023/G10_2023.JPG",
+        alt: "Entrega de reconocimientos al exponente invitado",
+        title: "Entrega de Constancia",
+        category: "premiaciones",
+        year: 2023
+        },
+        {
+        src: "/assets/images/galeria/2023/G11_2023.JPG",
+        alt: "Entrega de reconocimientos a los exponentes invitados",
+        title: "Entrega de Constancia",
+        category: "premiaciones",
+        year: 2023
+        },
+        {
+        src: "/assets/images/galeria/2023/G14_2023.jpg",
+        alt: "Entrega de un obsequio al estudiante exponente",
+        title: "Entrega de Premio",
+        category: "premiaciones",
+        year: 2023
+        },
+        {
+        src: "/assets/images/galeria/2023/G19_2023.jpg",
+        alt: "Entrega de reconocimientos al exponente invitado",
+        title: "Entrega de Constancia",
+        category: "premiaciones",
+        year: 2023
+        },
+        {
+        src: "/assets/images/galeria/2023/G21_2023.jpg",
+        alt: "Entrega de playeras a los estudiantes",
+        title: "Entrega de Playeras",
+        category: "premiaciones",
+        year: 2023
+        },
+        
+    //2024
+        //Conferencias 2024
+        {
+        src: "/assets/images/galeria/2024/PanelEgresados.JPG",
+        alt: "Conferencia con un Panel de Egresados",
+        title: "Panel de Egresados",
+        category: "conferencias",
+        year: 2024
+        },
+        {
+        src: "/assets/images/galeria/2024/G30_2024.jpg",
+        alt: "Conferencia principal con expertos internacionales",
+        title: "Conferencia de expertos",
+        category: "conferencias",
+        year: 2024
+        },
+        {
+        src: "/assets/images/galeria/2024/G32_2024.jpg",
+        alt: "Conferencia principal con expertos internacionales",
+        title: "Conferencia",
+        category: "conferencias",
+        year: 2024
+        },
+        {
+        src: "/assets/images/galeria/2024/G33_2024.jpg",
+        alt: "Conferencia principal con expertos internacionales",
+        title: "Conferencia",
+        category: "conferencias",
+        year: 2024
+        },
+        
+        //Talleres 2024 
+        {
+        src: "/assets/images/galeria/2024/G2_2024.jpg",
+        alt: "Taller práctico sobre innovación industrial",
+        title: "Taller Práctico",
+        category: "talleres",
+        year: 2024
+        },
+        {
+        src: "/assets/images/galeria/2024/G4_2024.jpg",
+        alt: "Taller práctico sobre innovación industrial",
+        title: "Taller Práctico",
+        category: "talleres",
+        year: 2024
+        },
+        {
+        src: "/assets/images/galeria/2024/G5_2024.jpg",
+        alt: "Taller práctico sobre innovación industrial",
+        title: "Taller Práctico",
+        category: "talleres",
+        year: 2024
+        },
+        {
+        src: "/assets/images/galeria/2024/G6_2024.jpg",
+        alt: "Taller práctico sobre innovación industrial",
+        title: "Taller Práctico",
+        category: "talleres",
+        year: 2024
+        },
+        
+        {
+        src: "/assets/images/galeria/2024/G34_2024.jpg",
+        alt: "Taller práctico sobre innovación industrial",
+        title: "Taller Práctico",
+        category: "talleres",
+        year: 2024
+        },
+        
+
+        //Proyectos 2024
+        {
+        src: "assets/images/galeria/2024/G3_2024.jpg",
+        alt: "Presentación de proyectos en el laboratorio de mecánica",
+        title: "Presentación de proyectos",
+        category: "proyectos",
+        year: 2024
+        },
+
+        //Networking 2024
+        {
+        src: "/assets/images/galeria/2024/G1_2024.jpg",
+        alt: "Partidos recreativos de fútbol",
+        title: "Torneo de fútbol",
+        category: "networking",
+        year: 2024
+        },
+        {
+        src: "/assets/images/galeria/2024/G13_2024.jpg",
+        alt: "Actividades de esparcimiento en la explanada de la Universidad",
+        title: "Actividades de esparcimiento",
+        category: "networking",
+        year: 2024
+        },
+        {
+        src: "/assets/images/galeria/2024/G14_2024.jpg",
+        alt: "Actividades de esparcimiento en la explanada de la Universidad",
+        title: "Actividades de esparcimiento",
+        category: "networking",
+        year: 2024
+        },
+        {
+        src: "/assets/images/galeria/2024/G15_2024.jpg",
+        alt: "Actividades de esparcimiento en la explanada de la Universidad",
+        title: "Actividades de esparcimiento",
+        category: "networking",
+        year: 2024
+        },
+        {
+        src: "/assets/images/galeria/2024/G16_2024.jpg",
+        alt: "Actividades de esparcimiento en la explanada de la Universidad",
+        title: "Actividades de esparcimiento",
+        category: "networking",
+        year: 2024
+        },
+        {
+        src: "/assets/images/galeria/2024/G17_2024.jpg",
+        alt: "Actividades de esparcimiento en las canchas de la Universidad",
+        title: "Actividades de esparcimiento",
+        category: "networking",
+        year: 2024
+        },
+        {
+        src: "/assets/images/galeria/2024/G18_2024.jpg",
+        alt: "Actividades de esparcimiento en las canchas de la Universidad",
+        title: "Actividades de esparcimiento",
+        category: "networking",
+        year: 2024
+        },
+        {
+        src: "/assets/images/galeria/2024/G19_2024.jpg",
+        alt: "Actividades de esparcimiento en las canchas de la Universidad",
+        title: "Actividades de esparcimiento",
+        category: "networking",
+        year: 2024
+        },
+        {
+        src: "/assets/images/galeria/2024/G20_2024.jpg",
+        alt: "Actividades de esparcimiento en las canchas de la Universidad",
+        title: "Actividades de esparcimiento",
+        category: "networking",
+        year: 2024
+        },
+        {
+        src: "/assets/images/galeria/2024/G21_2024.jpg",
+        alt: "Actividades de esparcimiento en la explanada de la Universidad",
+        title: "Actividades de esparcimiento",
+        category: "networking",
+        year: 2024
+        },
+        {
+        src: "/assets/images/galeria/2024/G22_2024.jpg",
+        alt: "Actividades de esparcimiento en la explanada de la Universidad",
+        title: "Actividades de esparcimiento",
+        category: "networking",
+        year: 2024
+        },
+        {
+        src: "/assets/images/galeria/2024/G23_2024.jpg",
+        alt: "Actividades de esparcimiento en la explanada de la Universidad",
+        title: "Actividades de esparcimiento",
+        category: "networking",
+        year: 2024
+        },
+        {
+        src: "/assets/images/galeria/2024/G24_2024.jpg",
+        alt: "Actividades de esparcimiento en la explanada de la Universidad",
+        title: "Actividades de esparcimiento",
+        category: "networking",
+        year: 2024
+        },
+        {
+        src: "/assets/images/galeria/2024/G25_2024.jpg",
+        alt: "Actividades de esparcimiento en la explanada de la Universidad",
+        title: "Actividades de esparcimiento",
+        category: "networking",
+        year: 2024
+        },
+        {
+        src: "/assets/images/galeria/2024/G26_2024.jpg",
+        alt: "Actividades de esparcimiento en la explanada de la Universidad",
+        title: "Actividades de esparcimiento",
+        category: "networking",
+        year: 2024
+        },
+        {
+        src: "/assets/images/galeria/2024/G27_2024.jpg",
+        alt: "Actividades de esparcimiento en la explanada de la Universidad",
+        title: "Actividades de esparcimiento",
+        category: "networking",
+        year: 2024
+        },
+        {
+        src: "/assets/images/galeria/2024/G28_2024.jpg",
+        alt: "Actividades de esparcimiento en la explanada de la Universidad",
+        title: "Actividades de esparcimiento",
+        category: "networking",
+        year: 2024
+        },
+        {
+        src: "/assets/images/galeria/2024/G29_2024.jpg",
+        alt: "Actividades de esparcimiento en la explanada de la Universidad",
+        title: "Actividades de esparcimiento",
+        category: "networking",
+        year: 2024
+        },
+        {
+        src: "/assets/images/galeria/2024/G31_2024.jpg",
+        alt: "Presentación de violín",
+        title: "Presentación de violín",
+        category: "networking",
+        year: 2024
+        },
+
+        //Premiaciones 2024
+        {
+        src: "/assets/images/galeria/2023/G2_2023.jpeg",
+        alt: "Entrega de reconocimientos a los mejores proyectos",
+        title: "Entrega de Reconocimientos",
+        category: "premiaciones",
+        year: 2024
+        },
+        {
+        src: "/assets/images/galeria/2024/G8_2024.jpg",
+        alt: "Entrega de constancia al profesor invitado",
+        title: "Entrega de Constancia",
+        category: "premiaciones",
+        year: 2024
+        },
+        {
+        src: "/assets/images/galeria/2024/G9_2024.jpg",
+        alt: "Entrega de constancia al profesor invitado",
+        title: "Entrega de Constancia",
+        category: "premiaciones",
+        year: 2024
+        },
+        {
+        src: "/assets/images/galeria/2024/G10_2024.jpg",
+        alt: "Entrega de constancia a los profesor invitado",
+        title: "Entrega de Constancia",
+        category: "premiaciones",
+        year: 2024
+        },
+        {
+        src: "/assets/images/galeria/2024/G11_2024.jpg",
+        alt: "Entrega de constancia al exponente invitado",
+        title: "Entrega de Constancia",
+        category: "premiaciones",
+        year: 2024
+        },
+        {
+        src: "/assets/images/galeria/2024/G12_2024.jpg",
+        alt: "Entrega de constancia al exponente invitado",
+        title: "Entrega de Constancia",
+        category: "premiaciones",
+        year: 2024
+        },
+        {
+        src: "/assets/images/galeria/2024/G7_2024.jpg",
+        alt: "Entrega de constancia al exponente invitado",
+        title: "Entrega de Constancia",
+        category: "premiaciones",
+        year: 2024
+        },
     ];
+
+    const [selectedYear, setSelectedYear] = useState<number | "todas">("todas");
 
     // Categorías para filtrar
     const categories = [
@@ -105,9 +487,11 @@
     ];
 
     // Filtrar imágenes por categoría
-    const filteredImages = selectedCategory === "todas" 
-        ? ALL_IMAGES 
-        : ALL_IMAGES.filter(img => img.category === selectedCategory);
+    const filteredImages = ALL_IMAGES.filter(
+      img =>
+        (selectedYear === "todas" || img.year === selectedYear) &&
+        (selectedCategory === "todas" || img.category === selectedCategory)
+    );
 
     // Simular carga de imágenes
     React.useEffect(() => {
@@ -150,33 +534,58 @@
             </div>
         </div>
 
-        {/* Filtros de categoría */}
-        <div className="bg-white py-8 mb-8 border-b border-slate-100">
-            <div className="container mx-auto px-4">
-                <AnimatedH2>
-            <h2 className="text-2xl font-bold text-[#1b1c39] text-center mb-6">Filtrar por categoría</h2></AnimatedH2>
+        {/* Filtro principal: Años */}
+        <div className="bg-white py-4 mb-4 border-b border-slate-100">
+          <div className="container mx-auto px-4">
+            <AnimatedH2>
+              <h2 className="text-2xl font-bold text-[#1b1c39] text-center mb-6">Filtrar por año</h2>
+            </AnimatedH2>
             <div className="flex justify-center flex-wrap gap-3">
-                {categories.map(category => (
-                <AnimatedButtonSecondary>
-                <button id="btn_gallery"
-                    key={category.id}
+              {(["todas", 2023, 2024] as Array<number | "todas">).map((year) => (
+                <AnimatedButtonSecondary key={year}>
+                  <button
+                    onClick={() => setSelectedYear(year)}
+                    className={`py-3 px-6 rounded-full border border-slate-200 font-medium cursor-pointer transition-all duration-300 shadow-sm hover:bg-slate-50 hover:-translate-y-0.5 hover:shadow-md ${
+                      selectedYear === year
+                        ? "bg-gradient-to-br from-cyan-400 to-cyan-500 text-white border-transparent shadow-cyan-200 hover:shadow-cyan-300"
+                        : "bg-white text-slate-500"
+                    }`}
+                  >
+                    {year === "todas" ? "Todos los años" : year}
+                  </button>
+                </AnimatedButtonSecondary>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Filtros secundarios: Categorías según el año seleccionado */}
+        <div className="bg-white py-4 border-b border-slate-100">
+          <div className="container mx-auto px-4">
+            <AnimatedH2>
+              <h2 className="text-2xl font-bold text-[#1b1c39] text-center mb-6">Filtrar por categoría</h2>
+            </AnimatedH2>
+            <div className="flex justify-center flex-wrap gap-3">
+              {categories.map((category) => (
+                <AnimatedButtonSecondary key={category.id}>
+                  <button
                     onClick={() => setSelectedCategory(category.id)}
                     className={`py-3 px-6 rounded-full border border-slate-200 font-medium cursor-pointer transition-all duration-300 shadow-sm hover:bg-slate-50 hover:-translate-y-0.5 hover:shadow-md ${
-                    selectedCategory === category.id 
-                        ? 'bg-gradient-to-br from-cyan-400 to-cyan-500 text-white border-transparent shadow-cyan-200 hover:shadow-cyan-300' 
-                        : 'bg-white text-slate-500'
+                      selectedCategory === category.id
+                        ? "bg-gradient-to-br from-cyan-400 to-cyan-500 text-white border-transparent shadow-cyan-200 hover:shadow-cyan-300"
+                        : "bg-white text-slate-500"
                     }`}
-                >
+                  >
                     {category.name}
-                </button>
+                  </button>
                 </AnimatedButtonSecondary>
-                ))}
+              ))}
             </div>
-            </div>
+          </div>
         </div>
-        
+
         {/* Contador de imágenes */}
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto px-4 pt-4">
             <div className="text-center">
             <AnimatedParagraph>
             <p className="text-slate-500 text-lg">
@@ -188,14 +597,6 @@
         </div>
 
         {/* Galería */}
-        <motion.section 
-          id="conferencias" 
-          className="actividades-section"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.7 }}
-        ></motion.section>
         <main className="container mx-auto px-4 pb-16">
             {loading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 py-4">
@@ -248,7 +649,7 @@
                 <img
                 src={selectedImage.src}
                 alt={selectedImage.alt}
-                className="w-full h-auto block"
+                className="w-full max-h-[80vh] object-contain mx-auto"
                 />
                 <div className="p-6 bg-white">
                 <h3 className="text-2xl font-bold text-[#1b1c39] mb-2">{selectedImage.title}</h3>
